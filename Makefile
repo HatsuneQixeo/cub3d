@@ -2,6 +2,8 @@ NAME		:=	cub3d
 
 CC			:=	gcc
 CXXFLAGS	:=	-Wall -Werror -Wextra
+CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
+# CXXFLAGS	+=	-D DEBUG_KEY=1
 
 SRC_DIR		:=	srcs
 SRCS		:=	$(shell find ${SRC_DIR} -name "*.c")
@@ -37,11 +39,12 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.c ${HEADER} | ${OBJ_DIR}
 ${NAME}: ${OBJS}
 	${LIBFT_MAKE}
 	@printf "${LIGHT_CYAN}${CC} ${CXXFLAGS} $^ -o $@${RESET}\n"
-	@${CC} ${CXXFLAGS} ${LIBFT} $^ -o $@
+	@${CC} ${CXXFLAGS} ${LIBFT} $^ -lmlx -framework OpenGL -framework AppKit -o $@
 
 san:
+	${LIBFT_MAKE}
 	@printf "${LIGHT_CYAN}SANITIZER: ON${RESET}\n"
-	@${CC} ${CXXFLAGS} -fsanitize=address -g ${LIBFT} ${CFLAGS} ${SRCS} -o ${NAME}
+	@${CC} ${CXXFLAGS} -fsanitize=address -g -lmlx -framework OpenGL -framework AppKit ${LIBFT} ${CFLAGS} ${SRCS} -o ${NAME}
 
 clean:
 	${LIBFT_MAKE} clean
@@ -60,3 +63,10 @@ run: ${NAME}
 
 log: ${NAME}
 	./$< > log.log
+
+thisre:
+	${RM} ${NAME} ${OBJ_DIR}
+	make all
+
+norm:
+	@norminette ${SRC_DIR} ${HEADER}
