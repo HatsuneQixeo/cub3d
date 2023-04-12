@@ -6,7 +6,7 @@
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/10 22:58:08 by hqixeo           ###   ########.fr       */
+/*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ t_colour		colour_from_rgba(const t_colour_byte red,
 					const t_colour_byte alpha);
 t_colour		colour_from_percentage(const double red, const double green,
 					const double blue, const double alpha);
+void			ft_intset(int *arr, const unsigned int size, const int value);
 
 #endif

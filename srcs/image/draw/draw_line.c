@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hook.c                                             :+:      :+:    :+:   */
+/*   draw_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,24 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "hook.h"
-#include "libft.h"
+#include "image.h"
 
-#ifndef SAN
-# define SAN 0
-#endif
-
-int	hook_button_close(const int status)
+void	image_draw_line(t_image image, const t_colour colour,
+			const t_pixelpoint start, const t_pixelpoint end)
 {
-	ft_putendl_fd("Game Closed", 2);
-	// if (!SAN)
-	// 	system("leaks -q cub3d");
-	exit(status);
-	return (0);
-}
+	const t_pixelpoint	distance = (t_pixelpoint){
+		end.x - start.x,
+		end.y - start.y
+	};
+	const int			total_step = ft_max(abs(distance.x), abs(distance.y));
+	const t_point		step_length = (t_point){
+		.x = distance.x / (double)total_step,
+		.y = distance.y / (double)total_step
+	};
+	int					step;
 
-int	hook_log(const char *message)
-{
-	ft_printf("%s\n", message);
-	return (0);
+	step = -1;
+	while (++step < total_step)
+	{
+		image_draw_pixel(image, colour, (t_pixelpoint){
+			.x = start.x + (step_length.x * step),
+			.y = start.y + (step_length.y * step)});
+	}
 }

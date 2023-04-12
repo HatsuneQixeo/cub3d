@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hook.c                                             :+:      :+:    :+:   */
+/*   image_put.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,24 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "hook.h"
-#include "libft.h"
+#include "image.h"
 
-#ifndef SAN
-# define SAN 0
-#endif
-
-int	hook_button_close(const int status)
+void	image_put(const t_mlx mlx, const t_image image, const t_pixelpoint pos)
 {
-	ft_putendl_fd("Game Closed", 2);
-	// if (!SAN)
-	// 	system("leaks -q cub3d");
-	exit(status);
-	return (0);
-}
+	t_pixelpoint	put;
 
-int	hook_log(const char *message)
-{
-	ft_printf("%s\n", message);
-	return (0);
+	ft_assert(image.p_image != NULL, "image_put: NULL image.p_image");
+	ft_assert(image.putoffset_x != NULL, "image_put: NULL putoffset_x");
+	ft_assert(image.putoffset_y != NULL, "image_put: NULL putoffset_y");
+	put = (t_pixelpoint){
+		.x = image.putoffset_x(pos.x, image.size.x),
+		.y = image.putoffset_y(pos.y, image.size.y)
+	};
+	mlx_put_image_to_window(mlx.p_mlx, mlx.p_win, image.p_image, put.x, put.y);
 }

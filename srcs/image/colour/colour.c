@@ -6,7 +6,7 @@
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/10 22:58:08 by hqixeo           ###   ########.fr       */
+/*   Updated: 2023/04/12 23:24:46 by hqixeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,43 @@
 
 /**
  * @brief 
- * (value * FF) is turning the value into mask,
- * & (bitwise and) is used to filter out the value inside the given byte
- * / is used to shift the value so that it fits into a byte
+ * (value * 0xff)
+ * turns the value into mask
+ * 
+ * & (bitwise and)
+ * filters out the value inside the given byte
+ * 
+ * /
+ * shifts the value so that it fits into a byte
  */
 t_colour_byte	colour_getmask(const t_colour colour,
 				const enum e_colour_value value)
 {
-	return ((colour & (value * 0xFF)) / value);
+	return ((colour & (value * 0xff)) / value);
 }
 
+/**
+ * @brief 
+ * 
+ * (value * 0xff)
+ * turns the value into mask
+ * 
+ * & (bitwise and)
+ * in combination with
+ * ~ (bitwise not)
+ * preserve the value in other mask, filter out the value in given mask
+ * 
+ * (set * value)
+ * shifts the byte into the belonging mask
+ * 
+ * |
+ * adds the value into the mask
+ * 
+ */
 void	colour_setmask(t_colour *colour, const t_colour_byte set,
 			const enum e_colour_value value)
 {
-	*colour = (*colour & ~(value * 0xFF)) | (set * value);
+	*colour = (*colour & ~(value * 0xff)) | (set * value);
 }
 
 t_colour	colour_from_rgba(const t_colour_byte red,
@@ -50,8 +73,17 @@ t_colour	colour_from_percentage(const double red, const double green,
 	ft_assert(0 <= blue && blue <= 1, "blue is not between 0 and 1");
 	ft_assert(0 <= alpha && alpha <= 1, "alpha is not between 0 and 1");
 	return (colour_from_rgba(
-			(t_colour_byte)(red * 0xFF),
-			(t_colour_byte)(green * 0xFF),
-			(t_colour_byte)(blue * 0xFF),
-			(t_colour_byte)(alpha * 0xFF)));
+			red * 0xff,
+			green * 0xff,
+			blue * 0xff,
+			alpha * 0xff));
+}
+
+void	ft_intset(int *arr, const unsigned int size, const int value)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < size)
+		arr[i++] = value;
 }

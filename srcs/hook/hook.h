@@ -1,12 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hook.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/12 23:24:47 by hqixeo            #+#    #+#             */
+/*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef HOOK_H
 # define HOOK_H
 
 /**
  * @brief These are events that will trigger the hook based on given condition
  * 
- * KEY:				refers to keyboard's key
- * BUTTON:			refers to mouse's button
- * DESTROYNOTIFY:	refers to the red x a the upper left corner of the window
+ * KEY:		refers to keyboard's key
+ * BUTTON:	refers to mouse's button
+ * MOTION:	refers to mouse's movement
+ * EXPOSE:	refers to the window's gaining focus
+ * DESTROY:	refers to the red cross at the upper left corner of the window,
+ * 			don't think mlx_close_window can trigger it?
+ * 
+ * Can't get the rest to trigger,
+ * not that any of them really contribute to this project anyway.
  */
 enum e_x11events
 {
@@ -48,8 +66,7 @@ enum e_x11events
 };
 
 /**
- * @brief To be continued
- * 
+ * @brief To be honest, I don't believe they are doing anything
  */
 enum e_x11masks
 {
@@ -81,6 +98,13 @@ enum e_x11masks
 	OwnerGrabButtonMask = (1L<<24),
 };
 
-int	hook_button_close(const int keycode, const int status);
+enum e_input
+{
+	Release,
+	Press
+};
+
+int	hook_button_close(const int status);
+int	hook_log(const char *message);
 
 #endif

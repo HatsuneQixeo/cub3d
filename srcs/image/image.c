@@ -1,11 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   image.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/12 23:24:46 by hqixeo            #+#    #+#             */
+/*   Updated: 2023/04/12 23:24:46 by hqixeo           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "image.h"
 
-unsigned int	size_area(const t_size size)
+static t_colour	*image_getdata(void *p_image)
 {
-	return (size.x * size.y);
+	int	var_void;
+
+	return ((t_colour *)mlx_get_data_addr(p_image,
+			&var_void, &var_void, &var_void));
 }
 
-t_image	image_create(void *p_mlx, const t_size size)
+t_image	image_create(void *p_mlx, const t_pixelpoint size,
+			t_offset putoffset_x, t_offset putoffset_y)
 {
 	t_image	image;
 
@@ -13,12 +29,20 @@ t_image	image_create(void *p_mlx, const t_size size)
 	image.p_image = mlx_new_image(p_mlx, size.x, size.y);
 	if (image.p_image == NULL)
 		return (image);
-	image.data = (t_colour *)mlx_get_data_addr(image.p_image,
-			(int[1]){0}, (int[1]){0}, (int[1]){0});
+	image.data = image_getdata(image.p_image);
+	image.putoffset_x = putoffset_x;
+	image.putoffset_y = putoffset_y;
 	image.size = size;
 	return (image);
 }
 
+/*
+	Not sure if the return value is really describing anything about the error
+
+	a file format error?
+	a file error?
+	a mlx error?
+*/
 t_image	image_readxpm(void *p_mlx, const char *path)
 {
 	t_image	image;
@@ -30,8 +54,7 @@ t_image	image_readxpm(void *p_mlx, const char *path)
 			&image.size.x, &image.size.y);
 	if (image.p_image == NULL)
 		return (image);
-	image.data = (t_colour *)mlx_get_data_addr(image.p_image,
-			(int[1]){0}, (int[1]){0}, (int[1]){0});
+	image.data = image_getdata(image.p_image);
 	return (image);
 }
 
@@ -39,9 +62,4 @@ void	image_destroy(void *p_mlx, t_image *image)
 {
 	mlx_destroy_image(p_mlx, image->p_image);
 	ft_bzero(image, sizeof(*image));
-}
-
-void	image_put(t_mlx mlx, t_image *p_image, t_size pos)
-{
-	mlx_put_image_to_window(mlx.p_mlx, mlx.p_win, p_image->p_image, 0, 0);
 }

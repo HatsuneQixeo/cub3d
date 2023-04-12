@@ -6,7 +6,7 @@
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/10 22:58:08 by hqixeo           ###   ########.fr       */
+/*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,11 @@ static t_point	keys_to_vector(const t_keys keys,
 
 t_point	player_vector(const t_keys keys)
 {
-	const double		move_speed = 1;
 	const t_key_vector	key_vectors[] = {
-	{.key_index = Key_W, .vector = {.x = 00, .y = -move_speed}},
-	{.key_index = Key_A, .vector = {.x = -(move_speed / 2), .y = 00}},
-	{.key_index = Key_S, .vector = {.x = 00, .y = +(move_speed / 2)}},
-	{.key_index = Key_D, .vector = {.x = +(move_speed / 2), .y = 00}},
+	{.key_index = Key_W, .vector = {.x = 00, .y = -1}},
+	{.key_index = Key_A, .vector = {.x = -1, .y = 00}},
+	{.key_index = Key_S, .vector = {.x = 00, .y = +1}},
+	{.key_index = Key_D, .vector = {.x = +1, .y = 00}},
 	};
 	const size_t		len = sizeof(key_vectors) / sizeof(key_vectors[0]);
 

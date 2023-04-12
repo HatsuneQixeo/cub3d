@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   key.c                                              :+:      :+:    :+:   */
+/*   hook_key.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/10 22:58:08 by hqixeo           ###   ########.fr       */
+/*   Updated: 2023/04/12 23:24:46 by hqixeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	find_key(unsigned int i, const void *arr_key_pair,
 }
 
 static int	key_action(t_keys keys, const int keycode,
-				const enum e_key_action key_action)
+				const enum e_input key_action)
 {
 	const t_key_pair	key_pairs[] = {
 	{.keycode = 13, .key_index = Key_W},

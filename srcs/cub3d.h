@@ -6,7 +6,7 @@
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/10 22:58:08 by hqixeo           ###   ########.fr       */
+/*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 # define CUB3D_H
 
 # include "libft.h"
-# include <math.h>
 # include "point.h"
 # include "hook_key.h"
+# include "hook_mouse.h"
 # include "image.h"
 
 typedef struct s_player
@@ -46,8 +46,8 @@ typedef struct s_player
 
 typedef struct s_map
 {
-	t_size	size;
-	char	**layout;
+	t_pixelpoint	size;
+	char			**layout;
 }			t_map;
 
 typedef struct s_game
@@ -58,9 +58,24 @@ typedef struct s_game
 	t_player	player;
 	// t_ray		ray;
 	t_keys		keys;
+	t_mouse		mouse;
 	t_map		map;
 }			t_game;
 
+enum e_screen_size
+{
+	ScreenWidth = 1280,
+	ScreenHeight = 720,
+	BorderWidth = ScreenWidth / 16,
+	BorderHeight = ScreenHeight / 16
+};
+
 t_point	player_vector(const t_keys keys);
+
+int		hook_loop(t_game *game);
+
+t_game	game_init(void);
+void	events(t_game *game);
+void	beta_screen_buffer(t_image screen_buffer);
 
 #endif
