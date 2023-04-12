@@ -22,19 +22,16 @@ typedef struct s_point
 }			t_point;
 
 /* Utilities */
-unsigned int	pixelpoint_area(const t_point size);
-double			point_magnitude(const t_point point);
-double			point_distance(const t_point point1, const t_point point2);
-double			point_dot(const t_point point1, const t_point point2);
-double			point_cross(const t_point point1, const t_point point2);
+double	point_magnitude(const t_point point);
+double	point_distance(const t_point point1, const t_point point2);
+double	point_dot(const t_point point1, const t_point point2);
+double	point_cross(const t_point point1, const t_point point2);
 
 /* Operators */
-t_point			point_add(const t_point point1, const t_point point2);
-t_point			point_sub(const t_point point1, const t_point point2);
-t_point			point_scale(const t_point point, const double scale);
-t_point			point_unscale(const t_point point, const double scale);
-
-/* Conversion */
-t_point			point_round(const t_point point, double (*ft_round)(double));
+t_point	point_add(const t_point point1, const t_point point2);
+t_point	point_sub(const t_point point1, const t_point point2);
+t_point	point_scale(const t_point point, const double scale);
+t_point	point_unscale(const t_point point, const double scale);
+t_point	point_round(const t_point point, double (*ft_round)(double));
 
 #endif

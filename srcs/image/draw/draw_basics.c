@@ -51,10 +51,11 @@ void	image_draw_rectangle(t_image image, const t_colour colour,
 
 void	image_fill(t_image image, const t_colour colour)
 {
-	image_draw_rectangle(image, colour, (t_point){0, 0}, image.size);
+	// image_draw_rectangle(image, colour, (t_point){0, 0}, image.size);
+	ft_intset((int *)image.data, image.size.x * image.size.y, colour);
 }
 
 void	image_clear(t_image image)
 {
-	image_fill(image, colour_from_percentage(0, 0, 0, 1));
+	image_fill(image, colour_from_rgba(0, 0, 0, 255));
 }

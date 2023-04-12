@@ -19,13 +19,33 @@ static t_texture	texture_init(void *p_mlx)
 	ft_bzero(&texture, sizeof(t_texture));
 	texture.player_icon = image_create(p_mlx, (t_point){.x = 17, .y = 17},
 			putoffset_centered, putoffset_centered);
+	ft_assert(texture.player_icon.p_image != NULL,
+		"image_create() for player_icon failed");
 	image_fill_circle(texture.player_icon,
 		colour_from_percentage(.3, .7, .5, .75));
-	texture.mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
-			putoffset_centered, putoffset_centered);
-	image_fill_circle(texture.mouse_icon,
-		colour_from_percentage(.3, .7, .8, .75));
+	texture.mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
+			putoffset_default, putoffset_default);
+	ft_assert(texture.mouse_icon.p_image != NULL,
+		"image_readxpm() for mouse_icon failed");
+	// texture.mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
+	// 		putoffset_centered, putoffset_centered);
+	// image_fill_circle(texture.mouse_icon,
+	// 	colour_from_percentage(.3, .7, .8, .75));
 	return (texture);
+}
+
+static t_mouse	mouse_init(void *p_win)
+{
+	t_mouse	mouse;
+	int		x;
+	int		y;
+
+	mlx_mouse_move(p_win, ScreenWidth / 2, ScreenHeight / 2);
+	mlx_mouse_get_pos(p_win, &x, &y);
+	mouse.pos = (t_point){.x = x, .y = y};
+	mouse.press = (t_point){.x = -1, .y = -1};
+	mouse.left_click = Release;
+	return (mouse);
 }
 
 /* Initialization and assertion */
@@ -47,11 +67,7 @@ t_game	game_init(void)
 	ft_assert(game.screen_buffer.p_image != NULL,
 		"image_create() for screen_buffer failed");
 	game.texture = texture_init(game.mlx.p_mlx);
-	{
-		game.mouse.pos = (t_point){.x = -1, .y = -1};
-		game.mouse.press = (t_point){.x = -1, .y = -1};
-		game.mouse.left_click = Release;
-	}
+	game.mouse = mouse_init(game.mlx.p_win);
 	ft_intset(game.keys, key_count, Release);
 	// game.map /* In map parsing */
 	// game.player /* In map parsing */

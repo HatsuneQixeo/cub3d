@@ -47,3 +47,12 @@ t_point	point_unscale(const t_point point, const double scale)
 	new_point.y = point.y / scale;
 	return (new_point);
 }
+
+t_point	point_round(const t_point point, double (*ft_round)(double))
+{
+	t_point	new_point;
+
+	new_point.x = ft_round(point.x);
+	new_point.y = ft_round(point.y);
+	return (new_point);
+}

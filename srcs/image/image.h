@@ -62,7 +62,8 @@ typedef struct s_mlx
 /* Image Creation */
 t_image	image_create(void *p_mlx, const t_point size,
 			t_offset putoffset_x, t_offset putoffset_y);
-t_image	image_readxpm(void *p_mlx, const char *path);
+t_image	image_readxpm(void *p_mlx, const char *path,
+			t_offset putoffset_x, t_offset putoffset_y);
 void	image_destroy(void *p_mlx, t_image *image);
 
 /* Image Manipulation */

@@ -13,10 +13,6 @@
 #include "hook.h"
 #include "libft.h"
 
-#ifndef SAN
-# define SAN 0
-#endif
-
 int	hook_button_close(const int status)
 {
 	ft_putendl_fd("Game Closed", 2);

@@ -75,6 +75,5 @@ thisre:
 norm:
 	@norminette ${SRC_DIR} ${HEADER}
 
-
 normltr:
 	@norminette -R CheckForbiddenSourceHeader ${SRC_DIR} ${HEADER} | grep -v INVALID_HEADER | grep -v WRONG_SCOPE_COMMENT # | grep -v LINE_TOO_LONG

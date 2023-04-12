@@ -43,7 +43,8 @@ t_image	image_create(void *p_mlx, const t_point size,
 	a file error?
 	a mlx error?
 */
-t_image	image_readxpm(void *p_mlx, const char *path)
+t_image	image_readxpm(void *p_mlx, const char *path,
+			t_offset putoffset_x, t_offset putoffset_y)
 {
 	t_image	image;
 	int		width;
@@ -57,6 +58,8 @@ t_image	image_readxpm(void *p_mlx, const char *path)
 		return (image);
 	image.size = (t_point){.x = width, .y = height};
 	image.data = image_getdata(image.p_image);
+	image.putoffset_x = putoffset_x;
+	image.putoffset_y = putoffset_y;
 	return (image);
 }
 

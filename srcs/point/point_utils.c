@@ -12,11 +12,6 @@
 
 #include "point.h"
 
-unsigned int	pixelpoint_area(const t_point size)
-{
-	return (size.x * size.y);
-}
-
 double	point_magnitude(const t_point point)
 {
 	return (sqrt(pow(point.x, 2) + pow(point.y, 2)));
