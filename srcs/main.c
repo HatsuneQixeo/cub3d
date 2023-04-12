@@ -75,8 +75,8 @@ t_offset	offset_direction(const double direction)
 		return (putoffset_default);
 }
 
-void	start_to_end(t_pixelpoint *start, t_pixelpoint *end,
-			const t_pixelpoint size, const t_point direction)
+void	start_to_end(t_point *start, t_point *end,
+			const t_point size, const t_point direction)
 {
 	ft_bzero(start, sizeof(*start));
 	*end = size;
@@ -94,11 +94,11 @@ void	start_to_end(t_pixelpoint *start, t_pixelpoint *end,
 
 void	cast_a_ray(const t_mlx mlx, const t_point player, const t_point cursor)
 {
-	const t_point		direction = point_sub(player, cursor);
-	const t_pixelpoint	size = to_pixelpoint((t_point){.x = ft_max(fabs(direction.x), 1), .y = ft_max(fabs(direction.y), 1)});
-	t_image				ray;
-	t_pixelpoint		start;
-	t_pixelpoint		end;
+	const t_point	direction = point_sub(player, cursor);
+	const t_point	size = point_round((t_point){.x = ft_max(fabs(direction.x), 1), .y = ft_max(fabs(direction.y), 1)}, round);
+	t_image			ray;
+	t_point			start;
+	t_point			end;
 
 	ray = image_create(mlx.p_mlx, size, NULL, NULL);
 	ft_assert(ray.data != NULL, "cast_a_ray: Image creation failed");
@@ -107,7 +107,7 @@ void	cast_a_ray(const t_mlx mlx, const t_point player, const t_point cursor)
 	start_to_end(&start, &end, size, direction);
 	image_clear(ray);
 	image_draw_line(ray, colour_from_percentage(.9, .2, .1, .4), start, end);
-	image_put(mlx, ray, to_pixelpoint(player));
+	image_put(mlx, ray, point_round(player, round));
 }
 
 void	test_rotate(const t_point dir)
@@ -135,10 +135,10 @@ int	hook_loop(t_game *game)
 		// if (angle != 0)
 		// 	printf("angle: %f\n", angle);
 	}
-	image_put(game->mlx, game->screen_buffer, (t_pixelpoint){0, 0});
+	image_put(game->mlx, game->screen_buffer, (t_point){0, 0});
 	if (display_mouse(game->mouse))
 	{
-		image_put(game->mlx, game->texture.mouse_icon, to_pixelpoint(game->mouse.pos));
+		image_put(game->mlx, game->texture.mouse_icon, point_round(game->mouse.pos, round));
 		if (game->mouse.left_click == Press)
 			cast_a_ray(game->mlx, game->player.pos, game->mouse.pos);
 	}
@@ -153,7 +153,7 @@ int	hook_loop(t_game *game)
 	}
 	prev_pos = game->mouse.pos;
 	point_move(&game->player.pos, vector);
-	image_put(game->mlx, game->texture.player_icon, to_pixelpoint(game->player.pos));
+	image_put(game->mlx, game->texture.player_icon, point_round(game->player.pos, round));
 	/*
 		Rotation seems to be on point,
 		should be able to draw a line starting with player position,
@@ -174,7 +174,7 @@ int	main(void)
 		Might come in handy if you get annoyed by the trace
 	*/
 	// image_fill(game.screen_buffer, colour_from_rgba(100, 100, 100, 0));
-	// image_put(game.mlx, game.screen_buffer, (t_pixelpoint){.x = 0, .y = 0});
+	// image_put(game.mlx, game.screen_buffer, (t_point){.x = 0, .y = 0});
 	beta_screen_buffer(game.screen_buffer);
 	events(&game);
 	mlx_loop(game.mlx.p_mlx);

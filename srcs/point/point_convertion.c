@@ -12,13 +12,7 @@
 
 #include "point.h"
 
-t_pixelpoint	to_pixelpoint(const t_point point)
+t_point	point_round(const t_point point, double (*ft_round)(double))
 {
-	// return ((t_pixelpoint){.x = round(point.x), .y = round(point.y)});
-	return ((t_pixelpoint){.x = point.x, .y = point.y});
-}
-
-t_point	to_point(const t_pixelpoint pixelpoint)
-{
-	return ((t_point){.x = pixelpoint.x, .y = pixelpoint.y});
+	return ((t_point){.x = ft_round(point.x), .y = ft_round(point.y)});
 }

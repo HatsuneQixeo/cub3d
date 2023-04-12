@@ -12,17 +12,17 @@
 
 #include "image.h"
 
-int	putoffset_default(const int pos, const int size)
+double	putoffset_default(const double pos, const double size)
 {
 	return (pos);
 }
 
-int	putoffset_centered(const int pos, const int size)
+double	putoffset_centered(const double pos, const double size)
 {
 	return (pos - size / 2);
 }
 
-int	putoffset_inverted(const int pos, const int size)
+double	putoffset_inverted(const double pos, const double size)
 {
 	return (pos - size);
 }

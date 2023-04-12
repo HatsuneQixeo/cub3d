@@ -17,11 +17,11 @@ static t_texture	texture_init(void *p_mlx)
 	t_texture	texture;
 
 	ft_bzero(&texture, sizeof(t_texture));
-	texture.player_icon = image_create(p_mlx, (t_pixelpoint){.x = 17, .y = 17},
+	texture.player_icon = image_create(p_mlx, (t_point){.x = 17, .y = 17},
 			putoffset_centered, putoffset_centered);
 	image_fill_circle(texture.player_icon,
 		colour_from_percentage(.3, .7, .5, .75));
-	texture.mouse_icon = image_create(p_mlx, (t_pixelpoint){.x = 25, .y = 25},
+	texture.mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
 			putoffset_centered, putoffset_centered);
 	image_fill_circle(texture.mouse_icon,
 		colour_from_percentage(.3, .7, .8, .75));
@@ -32,7 +32,7 @@ static t_texture	texture_init(void *p_mlx)
 t_game	game_init(void)
 {
 	t_game		game;
-	const t_mlx mlx = {
+	const t_mlx	mlx = {
 		.p_mlx = mlx_init(),
 		.p_win = mlx_new_window(mlx.p_mlx, ScreenWidth, ScreenHeight, "cub3d")
 	};
@@ -42,7 +42,7 @@ t_game	game_init(void)
 	ft_assert(mlx.p_win != NULL, "mlx_new_window() failed");
 	game.mlx = mlx;
 	game.screen_buffer = image_create(game.mlx.p_mlx,
-			(t_pixelpoint){.x = ScreenWidth, .y = ScreenHeight},
+			(t_point){.x = ScreenWidth, .y = ScreenHeight},
 			putoffset_default, putoffset_default);
 	ft_assert(game.screen_buffer.p_image != NULL,
 		"image_create() for screen_buffer failed");
@@ -83,23 +83,23 @@ void	events(t_game *game)
 /* Temporary background */
 void	beta_screen_buffer(t_image buffer)
 {
-	const t_pixelpoint	topleft = {
+	const t_point	topleft = {
 		.x = BorderWidth,
 		.y = BorderHeight
 	};
-	const t_pixelpoint	bottomright = {
+	const t_point	bottomright = {
 		.x = ScreenWidth - BorderWidth,
 		.y = ScreenHeight - BorderHeight
 	};
-	const t_pixelpoint	topright = {
+	const t_point	topright = {
 		.x = ScreenWidth - BorderWidth,
 		.y = BorderHeight
 	};
-	const t_pixelpoint	bottomleft = {
+	const t_point	bottomleft = {
 		.x = BorderWidth,
 		.y = ScreenHeight - BorderHeight
 	};
-	const t_pixelpoint	center = {
+	const t_point	center = {
 		.x = ScreenWidth / 2,
 		.y = ScreenHeight / 2
 	};
@@ -110,13 +110,13 @@ void	beta_screen_buffer(t_image buffer)
 	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0), bottomright, topleft);
 	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0), topright, bottomleft);
 	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0),
-		(t_pixelpoint){.x = center.x, .y = bottomleft.y},
-		(t_pixelpoint){.x = center.x, .y = topleft.y});
+		(t_point){.x = center.x, .y = bottomleft.y},
+		(t_point){.x = center.x, .y = topleft.y});
 	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0),
-		(t_pixelpoint){.x = topright.x, .y = center.y},
-		(t_pixelpoint){.x = topleft.x, .y = center.y});
+		(t_point){.x = topright.x, .y = center.y},
+		(t_point){.x = topleft.x, .y = center.y});
 	draw_filled_circle(buffer, colour_from_percentage(0.2, 0.4, 0.9, 0.3),
-		(t_pixelpoint){.x = center.x + center.x / 2, .y = center.y}, 100);
+		(t_point){.x = center.x + center.x / 2, .y = center.y}, 100);
 	image_draw_circle(buffer, colour_from_percentage(0.2, 0.4, 0.9, 0.3),
-		(t_pixelpoint){.x = center.x - center.x / 2, .y = center.y}, 100);
+		(t_point){.x = center.x - center.x / 2, .y = center.y}, 100);
 }

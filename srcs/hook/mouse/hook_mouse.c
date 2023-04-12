@@ -14,6 +14,7 @@
 #include "libft.h"
 
 #if 0
+
 typedef struct s_button_pair
 {
 	enum e_mouse	button;

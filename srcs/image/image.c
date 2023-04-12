@@ -20,7 +20,7 @@ static t_colour	*image_getdata(void *p_image)
 			&var_void, &var_void, &var_void));
 }
 
-t_image	image_create(void *p_mlx, const t_pixelpoint size,
+t_image	image_create(void *p_mlx, const t_point size,
 			t_offset putoffset_x, t_offset putoffset_y)
 {
 	t_image	image;
@@ -46,14 +46,16 @@ t_image	image_create(void *p_mlx, const t_pixelpoint size,
 t_image	image_readxpm(void *p_mlx, const char *path)
 {
 	t_image	image;
+	int		width;
+	int		height;
 
 	ft_bzero(&image, sizeof(image));
 	if (cmp_strsuffix(path, ".xpm"))
 		return (image);
-	image.p_image = mlx_xpm_file_to_image(p_mlx, (char *)path,
-			&image.size.x, &image.size.y);
+	image.p_image = mlx_xpm_file_to_image(p_mlx, (char *)path, &width, &height);
 	if (image.p_image == NULL)
 		return (image);
+	image.size = (t_point){.x = width, .y = height};
 	image.data = image_getdata(image.p_image);
 	return (image);
 }

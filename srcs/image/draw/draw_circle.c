@@ -12,35 +12,35 @@
 
 #include "image.h"
 
-static void	doro(t_image image, const t_colour colour, const t_pixelpoint center,
-			const t_pixelpoint point)
+static void	doro(t_image image, const t_colour colour, const t_point center,
+			const t_point point)
 {
 	image_draw_pixel(image, colour,
-		(t_pixelpoint){center.x + point.x, center.y + point.y});
+		(t_point){center.x + point.x, center.y + point.y});
 	image_draw_pixel(image, colour,
-		(t_pixelpoint){center.x + point.y, center.y + point.x});
+		(t_point){center.x + point.y, center.y + point.x});
 	image_draw_pixel(image, colour,
-		(t_pixelpoint){center.x - point.x, center.y + point.y});
+		(t_point){center.x - point.x, center.y + point.y});
 	image_draw_pixel(image, colour,
-		(t_pixelpoint){center.x - point.y, center.y + point.x});
+		(t_point){center.x - point.y, center.y + point.x});
 	image_draw_pixel(image, colour,
-		(t_pixelpoint){center.x + point.x, center.y - point.y});
+		(t_point){center.x + point.x, center.y - point.y});
 	image_draw_pixel(image, colour,
-		(t_pixelpoint){center.x + point.y, center.y - point.x});
+		(t_point){center.x + point.y, center.y - point.x});
 	image_draw_pixel(image, colour,
-		(t_pixelpoint){center.x - point.x, center.y - point.y});
+		(t_point){center.x - point.x, center.y - point.y});
 	image_draw_pixel(image, colour,
-		(t_pixelpoint){center.x - point.y, center.y - point.x});
+		(t_point){center.x - point.y, center.y - point.x});
 }
 
 /* Outline */
 void	image_draw_circle(t_image image, const t_colour colour,
-				const t_pixelpoint center, const unsigned int radius)
+				const t_point center, const unsigned int radius)
 {
-	t_pixelpoint	point;
-	int				error;
+	t_point	point;
+	int		error;
 
-	point = (t_pixelpoint){.x = 0, .y = radius};
+	point = (t_point){.x = 0, .y = radius};
 	error = 1 - radius;
 	while (point.x <= point.y)
 	{
@@ -62,9 +62,9 @@ void	image_draw_circle(t_image image, const t_colour colour,
 }
 
 void	draw_filled_circle(t_image image, const t_colour colour,
-			const t_pixelpoint center, const int radius)
+			const t_point center, const int radius)
 {
-	t_pixelpoint	index;
+	t_point	index;
 
 	index.y = center.y - radius - 1;
 	while (++index.y < center.y + radius)
@@ -72,7 +72,7 @@ void	draw_filled_circle(t_image image, const t_colour colour,
 		index.x = center.x - radius - 1;
 		while (++index.x < center.x + radius)
 		{
-			if (point_distance(to_point(index), to_point(center)) <= radius)
+			if (point_distance(index, center) <= radius)
 				image_draw_pixel(image, colour, index);
 		}
 	}
@@ -80,12 +80,12 @@ void	draw_filled_circle(t_image image, const t_colour colour,
 
 void	image_fill_circle(t_image image, t_colour colour)
 {
-	const t_pixelpoint	center = (t_pixelpoint){
+	const t_point	center = (t_point){
 		.x = image.size.x / 2,
 		.y = image.size.y / 2
 	};
-	const int			min = ft_min(image.size.x, image.size.y);
-	const double		radius = (double)(min - !(min & 0b1)) / 2;
+	const int		min = ft_min(image.size.x, image.size.y);
+	const double	radius = (double)(min - !(min & 0b1)) / 2;
 
 	image_clear(image);
 	// printf("image_fill_circle(): center = (%d, %d), radius = %f\n",

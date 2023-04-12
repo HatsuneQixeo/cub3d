@@ -46,8 +46,8 @@ typedef struct s_player
 
 typedef struct s_map
 {
-	t_pixelpoint	size;
-	char			**layout;
+	t_point	size;
+	char	**layout;
 }			t_map;
 
 typedef struct s_game

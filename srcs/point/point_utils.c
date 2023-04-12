@@ -12,7 +12,7 @@
 
 #include "point.h"
 
-unsigned int	pixelpoint_area(const t_pixelpoint size)
+unsigned int	pixelpoint_area(const t_point size)
 {
 	return (size.x * size.y);
 }
