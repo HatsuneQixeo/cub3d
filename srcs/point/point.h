@@ -26,6 +26,7 @@ double	point_magnitude(const t_point point);
 double	point_distance(const t_point point1, const t_point point2);
 double	point_dot(const t_point point1, const t_point point2);
 double	point_cross(const t_point point1, const t_point point2);
+t_point	point_rotate(const t_point point, const double angle);
 
 /* Operators */
 t_point	point_add(const t_point point1, const t_point point2);
@@ -33,5 +34,7 @@ t_point	point_sub(const t_point point1, const t_point point2);
 t_point	point_scale(const t_point point, const double scale);
 t_point	point_unscale(const t_point point, const double scale);
 t_point	point_round(const t_point point, double (*ft_round)(double));
+
+void	point_log(const char *prefix, const t_point point);
 
 #endif

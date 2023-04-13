@@ -12,21 +12,7 @@
 
 #include "cub3d.h"
 
-t_point	point_rotate(const t_point point, const double angle)
-{
-	t_point	new_point;
-
-	new_point.x = point.x * cos(angle) - point.y * sin(angle);
-	new_point.y = point.x * sin(angle) + point.y * cos(angle);
-	return (new_point);
-}
-
-void	point_log(const char *prefix, const t_point point)
-{
-	printf("%sx: %f, y: %f\n", prefix, point.x, point.y);
-}
-
-void	point_move(t_point *point, const t_point vector)
+void	point_move_player(t_point *point, const t_point vector)
 {
 	const double	speed = 6;
 
@@ -36,11 +22,6 @@ void	point_move(t_point *point, const t_point vector)
 		*point = point_add(*point, point_scale(vector, speed * .75));
 	else
 		*point = point_add(*point, point_scale(vector, speed * 1.2));
-}
-
-double	point_angle(const t_point point)
-{
-	return (atan2(point.y, point.x));
 }
 
 int	display_mouse(const t_mouse mouse)
@@ -57,102 +38,63 @@ int	display_mouse(const t_mouse mouse)
 	return (custom_cursor);
 }
 
-t_offset	offset_direction(const double direction)
+/* Just a tool for adjusting background colour */
+void	put_background(t_mlx mlx)
 {
-	if (direction > 0)
-		return (putoffset_inverted);
-	else
-		return (putoffset_default);
+	const t_point	size = (t_point){ScreenWidth, ScreenHeight};
+	t_image			image;
+	const t_colour	colour = colour_from_rgba(200, 255, 255, 210);
+
+	image = image_create(mlx.p_mlx, size, putoffset_default, putoffset_default);
+	image_fill(image, colour);
+	image_put(mlx, image, (t_point){0, 0});
+	image_destroy(mlx.p_mlx, &image);
 }
 
-void	start_to_end(t_point *start, t_point *end,
-			const t_point size, const t_point direction)
+void	player_rotate(t_point *dir, const t_mouse mouse, const t_keys keys)
 {
-	ft_bzero(start, sizeof(*start));
-	*end = size;
-	if (direction.x < 0)
-	{
-		start->x = size.x - 1;
-		end->x = -1;
-	}
-	if (direction.y < 0)
-	{
-		start->y = size.y - 1;
-		end->y = -1;
-	}
+	const int		key_direction = ((keys[Key_Left] == Press) * -1)
+				+ (keys[Key_Right] == Press);
+	const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) *.00831;
+
+	*dir = point_rotate(*dir, key_direction * 0.039);
+	*dir = point_rotate(*dir, mouse_speed);
 }
 
-void	cast_a_ray(const t_mlx mlx, const t_point player, const t_point cursor)
-{
-	const t_point	direction = point_sub(player, cursor);
-	const t_point	size = (t_point){
-		.x = ft_max(fabs(direction.x), 1),
-		.y = ft_max(fabs(direction.y), 1)
-	};
-	t_image			ray;
-	t_point			start;
-	t_point			end;
-
-	ray = image_create(mlx.p_mlx, size, NULL, NULL);
-	ft_assert(ray.data != NULL, "cast_a_ray: Image creation failed");
-	ray.putoffset_x = offset_direction(direction.x);
-	ray.putoffset_y = offset_direction(direction.y);
-	start_to_end(&start, &end, size, direction);
-	image_clear(ray);
-	image_draw_line(ray, colour_from_rgba(255, 120, 100, 20), start, end);
-	image_put(mlx, ray, player);
-}
-
-void	test_rotate(const t_point dir)
-{
-	static double	i = 0;
-
-	printf("i: %f\n", i);
-	point_log("Rotate: ", point_rotate(dir, i));
-	i += 0.1;
-}
-
-/* Should Divide the speed if both key is being pressed */
 // ft_printf("くるり廻る廻る廻る世界\n");
 int	hook_loop(t_game *game)
 {
-	const t_point	vector = player_vector(game->keys);
-
 	if (game->keys[Key_ESC] == Press)
 		hook_button_close(EXIT_SUCCESS);
-	point_move(&game->player.pos, vector);
-	image_put(game->mlx, game->screen_buffer, (t_point){0, 0});
+	/* Todo: Should probably rotate the vector to fit the direction */
+	point_move_player(&game->player.pos, player_vector(game->keys));
+	/* Background render */
+	{
+		mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
+		put_background(game->mlx);
+		image_put(game->mlx, game->screen_buffer, (t_point){0, 0});
+		/* Minimap */
+		image_put(game->mlx, game->texture.minimap, (t_point){0, 0});
+	}
 	if (display_mouse(game->mouse))
 	{
 		image_put(game->mlx, game->texture.mouse_icon, game->mouse.pos);
 		if (game->mouse.left_click == Press)
-			cast_a_ray(game->mlx, game->player.pos, game->mouse.pos);
+			cast_a_ray(game->mlx, game->player.pos, point_sub(game->player.pos, game->mouse.pos));
 	}
 	image_put(game->mlx, game->texture.player_icon, game->player.pos);
-	// test_rotate(game->player.dir);
 	/* Show angle */
 	{
 		// const double	angle = point_angle(point_sub(game->mouse.pos, prev_pos));
+
 		// if (angle != 0)
 		// 	printf("angle: %f\n", angle);
 	}
-	/* Show the mouse position */
-	{
-		// point_log("Motion: ", game->mouse.pos);
-	}
 	/* Show the mouse speed */
-	{
-		static t_point	prev_pos;
-
-		if (ft_memcmp(&game->mouse.pos, &prev_pos, sizeof(t_point)))
-			point_log("speed: ", point_sub(game->mouse.pos, prev_pos));
-		prev_pos = game->mouse.pos;
-	}
-	/*
-		Rotation seems to be on point,
-		should be able to draw a line starting with player position,
-		and (sum a scaled direction vector with player pos) as end
-	*/
+	player_rotate(&game->player.dir, game->mouse, game->keys);
+	/* Render the ray */
+	cast_a_ray(game->mlx, game->player.pos, point_scale(game->player.dir, 831 / 2));
+	game->mouse.prev_pos = game->mouse.pos;
 	return (0);
 }
 

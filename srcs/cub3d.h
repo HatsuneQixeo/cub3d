@@ -17,7 +17,9 @@
 # include "point.h"
 # include "hook_key.h"
 # include "hook_mouse.h"
-# include "image.h"
+# include "texture.h"
+
+# define TILE_SIZE	64
 
 typedef struct s_player
 {
@@ -67,10 +69,15 @@ enum e_screen_size
 	ScreenWidth = 1280,
 	ScreenHeight = 720,
 	BorderWidth = ScreenWidth / 16,
-	BorderHeight = ScreenHeight / 16
+	BorderHeight = ScreenHeight / 16,
+	MinimapWidth = 160,
+	MinimapHeight = 160,
+	MnmBorderWidth = MinimapWidth / 16,
+	MnmBorderHeight = MinimapHeight / 16,
 };
 
 t_point	player_vector(const t_keys keys);
+void	cast_a_ray(const t_mlx mlx, const t_point player, const t_point direction);
 
 int		hook_loop(t_game *game);
 

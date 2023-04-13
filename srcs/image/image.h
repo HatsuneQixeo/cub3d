@@ -18,20 +18,17 @@
 # include "colour.h"
 # include <mlx.h>
 
-enum e_wall_texture_index
-{
-	North,
-	East,
-	South,
-	West,
-	wall_texture_count
-};
-
 typedef double	(*t_offset)(const double pos, const double size);
 /* Image Offset */
 double	putoffset_default(const double pos, const double size);
 double	putoffset_centered(const double pos, const double size);
 double	putoffset_inverted(const double pos, const double size);
+
+typedef struct s_mlx
+{
+	void	*p_mlx;
+	void	*p_win;
+}			t_mlx;
 
 typedef struct s_image
 {
@@ -41,23 +38,6 @@ typedef struct s_image
 	t_offset	putoffset_y;
 	t_point		size;
 }				t_image;
-
-typedef t_image	t_wall_textures[wall_texture_count];
-
-typedef struct s_texture
-{
-	t_wall_textures	walls;
-	t_image			player_icon;
-	t_image			mouse_icon;
-	t_colour		colour_floor;
-	t_colour		colour_ceiling;
-}			t_texture;
-
-typedef struct s_mlx
-{
-	void	*p_mlx;
-	void	*p_win;
-}			t_mlx;
 
 /* Image Creation */
 t_image	image_create(void *p_mlx, const t_point size,

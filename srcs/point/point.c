@@ -1,16 +1,22 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        :::      ::::::::   */
-/*   point.c                                            :+:      :+:    :+:   */
-// /*                                                    +:+ +:+         +:+     */
-// /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
-// /*                                                +#+#+#+#+#+   +#+           */
-// /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
-// /*                                                                            */
-// /* ************************************************************************** */
+// // /* ************************************************************************** */
+// // /*                                                                            */
+// // /*                                                        :::      ::::::::   */
+// /*   point.c                                            :+:      :+:    :+:   */
+// // /*                                                    +:+ +:+         +:+     */
+// // /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
+// // /*                                                +#+#+#+#+#+   +#+           */
+// // /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
+// /*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
+// // /*                                                                            */
+// // /* ************************************************************************** */
 
-// #include "point.h"
+#include "point.h"
+#include <stdio.h>
+
+void	point_log(const char *prefix, const t_point point)
+{
+	printf("%sx: %f, y: %f\n", prefix, point.x, point.y);
+}
 
 /* Bunch of math I have no idea */
 
@@ -82,4 +88,9 @@
 // 	point.x = magnitude * cos(angle);
 // 	point.y = magnitude * sin(angle);
 // 	return (point);
+// }
+
+// double	point_angle(const t_point point)
+// {
+// 	return (atan2(point.y, point.x));
 // }

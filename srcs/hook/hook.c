@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "hook.h"
-#include "libft.h"
+#include "cub3d.h"
 
 int	hook_button_close(const int status)
 {
@@ -25,5 +25,16 @@ int	hook_button_close(const int status)
 int	hook_log(const char *message)
 {
 	ft_printf("%s\n", message);
+	return (0);
+}
+
+int	hook_expose(t_game *game)
+{
+	int	x;
+	int	y;
+
+	mlx_mouse_get_pos(game->mlx.p_win, &x, &y);
+	game->mouse.pos = (t_point){.x = x, .y = y};
+	game->mouse.prev_pos = game->mouse.pos;
 	return (0);
 }

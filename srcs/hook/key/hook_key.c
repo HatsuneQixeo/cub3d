@@ -23,7 +23,7 @@ typedef struct s_key_pair
 	int	key_index;
 }			t_key_pair;
 
-void	debug_key(const char *format, ...)
+static void	debug_key(const char *format, ...)
 {
 	va_list	args;
 
@@ -51,6 +51,8 @@ static int	key_action(t_keys keys, const int keycode,
 	{.keycode = 1, .key_index = Key_S},
 	{.keycode = 2, .key_index = Key_D},
 	{.keycode = 53, .key_index = Key_ESC},
+	{.keycode = 123, .key_index = Key_Left},
+	{.keycode = 124, .key_index = Key_Right},
 	};
 	const size_t		len = (sizeof(key_pairs) / sizeof(key_pairs[0]));
 	const size_t		find = ft_arrfind(key_pairs, len, find_key, &keycode);

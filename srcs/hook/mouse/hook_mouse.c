@@ -13,6 +13,21 @@
 #include "hook_mouse.h"
 #include "libft.h"
 
+#ifndef DEBUG_BUTTON
+# define DEBUG_BUTTON	0
+#endif
+
+static void	debug_button(const char *format, ...)
+{
+	va_list	args;
+
+	if (!DEBUG_BUTTON)
+		return ;
+	va_start(args, format);
+	ft_printf_core(STDERR_FILENO, format, args);
+	va_end(args);
+}
+
 #if 0
 
 typedef struct s_button_pair
@@ -51,7 +66,8 @@ void	mouse_action(t_mouse_buttons buttons, int button,
 
 int	hook_mouse_click(int button, int x, int y, t_mouse *mouse)
 {
-	if (button != 1)
+	debug_button("mouse click: %d, x: %d, y: %d\n", button, x, y);
+	if (y < 0 || button != 1)
 		return (-1);
 	mouse->left_click = Press;
 	mouse->press = (t_point){.x = x, .y = y};
@@ -60,6 +76,7 @@ int	hook_mouse_click(int button, int x, int y, t_mouse *mouse)
 
 int	hook_mouse_release(int button, int x, int y, t_mouse *mouse)
 {
+	debug_button("mouse release: %d, x: %d, y: %d\n", button, x, y);
 	if (button != 1)
 		return (-1);
 	mouse->left_click = Release;

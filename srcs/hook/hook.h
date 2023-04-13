@@ -104,7 +104,12 @@ enum e_input
 	Press
 };
 
+typedef struct s_game	t_game;
+
 int	hook_button_close(const int status);
 int	hook_log(const char *message);
+
+int	hook_expose(t_game *game);
+int	hook_loop(t_game *game);
 
 #endif

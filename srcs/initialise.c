@@ -17,33 +17,48 @@ static t_texture	texture_init(void *p_mlx)
 	t_texture	texture;
 
 	ft_bzero(&texture, sizeof(t_texture));
-	texture.player_icon = image_create(p_mlx, (t_point){.x = 17, .y = 17},
-			putoffset_centered, putoffset_centered);
-	ft_assert(texture.player_icon.p_image != NULL,
-		"image_create() for player_icon failed");
-	image_fill_circle(texture.player_icon,
-		colour_from_percentage(.3, .7, .5, .75));
-	texture.mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
-			putoffset_default, putoffset_default);
-	ft_assert(texture.mouse_icon.p_image != NULL,
-		"image_readxpm() for mouse_icon failed");
-	// texture.mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
-	// 		putoffset_centered, putoffset_centered);
-	// image_fill_circle(texture.mouse_icon,
-	// 	colour_from_percentage(.3, .7, .8, .75));
+	{
+		texture.player_icon = image_create(p_mlx, (t_point){.x = 17, .y = 17},
+				putoffset_centered, putoffset_centered);
+		ft_assert(texture.player_icon.p_image != NULL,
+			"image_create() for player_icon failed");
+		image_fill_circle(texture.player_icon,
+			colour_from_percentage(.3, .7, .5, .75));
+	}
+	{
+		texture.mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
+				putoffset_default, putoffset_default);
+		ft_assert(texture.mouse_icon.p_image != NULL,
+			"image_readxpm() for mouse_icon failed");
+		// texture.mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
+		// 		putoffset_centered, putoffset_centered);
+		// image_fill_circle(texture.mouse_icon,
+		// 	colour_from_percentage(.3, .7, .8, .75));
+	}
+	{
+		texture.minimap = image_create(p_mlx,
+				(t_point){.x = MinimapWidth, .y = MinimapHeight},
+				putoffset_default, putoffset_default);
+		ft_assert(texture.minimap.p_image != NULL,
+			"image_create() for minimap failed");
+		image_fill(texture.minimap, colour_from_percentage(.20, .40, .40, .70));
+		image_draw_rectangle(texture.minimap, colour_from_percentage(.70, .90, .90, .70),
+			(t_point){0, 0},
+			// (t_point){.x = MnmBorderWidth, .y = MnmBorderHeight},
+			(t_point){
+				.x = MinimapWidth - MnmBorderWidth,
+				.y = MinimapHeight - MnmBorderHeight
+			});
+	}
 	return (texture);
 }
 
 static t_mouse	mouse_init(void *p_win)
 {
 	t_mouse	mouse;
-	int		x;
-	int		y;
 
-	mlx_mouse_move(p_win, ScreenWidth / 2, ScreenHeight / 2);
-	mlx_mouse_get_pos(p_win, &x, &y);
-	mouse.pos = (t_point){.x = x, .y = y};
-	mouse.press = (t_point){.x = -1, .y = -1};
+	// mlx_mouse_move(p_win, ScreenWidth / 2, ScreenHeight / 2);
+	// mouse.press = (t_point){.x = -1, .y = -1};
 	mouse.left_click = Release;
 	return (mouse);
 }
@@ -90,6 +105,7 @@ void	events(t_game *game)
 	ft_mlx_hook(mlx.p_win, KeyRelease, hook_key_release, game->keys);
 	ft_mlx_hook(mlx.p_win, ButtonPress, hook_mouse_click, &game->mouse);
 	ft_mlx_hook(mlx.p_win, ButtonRelease, hook_mouse_release, &game->mouse);
+	ft_mlx_hook(mlx.p_win, Expose, hook_expose, game);
 	ft_mlx_hook(mlx.p_win, MotionNotify, hook_mouse_move, &game->mouse.pos);
 	/* Gotta have to dig into this */
 	// mlx_do_sync(mlx.p_mlx);
@@ -121,7 +137,7 @@ void	beta_screen_buffer(t_image buffer)
 	};
 
 	image_fill(buffer, colour_from_percentage(.1, .5, .5, .4));
-	image_draw_rectangle(buffer, colour_from_percentage(.1, .3, .35, .39),
+	image_draw_rectangle(buffer, colour_from_percentage(.1, .3, .35, .60),
 		topleft, bottomright);
 	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0), bottomright, topleft);
 	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0), topright, bottomleft);

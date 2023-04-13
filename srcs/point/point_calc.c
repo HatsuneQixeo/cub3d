@@ -31,3 +31,12 @@ double	point_cross(const t_point point1, const t_point point2)
 {
 	return (point1.x * point2.y - point1.y * point2.x);
 }
+
+t_point	point_rotate(const t_point point, const double angle)
+{
+	t_point	new_point;
+
+	new_point.x = point.x * cos(angle) - point.y * sin(angle);
+	new_point.y = point.x * sin(angle) + point.y * cos(angle);
+	return (new_point);
+}

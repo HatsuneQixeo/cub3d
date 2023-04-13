@@ -31,6 +31,7 @@
 typedef struct s_mouse
 {
 	t_point		pos;
+	t_point		prev_pos;
 	t_point		press;
 	// t_mouse_buttons	buttons;
 	int			left_click;
