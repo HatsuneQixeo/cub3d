@@ -12,47 +12,52 @@
 
 #include "point.h"
 
-t_point	point_add(const t_point point1, const t_point point2)
+t_point	point_add(const t_point a, const t_point b)
 {
-	t_point	new_point;
+	const t_point	new_point = {
+		.x = a.x + b.x,
+		.y = a.y + b.y
+	};
 
-	new_point.x = point1.x + point2.x;
-	new_point.y = point1.y + point2.y;
 	return (new_point);
 }
 
-t_point	point_sub(const t_point point1, const t_point point2)
+t_point	point_sub(const t_point a, const t_point b)
 {
-	t_point	new_point;
+	const t_point	new_point = {
+		.x = a.x - b.x,
+		.y = a.y - b.y
+	};
 
-	new_point.x = point1.x - point2.x;
-	new_point.y = point1.y - point2.y;
 	return (new_point);
 }
 
 t_point	point_scale(const t_point point, const double scale)
 {
-	t_point	new_point;
+	const t_point	new_point = {
+		.x = point.x * scale,
+		.y = point.y * scale
+	};
 
-	new_point.x = point.x * scale;
-	new_point.y = point.y * scale;
 	return (new_point);
 }
 
 t_point	point_unscale(const t_point point, const double scale)
 {
-	t_point	new_point;
+	const t_point	new_point = {
+		.x = point.x / scale,
+		.y = point.y / scale
+	};
 
-	new_point.x = point.x / scale;
-	new_point.y = point.y / scale;
 	return (new_point);
 }
 
 t_point	point_round(const t_point point, double (*ft_round)(double))
 {
-	t_point	new_point;
+	const t_point	new_point = {
+		.x = ft_round(point.x),
+		.y = ft_round(point.y)
+	};
 
-	new_point.x = ft_round(point.x);
-	new_point.y = ft_round(point.y);
 	return (new_point);
 }
