@@ -37,4 +37,7 @@ t_point	point_round(const t_point point, double (*ft_round)(double));
 
 void	point_log(const char *prefix, const t_point point);
 
+t_point	point_multiply(const t_point point1, const t_point point2);
+t_point	point_normalize(const t_point point);
+double	point_angle(const t_point point);
 #endif

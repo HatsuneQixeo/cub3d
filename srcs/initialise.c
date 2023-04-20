@@ -12,7 +12,33 @@
 
 #include "cub3d.h"
 
-static t_texture	texture_init(void *p_mlx)
+t_image	map_texture(void *p_mlx, const t_map map)
+{
+	const t_colour	wall_colour = colour_from_percentage(.70, .90, .90, .70);
+	t_image			image;
+	t_point			it;
+
+	image = image_create(p_mlx, point_scale(map.size, MinimapCellSize),
+			putoffset_default, putoffset_default);
+	if (image.data == NULL)
+		return (image);
+	image_fill(&image, colour_from_percentage(.20, .40, .40, .70));
+	it.y = -1;
+	while (++it.y < map.size.y)
+	{
+		it.x = -1;
+		while (++it.x < map.size.x)
+		{
+			if (map.layout[(unsigned int)it.y][(unsigned int)it.x] == '1')
+				image_draw_rectangle(&image, wall_colour,
+					point_scale(it, MinimapCellSize),
+					point_scale(point_add(it, (t_point){1, 1}), MinimapCellSize));
+		}
+	}
+	return (image);
+}
+
+static t_texture	texture_init(void *p_mlx, const t_map map)
 {
 	t_texture	texture;
 
@@ -22,7 +48,7 @@ static t_texture	texture_init(void *p_mlx)
 				putoffset_centered, putoffset_centered);
 		ft_assert(texture.player_icon.p_image != NULL,
 			"image_create() for player_icon failed");
-		image_fill_circle(texture.player_icon,
+		image_fill_circle(&texture.player_icon,
 			colour_from_percentage(.3, .7, .5, .75));
 	}
 	{
@@ -36,19 +62,9 @@ static t_texture	texture_init(void *p_mlx)
 		// 	colour_from_percentage(.3, .7, .8, .75));
 	}
 	{
-		texture.minimap = image_create(p_mlx,
-				(t_point){.x = MinimapWidth, .y = MinimapHeight},
-				putoffset_default, putoffset_default);
+		texture.minimap = map_texture(p_mlx, map);
 		ft_assert(texture.minimap.p_image != NULL,
 			"image_create() for minimap failed");
-		image_fill(texture.minimap, colour_from_percentage(.20, .40, .40, .70));
-		image_draw_rectangle(texture.minimap, colour_from_percentage(.70, .90, .90, .70),
-			(t_point){0, 0},
-			// (t_point){.x = MnmBorderWidth, .y = MnmBorderHeight},
-			(t_point){
-				.x = MinimapWidth - MnmBorderWidth,
-				.y = MinimapHeight - MnmBorderHeight
-			});
 	}
 	return (texture);
 }
@@ -61,6 +77,47 @@ static t_mouse	mouse_init(void *p_win)
 	// mouse.press = (t_point){.x = -1, .y = -1};
 	mouse.left_click = Release;
 	return (mouse);
+}
+
+t_map	beta_map(void)
+{
+	t_map	map;
+
+	// map.layout = ft_strlistdup((char *[]) {
+	// 		"111111111",
+	// 		"100010001",
+	// 		"100011011",
+	// 		"100010001",
+	// 		"110110001",
+	// 		"100000001",
+	// 		"100010111",
+	// 		"100010001",
+	// 		"111111111",
+	// 		NULL
+	// 	});
+	map.layout = ft_strlistdup((char *[]){
+			"111111111111111",
+			"100000010000001",
+			"100000010000001",
+			"100011111000111",
+			"100000010000001",
+			"100000010000001",
+			"100000010000001",
+			"110000110000001",
+			"100000000000001",
+			"100000000000001",
+			"100000010000111",
+			"100000010000001",
+			"100000010000001",
+			"100000010000001",
+			"111111111111111",
+			NULL
+		});
+	map.size = (t_point){
+		.x = ft_strlen(map.layout[0]),
+		.y = ft_strcount(map.layout)
+	};
+	return (map);
 }
 
 /* Initialization and assertion */
@@ -81,9 +138,10 @@ t_game	game_init(void)
 			putoffset_default, putoffset_default);
 	ft_assert(game.screen_buffer.p_image != NULL,
 		"image_create() for screen_buffer failed");
-	game.texture = texture_init(game.mlx.p_mlx);
 	game.mouse = mouse_init(game.mlx.p_win);
 	ft_intset(game.keys, key_count, Release);
+	game.map = beta_map();
+	game.texture = texture_init(game.mlx.p_mlx, game.map);
 	// game.map /* In map parsing */
 	// game.player /* In map parsing */
 	return (game);
@@ -116,39 +174,44 @@ void	events(t_game *game)
 void	beta_screen_buffer(t_image buffer)
 {
 	const t_point	topleft = {
-		.x = BorderWidth,
-		.y = BorderHeight
+		.x = ScreenBorderWidth,
+		.y = ScreenBorderHeight
 	};
 	const t_point	bottomright = {
-		.x = ScreenWidth - BorderWidth,
-		.y = ScreenHeight - BorderHeight
+		.x = ScreenWidth - ScreenBorderWidth,
+		.y = ScreenHeight - ScreenBorderHeight
 	};
 	const t_point	topright = {
-		.x = ScreenWidth - BorderWidth,
-		.y = BorderHeight
+		.x = ScreenWidth - ScreenBorderWidth,
+		.y = ScreenBorderHeight
 	};
 	const t_point	bottomleft = {
-		.x = BorderWidth,
-		.y = ScreenHeight - BorderHeight
+		.x = ScreenBorderWidth,
+		.y = ScreenHeight - ScreenBorderHeight
 	};
 	const t_point	center = {
 		.x = ScreenWidth / 2,
 		.y = ScreenHeight / 2
 	};
 
-	image_fill(buffer, colour_from_percentage(.1, .5, .5, .4));
-	image_draw_rectangle(buffer, colour_from_percentage(.1, .3, .35, .60),
+	image_fill(&buffer, colour_from_percentage(.1, .5, .5, .4));
+	image_draw_rectangle(&buffer, colour_from_percentage(.1, .3, .35, .60),
 		topleft, bottomright);
-	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0), bottomright, topleft);
-	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0), topright, bottomleft);
-	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0),
+	// for (unsigned int i = 1; i < buffer.size.y; i += 2)
+	// {
+	// 	image_draw_line(&buffer, colour_from_rgba(200, 50, 50, 40), (t_point){.x = 0, .y = i}, (t_point){.x = buffer.size.x, .y = i});
+	// }
+
+	image_draw_line(&buffer, colour_from_rgba(0, 0, 0, 0), bottomright, topleft);
+	image_draw_line(&buffer, colour_from_rgba(0, 0, 0, 0), topright, bottomleft);
+	image_draw_line(&buffer, colour_from_rgba(0, 0, 0, 0),
 		(t_point){.x = center.x, .y = bottomleft.y},
 		(t_point){.x = center.x, .y = topleft.y});
-	image_draw_line(buffer, colour_from_rgba(0, 0, 0, 0),
+	image_draw_line(&buffer, colour_from_rgba(0, 0, 0, 0),
 		(t_point){.x = topright.x, .y = center.y},
 		(t_point){.x = topleft.x, .y = center.y});
-	draw_filled_circle(buffer, colour_from_percentage(0.2, 0.4, 0.9, 0.3),
+	draw_filled_circle(&buffer, colour_from_percentage(0.2, 0.4, 0.9, 0.3),
 		(t_point){.x = center.x + center.x / 2, .y = center.y}, 100);
-	image_draw_circle(buffer, colour_from_percentage(0.2, 0.4, 0.9, 0.3),
+	image_draw_circle(&buffer, colour_from_percentage(0.2, 0.4, 0.9, 0.3),
 		(t_point){.x = center.x - center.x / 2, .y = center.y}, 100);
 }

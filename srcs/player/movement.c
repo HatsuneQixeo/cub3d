@@ -10,9 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "point.h"
-#include "hook_key.h"
 #include "libft.h"
+#include "player.h"
+
+#define PLAYER_SPEED	6
 
 typedef struct s_key_vector
 {
@@ -31,23 +32,44 @@ static t_point	keys_to_vector(const t_keys keys,
 	while (++i < length)
 	{
 		if (keys[arr_key_vectors[i].key_index] == Press)
-		{
-			vector.x += arr_key_vectors[i].vector.x;
-			vector.y += arr_key_vectors[i].vector.y;
-		}
+			vector = point_add(vector, arr_key_vectors[i].vector);
 	}
 	return (vector);
 }
 
-t_point	player_vector(const t_keys keys)
+t_point	player_direction(const t_keys keys)
 {
 	const t_key_vector	key_vectors[] = {
 	{.key_index = Key_W, .vector = {.x = 00, .y = -1}},
-	{.key_index = Key_A, .vector = {.x = -1, .y = 00}},
-	{.key_index = Key_S, .vector = {.x = 00, .y = +1}},
-	{.key_index = Key_D, .vector = {.x = +1, .y = 00}},
+	{.key_index = Key_A, .vector = {.x = -.75, .y = 00}},
+	{.key_index = Key_S, .vector = {.x = 00, .y = +.75}},
+	{.key_index = Key_D, .vector = {.x = +.75, .y = 00}},
 	};
 	const size_t		len = sizeof(key_vectors) / sizeof(key_vectors[0]);
 
 	return (keys_to_vector(keys, key_vectors, len));
+}
+
+void	player_move(t_player *player, const t_point direction)
+{
+	const t_point	rotate = point_rotate(direction,
+			point_angle(player->dir) + M_PI_2);
+	t_point			vector;
+
+	if (rotate.x == 0 && rotate.y == 0)
+		return ;
+	else if (rotate.x != 0 && rotate.y != 0)
+		vector = point_scale(rotate, PLAYER_SPEED * .75);
+	else
+		vector = point_scale(rotate, PLAYER_SPEED * 1.2);
+	player->pos = point_add(player->pos, vector);
+}
+
+void	player_rotate(t_point *dir, const t_mouse mouse, const t_keys keys)
+{
+	const double	key_direction = ((keys[Key_Right] == Press)
+			- (keys[Key_Left] == Press)) * 0.039;
+	const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) * .00831;
+
+	*dir = point_rotate(*dir, key_direction + mouse_speed);
 }

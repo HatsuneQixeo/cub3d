@@ -1,14 +1,14 @@
-// // /* ************************************************************************** */
-// // /*                                                                            */
-// // /*                                                        :::      ::::::::   */
-// /*   point.c                                            :+:      :+:    :+:   */
-// // /*                                                    +:+ +:+         +:+     */
-// // /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
-// // /*                                                +#+#+#+#+#+   +#+           */
-// // /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
-// /*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
-// // /*                                                                            */
-// // /* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   point.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
+/*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "point.h"
 #include <stdio.h>
@@ -20,15 +20,25 @@ void	point_log(const char *prefix, const t_point point)
 
 /* Bunch of math I have no idea */
 
-// t_point	point_normalize(const t_point point)
-// {
-// 	t_point			new_point;
-// 	const double	magnitude = point_magnitude(point);
+t_point	point_normalize(const t_point point)
+{
+	t_point			new_point;
+	const double	magnitude = point_magnitude(point);
 
-// 	new_point.x = point.x / magnitude;
-// 	new_point.y = point.y / magnitude;
-// 	return (new_point);
-// }
+	new_point.x = point.x / magnitude;
+	new_point.y = point.y / magnitude;
+	return (new_point);
+}
+
+t_point	point_multiply(const t_point point1, const t_point point2)
+{
+	const t_point	new_point = {
+		.x = point1.x * point2.x,
+		.y = point1.y * point2.y
+	};
+
+	return (new_point);
+}
 
 // t_point	point_lerp(const t_point point1, const t_point point2, const double t)
 // {
@@ -90,7 +100,7 @@ void	point_log(const char *prefix, const t_point point)
 // 	return (point);
 // }
 
-// double	point_angle(const t_point point)
-// {
-// 	return (atan2(point.y, point.x));
-// }
+double	point_angle(const t_point point)
+{
+	return (atan2(point.y, point.x));
+}

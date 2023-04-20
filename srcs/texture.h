@@ -24,5 +24,4 @@ typedef struct s_texture
 	t_colour		colour_ceiling;
 }			t_texture;
 
-
 #endif

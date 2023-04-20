@@ -12,7 +12,7 @@
 
 #include "image.h"
 
-void	image_draw_line(t_image image, const t_colour colour,
+void	image_draw_line(t_image *image, const t_colour colour,
 			const t_point start, const t_point end)
 {
 	const t_point	distance = (t_point){

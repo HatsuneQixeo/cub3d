@@ -12,7 +12,7 @@
 
 #include "image.h"
 
-static void	doro(t_image image, const t_colour colour, const t_point center,
+static void	doro(t_image *image, const t_colour colour, const t_point center,
 			const t_point point)
 {
 	image_draw_pixel(image, colour,
@@ -34,7 +34,7 @@ static void	doro(t_image image, const t_colour colour, const t_point center,
 }
 
 /* Outline */
-void	image_draw_circle(t_image image, const t_colour colour,
+void	image_draw_circle(t_image *image, const t_colour colour,
 				const t_point center, const unsigned int radius)
 {
 	t_point	point;
@@ -61,7 +61,7 @@ void	image_draw_circle(t_image image, const t_colour colour,
 		image_draw_circle(image, colour, center, radius - 1);
 }
 
-void	draw_filled_circle(t_image image, const t_colour colour,
+void	draw_filled_circle(t_image *image, const t_colour colour,
 			const t_point center, const int radius)
 {
 	t_point	index;
@@ -78,13 +78,13 @@ void	draw_filled_circle(t_image image, const t_colour colour,
 	}
 }
 
-void	image_fill_circle(t_image image, t_colour colour)
+void	image_fill_circle(t_image *image, const t_colour colour)
 {
 	const t_point	center = (t_point){
-		.x = image.size.x / 2,
-		.y = image.size.y / 2
+		.x = image->size.x / 2,
+		.y = image->size.y / 2
 	};
-	const int		min = ft_min(image.size.x, image.size.y);
+	const int		min = ft_min(image->size.x, image->size.y);
 	const double	radius = (double)(min - !(min & 0b1)) / 2;
 
 	image_clear(image);
