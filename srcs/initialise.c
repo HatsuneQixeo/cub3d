@@ -15,14 +15,15 @@
 t_image	map_texture(void *p_mlx, const t_map map)
 {
 	const t_colour	wall_colour = colour_from_percentage(.70, .90, .90, .70);
+	const t_colour	space_colour = colour_from_percentage(.20, .30, .40, .70);
 	t_image			image;
 	t_point			it;
 
-	image = image_create(p_mlx, point_scale(map.size, MinimapCellSize),
-			putoffset_default, putoffset_default);
+	image = image_create(p_mlx, point_add(point_scale(map.size, MapCellSize), map.size),
+			putoffset_inverted, putoffset_inverted);
 	if (image.data == NULL)
 		return (image);
-	image_fill(&image, colour_from_percentage(.20, .40, .40, .70));
+	image_fill(&image, colour_from_percentage(.0, .20, .20, .50));
 	it.y = -1;
 	while (++it.y < map.size.y)
 	{
@@ -31,8 +32,12 @@ t_image	map_texture(void *p_mlx, const t_map map)
 		{
 			if (map.layout[(unsigned int)it.y][(unsigned int)it.x] == '1')
 				image_draw_rectangle(&image, wall_colour,
-					point_scale(it, MinimapCellSize),
-					point_scale(point_add(it, (t_point){1, 1}), MinimapCellSize));
+					point_add(point_scale(it, MapCellSize), it),
+					point_add(point_scale(point_add(it, (t_point){1, 1}), MapCellSize), it));
+			else
+				image_draw_rectangle(&image, space_colour,
+					point_add(point_scale(it, MapCellSize), it),
+					point_add(point_scale(point_add(it, (t_point){1, 1}), MapCellSize), it));
 		}
 	}
 	return (image);
@@ -62,9 +67,9 @@ static t_texture	texture_init(void *p_mlx, const t_map map)
 		// 	colour_from_percentage(.3, .7, .8, .75));
 	}
 	{
-		texture.minimap = map_texture(p_mlx, map);
-		ft_assert(texture.minimap.p_image != NULL,
-			"image_create() for minimap failed");
+		texture.map = map_texture(p_mlx, map);
+		ft_assert(texture.map.p_image != NULL,
+			"image_create() for map failed");
 	}
 	return (texture);
 }
@@ -82,35 +87,34 @@ static t_mouse	mouse_init(void *p_win)
 t_map	beta_map(void)
 {
 	t_map	map;
-
-	// map.layout = ft_strlistdup((char *[]) {
-	// 		"111111111",
-	// 		"100010001",
-	// 		"100011011",
-	// 		"100010001",
-	// 		"110110001",
-	// 		"100000001",
-	// 		"100010111",
-	// 		"100010001",
-	// 		"111111111",
-	// 		NULL
-	// 	});
-	map.layout = ft_strlistdup((char *[]){
+	map.layout = ft_strlistdup((char *[]) {
+#if 1
+			"111111111",
+			"100010001",
+			"100011011",
+			"100010001",
+			"110110001",
+			"100000001",
+			"100010111",
+			"100010001",
+			"111111111",
+#else
 			"111111111111111",
 			"100000010000001",
 			"100000010000001",
-			"100011111000111",
+			"100011111100111",
 			"100000010000001",
 			"100000010000001",
 			"100000010000001",
-			"110000110000001",
+			"110011110000001",
 			"100000000000001",
 			"100000000000001",
-			"100000010000111",
+			"100000010011111",
 			"100000010000001",
 			"100000010000001",
 			"100000010000001",
 			"111111111111111",
+#endif
 			NULL
 		});
 	map.size = (t_point){

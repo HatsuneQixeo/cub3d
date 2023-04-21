@@ -38,46 +38,58 @@ void	put_background(t_mlx mlx)
 	image_destroy(mlx.p_mlx, &image);
 }
 
-void	put_minimap(t_mlx mlx, const t_image *minimap, const t_player *player, const t_image *player_icon)
+/* Doesn't work the way I think because the map is not always rectangular */
+void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_image *player_icon)
 {
-	const t_point	size = (t_point){MinimapLength, MinimapLength};
-	t_image			image;
-	const t_point	player_pos = point_unscale(player->pos, (double)CELL_SIZE / MinimapCellSize);
-
-	image = image_create(mlx.p_mlx, size, putoffset_default, putoffset_default);
-	image_draw_rectangle(&image, colour_from_rgba(20, 150, 200, 50),
-		(t_point){0, 0}, image.size);
-	t_point	start = {
-		.x = ft_max(0, player_pos.x - (size.x / 2)),
-		.y = ft_max(0, player_pos.y - (size.y / 2))
-	};
-	t_point	end = {
-		.x = ft_min(minimap->size.x, player_pos.x + (size.x / 2)),
-		.y = ft_min(minimap->size.y, player_pos.y + (size.y / 2))
-	};
-	t_point	it;
-
-	if (start.x == 0)
-		end.x = ft_min(minimap->size.x, size.x);
-	else if (end.x - start.x < size.x)
-		start.x = ft_max(0, minimap->size.x - size.x);
-	if (start.y == 0)
-		end.y = ft_min(minimap->size.y, size.y);
-	else if (end.y - start.y < size.y)
-		start.y = ft_max(0, minimap->size.y - size.y);
-	it.y = start.y - 1;
-	while (++it.y < end.y)
+	const t_point	player_map_pos = point_unscale(player->pos, (double)CELL_SIZE / MapCellSize);
+	/* Sectioned Minimap */
 	{
-		it.x = start.x - 1;
-		while (++it.x < end.x)
-			image_draw_pixel(&image, minimap->data[image_getindex(minimap, it)],
-				point_sub(it, start));
+		t_image			image;
+
+		image = image_create(mlx.p_mlx, (t_point){MinimapLength, MinimapLength},
+				putoffset_default, putoffset_default);
+		image_clear(&image);
+		t_point	start = {
+			.x = ft_max(0, player_map_pos.x - (image.size.x / 2)),
+			.y = ft_max(0, player_map_pos.y - (image.size.y / 2))
+		};
+		t_point	end = {
+			.x = ft_min(map->size.x, start.x + image.size.x),
+			.y = ft_min(map->size.y, start.y + image.size.y)
+		};
+
+		if (end.x - start.x < image.size.x)
+			start.x = ft_max(0, map->size.x - image.size.x);
+		if (end.y - start.y < image.size.y)
+			start.y = ft_max(0, map->size.y - image.size.y);
+		t_point	it;
+		it.y = start.y - 1;
+		while (++it.y < end.y)
+		{
+			it.x = start.x - 1;
+			while (++it.x < end.x)
+				image_draw_pixel(&image, map->data[image_getindex(map, it)],
+					point_sub(it, start));
+		}
+		image_put(mlx, &image, (t_point){0, 0});
+		t_point	put = {
+			.x = player_map_pos.x - start.x,
+			.y = player_map_pos.y - start.y
+		};
+		if (0 <= player_map_pos.x && player_map_pos.x < map->size.x
+			&& 0 <= player_map_pos.y && player_map_pos.y < map->size.y)
+			image_put(mlx, player_icon, put);
+		image_destroy(mlx.p_mlx, &image);
 	}
-	image_put(mlx, &image, (t_point){0, 0});
-	image_destroy(mlx.p_mlx, &image);
-	if (0 < player_pos.x && player_pos.x < size.x
-		&& 0 < player_pos.y && player_pos.y < size.y)
-		image_put(mlx, player_icon, player_pos);
+	/* Puts the whole map */
+#if 0
+	image_put(mlx, map, (t_point){.x = ScreenWidth, .y = ScreenHeight});
+	const t_point	offset = {
+		.x = ScreenWidth - map->size.x,
+		.y = ScreenHeight - map->size.y
+	};
+	image_put(mlx, player_icon, point_add(offset, player_map_pos));
+#endif
 }
 
 // ft_printf("くるり廻る廻る廻る世界\n");
@@ -92,12 +104,12 @@ int	hook_loop(t_game *game)
 		image_put(game->mlx, &game->screen_buffer, (t_point){0, 0});
 		/* Minimap */
 		{
-			put_minimap(game->mlx, &game->texture.minimap, &game->player, &game->texture.player_icon);
+			put_minimap(game->mlx, &game->texture.map, &game->player, &game->texture.player_icon);
 		}
 	}
 	/* Rotate the player direction */
 	{
-		player_rotate(&game->player.dir, game->mouse, game->keys);
+		// player_rotate(&game->player.dir, game->mouse, game->keys);
 		game->mouse.prev_pos = game->mouse.pos;
 	}
 	/* Move the player */

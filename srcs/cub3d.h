@@ -68,9 +68,9 @@ enum e_screen_size
 
 enum e_minimap_size
 {
-	MinimapCellSize = CELL_SIZE / 2,
+	MapCellSize = CELL_SIZE / 2,
 	MinimapScale = 10,
-	MinimapLength = MinimapCellSize * MinimapScale,
+	MinimapLength = MapCellSize * MinimapScale,
 };
 
 void	cast_a_ray(const t_mlx mlx, const t_point player, const t_point vector);

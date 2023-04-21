@@ -15,7 +15,7 @@
 
 void	point_log(const char *prefix, const t_point point)
 {
-	printf("%sx: %f, y: %f\n", prefix, point.x, point.y);
+	printf("%-15sx: %6.2f, y: %6.2f\n", prefix, point.x, point.y);
 }
 
 /* Bunch of math I have no idea */

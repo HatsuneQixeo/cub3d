@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "player.h"
 
-#define PLAYER_SPEED	6
+#define PLAYER_SPEED	5
 
 typedef struct s_key_vector
 {
@@ -41,9 +41,9 @@ t_point	player_direction(const t_keys keys)
 {
 	const t_key_vector	key_vectors[] = {
 	{.key_index = Key_W, .vector = {.x = 00, .y = -1}},
-	{.key_index = Key_A, .vector = {.x = -.75, .y = 00}},
-	{.key_index = Key_S, .vector = {.x = 00, .y = +.75}},
-	{.key_index = Key_D, .vector = {.x = +.75, .y = 00}},
+	{.key_index = Key_A, .vector = {.x = -1, .y = 00}},
+	{.key_index = Key_S, .vector = {.x = 00, .y = +1}},
+	{.key_index = Key_D, .vector = {.x = +1, .y = 00}},
 	};
 	const size_t		len = sizeof(key_vectors) / sizeof(key_vectors[0]);
 

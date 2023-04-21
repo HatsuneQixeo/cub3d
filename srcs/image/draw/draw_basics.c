@@ -12,6 +12,10 @@
 
 #include "image.h"
 
+#ifndef DRAW_WARNING
+# define DRAW_WARNING	1
+#endif
+
 int	image_getindex(const t_image *image, const t_point pos)
 {
 	return ((pos.y * image->size.x) + pos.x);
@@ -23,18 +27,16 @@ void	image_draw_pixel(t_image *image, const t_colour colour, const t_point at)
 
 	if (!(0 <= rounded.x && rounded.x < image->size.x))
 	{
-		printf("outofrange x: %f, size: %f\n", at.x, image->size.x);
+		if (DRAW_WARNING)
+			printf("outofrange x: %f, size: %f\n", at.x, image->size.x);
 		return ;
 	}
 	if (!(0 <= rounded.y && rounded.y < image->size.y))
 	{
-		printf("ourofrange y: %f, size: %f\n", at.y, image->size.y);
+		if (DRAW_WARNING)
+			printf("ourofrange y: %f, size: %f\n", at.y, image->size.y);
 		return ;
 	}
-	ft_assert(0 <= rounded.x && rounded.x < image->size.x,
-		"image_draw_pixel: out of range: x");
-	ft_assert(0 <= rounded.y && rounded.y < image->size.y,
-		"image_draw_pixel: out of range: y");
 	ft_assert(image->data != NULL, "image_draw_pixel: NULL image->data");
 	image->data[image_getindex(image, rounded)] = colour;
 }

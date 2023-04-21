@@ -17,7 +17,7 @@ typedef t_image	t_wall_textures[wall_texture_count];
 typedef struct s_texture
 {
 	t_wall_textures	walls;
-	t_image			minimap;
+	t_image			map;
 	t_image			player_icon;
 	t_image			mouse_icon;
 	t_colour		colour_floor;
