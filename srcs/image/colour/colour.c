@@ -23,6 +23,9 @@
  * 
  * /
  * shifts the value so that it fits into a byte
+ * 
+ * @note Have not yet tested what would happen if multiple values were given
+ * In theory the biggest byte should be prioritize
  */
 t_colour_byte	colour_getmask(const t_colour colour,
 				const enum e_colour_value value)
@@ -47,6 +50,7 @@ t_colour_byte	colour_getmask(const t_colour colour,
  * |
  * adds the value into the mask
  * 
+ * @note This can set multiple values to the given value
  */
 void	colour_setmask(t_colour *colour, const t_colour_byte set,
 			const enum e_colour_value value)
@@ -79,11 +83,14 @@ t_colour	colour_from_percentage(const double red, const double green,
 			alpha * 0xff));
 }
 
-void	ft_intset(int *arr, const unsigned int size, const int value)
+/**
+ * Chose this approach over getmask and setmask to support multiple masks,
+ * which is not possible with getmask,
+ * and setmask can only set a given value for all the given mask
+ */
+t_colour	colour_invert(const t_colour colour, const enum e_colour_value value)
 {
-	unsigned int	i;
+	const t_colour	mask = value * 0xff;
 
-	i = 0;
-	while (i < size)
-		arr[i++] = value;
+	return ((colour & ~mask) | (~colour & mask));
 }

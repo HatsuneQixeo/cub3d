@@ -25,7 +25,7 @@ static void	start_to_end(t_point *start, t_point *end,
 	}
 }
 
-void	cast_a_ray(const t_mlx mlx, const t_point player, const t_point vector)
+void	cast_a_ray(const t_mlx mlx, const t_point pos, const t_point vector)
 {
 	const t_point	size = (t_point){
 		.x = ft_max(fabs(vector.x), 1),
@@ -40,6 +40,6 @@ void	cast_a_ray(const t_mlx mlx, const t_point player, const t_point vector)
 	ft_assert(ray.data != NULL, "cast_a_ray: Image creation failed");
 	start_to_end(&start, &end, size, vector);
 	image_clear(&ray);
-	image_draw_line(&ray, colour_from_rgba(255, 50, 40, 20), start, end);
-	image_put(mlx, &ray, player);
+	image_draw_line(&ray, colour_from_rgba(255, 255, 255, 20), start, end);
+	image_put(mlx, &ray, pos);
 }

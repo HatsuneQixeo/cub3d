@@ -13,8 +13,6 @@
 #include "libft.h"
 #include "player.h"
 
-#define PLAYER_SPEED	5
-
 typedef struct s_key_vector
 {
 	int		key_index;
@@ -52,16 +50,15 @@ t_point	player_direction(const t_keys keys)
 
 void	player_move(t_player *player, const t_point direction)
 {
-	const t_point	rotate = point_rotate(direction,
-			point_angle(player->dir) + M_PI_2);
+	const t_point	rotate = point_rotate(direction, point_angle(player->dir));
 	t_point			vector;
 
 	if (rotate.x == 0 && rotate.y == 0)
 		return ;
 	else if (rotate.x != 0 && rotate.y != 0)
-		vector = point_scale(rotate, PLAYER_SPEED * .75);
+		vector = point_scale(rotate, .025);
 	else
-		vector = point_scale(rotate, PLAYER_SPEED * 1.2);
+		vector = point_scale(rotate, .050);
 	player->pos = point_add(player->pos, vector);
 }
 
@@ -69,7 +66,7 @@ void	player_rotate(t_point *dir, const t_mouse mouse, const t_keys keys)
 {
 	const double	key_direction = ((keys[Key_Right] == Press)
 			- (keys[Key_Left] == Press)) * 0.039;
-	const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) * .00831;
+	const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) * (.00831 * .39);
 
 	*dir = point_rotate(*dir, key_direction + mouse_speed);
 }

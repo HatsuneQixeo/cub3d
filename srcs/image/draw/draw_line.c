@@ -29,8 +29,7 @@ void	image_draw_line(t_image *image, const t_colour colour,
 	step = -1;
 	while (++step < total_step)
 	{
-		image_draw_pixel(image, colour, (t_point){
-			.x = start.x + (step_length.x * step),
-			.y = start.y + (step_length.y * step)});
+		image_draw_pixel(image, colour,
+			point_add(start, point_scale(step_length, step)));
 	}
 }

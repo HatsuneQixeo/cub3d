@@ -23,19 +23,20 @@ enum e_colour_value
 	ValueR = 0x00010000,
 	ValueG = 0x00000100,
 	ValueB = 0x00000001,
-	ValueA = 0x01000000
+	ValueA = 0x01000000,
+	ValueRGB = ValueR | ValueG | ValueB,
+	ValueAll = ValueRGB | ValueA,
 };
 
-t_colour_byte	colour_getmask(const t_colour colour,
-					const enum e_colour_value value);
-void			colour_setmask(t_colour *colour, const t_colour_byte set,
-					const enum e_colour_value value);
-t_colour		colour_from_rgba(const t_colour_byte red,
-					const t_colour_byte green,
-					const t_colour_byte blue,
-					const t_colour_byte alpha);
-t_colour		colour_from_percentage(const double red, const double green,
-					const double blue, const double alpha);
-void			ft_intset(int *arr, const unsigned int size, const int value);
+t_colour_byte	colour_getmask(t_colour colour, enum e_colour_value value);
+void			colour_setmask(t_colour *colour, t_colour_byte set,
+					enum e_colour_value value);
+t_colour		colour_from_rgba(t_colour_byte red, t_colour_byte green,
+					t_colour_byte blue, t_colour_byte alpha);
+t_colour		colour_from_percentage(double red, double green,
+					double blue, double alpha);
+t_colour		colour_invert(t_colour colour, enum e_colour_value value);
+
+void			ft_intset(int *arr, unsigned int size, int value);
 
 #endif

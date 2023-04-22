@@ -24,19 +24,19 @@ double	point_distance(const t_point point1, const t_point point2)
 
 double	point_dot(const t_point point1, const t_point point2)
 {
-	return (point1.x * point2.x + point1.y * point2.y);
+	return ((point1.x * point2.x) + (point1.y * point2.y));
 }
 
 double	point_cross(const t_point point1, const t_point point2)
 {
-	return (point1.x * point2.y - point1.y * point2.x);
+	return ((point1.x * point2.y) - (point1.y * point2.x));
 }
 
 t_point	point_rotate(const t_point point, const double angle)
 {
 	const t_point	new_point = {
-		.x = point.x * cos(angle) - point.y * sin(angle),
-		.y = point.x * sin(angle) + point.y * cos(angle)
+		.x = (point.x * cos(angle)) - (point.y * sin(angle)),
+		.y = (point.x * sin(angle)) + (point.y * cos(angle))
 	};
 
 	return (new_point);

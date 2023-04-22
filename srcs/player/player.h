@@ -9,7 +9,7 @@ typedef struct s_player
 {
 	t_point	pos;
 	t_point	dir;
-	// t_point	plane; /* ??? */
+	t_point	plane;
 }			t_player;
 
 t_point	player_direction(const t_keys keys);
