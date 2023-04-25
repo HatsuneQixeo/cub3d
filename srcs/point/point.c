@@ -12,6 +12,24 @@
 
 #include "point.h"
 #include <stdio.h>
+#include <stdlib.h>
+
+t_point	*point_new(const double x, const double y)
+{
+	t_point	*point;
+
+	point = malloc(sizeof(t_point));
+	if (point == NULL)
+		return (NULL);
+	point->x = x;
+	point->y = y;
+	return (point);
+}
+
+void	point_del(void *content)
+{
+	free(content);
+}
 
 void	point_log(const char *prefix, const t_point point)
 {

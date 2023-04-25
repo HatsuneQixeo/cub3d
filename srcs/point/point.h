@@ -35,6 +35,8 @@ t_point	point_scale(const t_point point, const double scale);
 t_point	point_unscale(const t_point point, const double scale);
 t_point	point_round(const t_point point, double (*ft_round)(double));
 
+t_point	*point_new(const double x, const double y);
+void	point_del(void *content);
 void	point_log(const char *prefix, const t_point point);
 
 t_point	point_multiply(const t_point point1, const t_point point2);
