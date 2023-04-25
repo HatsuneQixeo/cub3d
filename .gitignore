@@ -3,3 +3,4 @@ objs
 *.o
 libmlx.a
 cub3d
+log

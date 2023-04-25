@@ -19,32 +19,9 @@
 # include "hook_mouse.h"
 # include "texture.h"
 # include "player.h"
+# include "cubmap.h"
 
 # define CELL_SIZE	64
-
-/* ??? */
-// typedef struct s_ray
-// {
-// 	double	camera_x;
-// 	double	ray_dir_x;
-// 	double	ray_dir_y;
-// 	int		map_x;
-// 	int		map_y;
-// 	double	side_dist_x;
-// 	double	side_dist_y;
-// 	double	delta_dist_x;
-// 	double	delta_dist_y;
-// 	double	perp_wall_dist;
-// 	int		step_x;
-// 	int		step_y;
-// 	int		side;
-// }			t_ray;
-
-typedef struct s_map
-{
-	t_point	size;
-	char	**layout;
-}			t_map;
 
 typedef struct s_game
 {
@@ -52,7 +29,6 @@ typedef struct s_game
 	t_image		screen_buffer;
 	t_texture	texture;
 	t_player	player;
-	// t_ray		ray;
 	t_keys		keys;
 	t_mouse		mouse;
 	t_map		map;
@@ -60,6 +36,7 @@ typedef struct s_game
 
 enum e_screen_size
 {
+	// ScreenWidth = 1000,
 	ScreenWidth = 1280,
 	ScreenHeight = 720,
 	ScreenBorderWidth = ScreenWidth / 16,

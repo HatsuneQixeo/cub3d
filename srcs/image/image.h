@@ -18,6 +18,8 @@
 # include "colour.h"
 # include <mlx.h>
 
+# define IMAGE_CREATION_FAILED	"Image Creation Failed"
+
 typedef double	(*t_offset)(const double pos, const double size);
 /* Image Offset */
 double	putoffset_default(const double pos, const double size);

@@ -12,6 +12,17 @@
 
 #include "cub3d.h"
 
+void	map_draw_tile(t_image *map, const t_colour colour, const t_point pos)
+{
+	const t_point	map_start = point_scale(pos, MapCellSize);
+	const t_point	map_end = point_scale(point_add(pos, (t_point){1, 1}),
+				MapCellSize);
+
+	image_draw_rectangle(map, colour,
+		point_add(map_start, pos),
+		point_add(map_end, pos));
+}
+
 t_image	map_texture(void *p_mlx, const t_map map)
 {
 	const t_colour	wall_colour = colour_from_percentage(.70, .90, .90, .70);
@@ -19,7 +30,8 @@ t_image	map_texture(void *p_mlx, const t_map map)
 	t_image			image;
 	t_point			it;
 
-	image = image_create(p_mlx, point_add(point_scale(map.size, MapCellSize), map.size),
+	image = image_create(p_mlx, point_add(point_scale(map.size, MapCellSize),
+				point_sub(map.size, (t_point){1, 1})),
 			putoffset_inverted, putoffset_inverted);
 	if (image.data == NULL)
 		return (image);
@@ -31,13 +43,9 @@ t_image	map_texture(void *p_mlx, const t_map map)
 		while (++it.x < map.size.x)
 		{
 			if (map.layout[(unsigned int)it.y][(unsigned int)it.x] == '1')
-				image_draw_rectangle(&image, wall_colour,
-					point_add(point_scale(it, MapCellSize), it),
-					point_add(point_scale(point_add(it, (t_point){1, 1}), MapCellSize), it));
+				map_draw_tile(&image, wall_colour, it);
 			else
-				image_draw_rectangle(&image, space_colour,
-					point_add(point_scale(it, MapCellSize), it),
-					point_add(point_scale(point_add(it, (t_point){1, 1}), MapCellSize), it));
+				map_draw_tile(&image, space_colour, it);
 		}
 	}
 	return (image);
@@ -87,6 +95,7 @@ static t_mouse	mouse_init(void *p_win)
 t_map	beta_map(void)
 {
 	t_map	map;
+
 	map.layout = ft_strlistdup((char *[]) {
 #if 1
 			"111111111",

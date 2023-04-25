@@ -38,13 +38,26 @@ void	put_background(t_mlx mlx)
 	image_destroy(mlx.p_mlx, &image);
 }
 
-#ifndef DEBUG
-# define DEBUG	0
+#ifndef DEBUG_RAY
+# define DEBUG_RAY	0
 #endif
 
-#define DEBUGI(value)	if (DEBUG) printf("%-20s: %d\n", #value, value)
-#define DEBUGF(value)	if (DEBUG) printf("%-20s: %f\n", #value, value)
-#define DEBUGPOINT(point)	if (DEBUG) point_log(#point": ", point)
+#define DEBUGI(value)		if (DEBUG_RAY) printf("%-20s: %d\n", #value, value)
+#define DEBUGF(value)		if (DEBUG_RAY) printf("%-20s: %f\n", #value, value)
+#define DEBUGPOINT(point)	if (DEBUG_RAY) point_log(#point": ", point)
+
+typedef struct s_ray
+{
+	t_point		direction;
+	double		distance_traveled;
+	int			side;
+}			t_ray;
+
+typedef struct s_rays
+{
+	t_point	pos;
+	t_ray	rays[ScreenWidth];
+}			t_rays;
 
 void	raycast(t_mlx mlx, t_image *screen_buffer, const t_player *player, const t_map map)
 {
@@ -53,15 +66,16 @@ void	raycast(t_mlx mlx, t_image *screen_buffer, const t_player *player, const t_
 	const t_point	plane = point_rotate(player->plane, point_angle(player->dir));
 	const t_point	pos = player->pos;
 
+	ft_assert(image_ray.data != NULL, "raycast: "IMAGE_CREATION_FAILED);
 	image_clear(&image_ray);
 	for (unsigned int i = 0; i < ScreenWidth; i++)
 	{
 		DEBUGPOINT(pos);
 		DEBUGPOINT(plane);
 
-		if (DEBUG)
+		if (DEBUG_RAY)
 			printf("i: %i\n", i);
-		const double	cameraX = -1 + (2 * i / (double)ScreenWidth);
+		const double	cameraX = (-1 + (1.0 / ScreenWidth)) + (2 * (i / (double)ScreenWidth));
 		DEBUGF(cameraX);
 		const t_point	scaled_plane = point_scale(plane, cameraX);
 		DEBUGPOINT(scaled_plane);
@@ -69,35 +83,42 @@ void	raycast(t_mlx mlx, t_image *screen_buffer, const t_player *player, const t_
 		DEBUGPOINT(player->dir);
 		DEBUGPOINT(ray_direction);
 
-		t_point	delta_distance = {
-			.x = (ray_direction.x == 0) ? 1e30 : fabs(1 / ray_direction.x),
-			.y = (ray_direction.y == 0) ? 1e30 : fabs(1 / ray_direction.y)
+		const t_point	delta_distance = {
+			.x = fabs(1 / ray_direction.x),
+			.y = fabs(1 / ray_direction.y)
 		};
 		DEBUGPOINT(delta_distance);
 		t_point	step;
 		t_point	side_distance;
 
-		if (ray_direction.x < 0)
+
 		{
-			step.x = -1;
-			side_distance.x = (pos.x - trunc(pos.x)) * delta_distance.x;
+			const t_point	distance = point_sub(pos, point_round(pos, trunc));
+
+			if (ray_direction.x < 0)
+			{
+				step.x = -1;
+				side_distance.x = distance.x * delta_distance.x;
+			}
+			else
+			{
+				step.x = 1;
+				side_distance.x = (1 - distance.x) * delta_distance.x;
+			}
+			if (ray_direction.y < 0)
+			{
+				step.y = -1;
+				side_distance.y = distance.y * delta_distance.y;
+			}
+			else
+			{
+				step.y = 1;
+				side_distance.y = (1 - distance.y) * delta_distance.y;
+			}
 		}
-		else
-		{
-			step.x = 1;
-			side_distance.x = (1 + (trunc(pos.x) - pos.x)) * delta_distance.x;
-		}
-		if (ray_direction.y < 0)
-		{
-			step.y = -1;
-			side_distance.y = (pos.y - trunc(pos.y)) * delta_distance.y;
-		}
-		else
-		{
-			step.y = 1;
-			side_distance.y = (1 + (trunc(pos.y) - pos.y)) * delta_distance.y;
-		}
-		DEBUGPOINT(side_distance);
+		if (DEBUG_RAY)
+			point_log("side_distance start: ", side_distance);
+		DEBUGPOINT(step);
 		t_point	point_map = point_round(pos, trunc);
 
 		int	side;
@@ -116,10 +137,16 @@ void	raycast(t_mlx mlx, t_image *screen_buffer, const t_player *player, const t_
 				side = 1;
 			}
 		}
+		if (DEBUG_RAY)
+			point_log("side_distance break: ", side_distance);
 		DEBUGI(side);
 		const double	collide_distance = (side ? (side_distance.y - delta_distance.y) : (side_distance.x - delta_distance.x));
 		DEBUGF(collide_distance);
-
+		t_colour	colour = colour_from_rgba(20, 150, 180, 39);
+		{
+			if (side)
+				colour_setmask(&colour, 139, ValueA);
+		}
 		const int	line_height = ScreenHeight / collide_distance;
 		const int	draw_start = ft_max(0, (ScreenHeight - line_height) / 2);
 		const int	draw_end = ft_min(ScreenHeight - 1, (line_height + ScreenHeight) / 2);
@@ -127,11 +154,12 @@ void	raycast(t_mlx mlx, t_image *screen_buffer, const t_player *player, const t_
 		DEBUGI(line_height);
 		DEBUGI(draw_start);
 		DEBUGI(draw_end);
-		if (DEBUG)
+		if (DEBUG_RAY)
 			printf("\n");
-		image_draw_line(&image_ray, colour_from_rgba(20, 150, 180, 39),
+		image_draw_line(&image_ray, colour,
 			(t_point){.x = i, .y = draw_start},
 			(t_point){.x = i, .y = draw_end});
+		// usleep(100 * 1000);
 	}
 	image_put(mlx, &image_ray, (t_point){0, 0});
 	image_destroy(mlx.p_mlx, &image_ray);
@@ -148,6 +176,7 @@ void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_
 
 		image = image_create(mlx.p_mlx, (t_point){MinimapLength, MinimapLength},
 				putoffset_default, putoffset_default);
+		ft_assert(image.data != NULL, "put_minimap: "IMAGE_CREATION_FAILED);
 		image_clear(&image);
 		t_point	start = {
 			.x = ft_max(0, player_map_pos.x - (image.size.x / 2)),
@@ -158,9 +187,9 @@ void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_
 			.y = ft_min(map->size.y, start.y + image.size.y)
 		};
 
-		if (end.x - start.x < image.size.x)
+		if (end.x == map->size.x)
 			start.x = ft_max(0, map->size.x - image.size.x);
-		if (end.y - start.y < image.size.y)
+		if (end.y == map->size.y)
 			start.y = ft_max(0, map->size.y - image.size.y);
 		t_point	it;
 		it.y = start.y - 1;
@@ -172,20 +201,21 @@ void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_
 					point_sub(it, start));
 		}
 		image_put(mlx, &image, (t_point){0, 0});
-		const t_point	put = {
-			.x = player_map_pos.x - start.x,
-			.y = player_map_pos.y - start.y
-		};
-		if (0 <= player_map_pos.x && player_map_pos.x < map->size.x
-			&& 0 <= player_map_pos.y && player_map_pos.y < map->size.y)
+
 		{
-			image_put(mlx, player_icon, put);
-			cast_a_ray(mlx, put, point_scale(player->dir, 39));
+			const t_point	put = point_sub(player_map_pos, start);
+
+			if (0 <= put.x && put.x < image.size.x
+				&& 0 <= put.y && put.y < image.size.y)
+			{
+				image_put(mlx, player_icon, put);
+				cast_a_ray(mlx, put, point_scale(player->dir, 39));
+			}
 		}
 		image_destroy(mlx.p_mlx, &image);
 	}
 	/* Puts the whole map */
-#if 0
+#if 1
 	image_put(mlx, map, (t_point){.x = ScreenWidth, .y = ScreenHeight});
 	const t_point	offset = {
 		.x = ScreenWidth - map->size.x,
@@ -230,8 +260,6 @@ int	hook_loop(t_game *game)
 	return (0);
 }
 
-#define FIELD_OF_VIEW	120
-
 int	main(void)
 {
 	t_game	game;
@@ -239,9 +267,8 @@ int	main(void)
 
 	game = game_init();
 	// game.player.pos = point_scale(game.map.size, CELL_SIZE * .50);
-	game.player.pos = (t_point){1.50, 1.50};
+	game.player.pos = (t_point){3.50, 3.50};
 	game.player.dir = (t_point){.x = 0, .y = -1}; /* N, S, E, W */
-	// game.player.plane = game.player.dir;
 	game.player.plane = (t_point){1, 0};
 	// image_fill(game.screen_buffer, colour_from_rgba(100, 100, 100, 0));
 	// image_put(game.mlx, game.screen_buffer, (t_point){0, 0});

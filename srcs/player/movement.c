@@ -56,9 +56,10 @@ void	player_move(t_player *player, const t_point direction)
 	if (rotate.x == 0 && rotate.y == 0)
 		return ;
 	else if (rotate.x != 0 && rotate.y != 0)
-		vector = point_scale(rotate, .025);
+		vector = point_scale(rotate, .05);
 	else
-		vector = point_scale(rotate, .050);
+		vector = point_scale(rotate, .1);
+	// vector = point_scale(vector, .2);
 	player->pos = point_add(player->pos, vector);
 }
 
