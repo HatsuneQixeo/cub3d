@@ -56,18 +56,21 @@ void	player_move(t_player *player, const t_point direction)
 	if (rotate.x == 0 && rotate.y == 0)
 		return ;
 	else if (rotate.x != 0 && rotate.y != 0)
-		vector = point_scale(rotate, .05);
+		vector = point_upscale(rotate, .05);
 	else
-		vector = point_scale(rotate, .1);
-	// vector = point_scale(vector, .2);
+		vector = point_upscale(rotate, .1);
+	// vector = point_upscale(vector, .2);
 	player->pos = point_add(player->pos, vector);
 }
 
-void	player_rotate(t_point *dir, const t_mouse mouse, const t_keys keys)
+void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys)
 {
 	const double	key_direction = ((keys[Key_Right] == Press)
 			- (keys[Key_Left] == Press)) * 0.039;
-	const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) * (.00831 * .39);
+	// const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) * (.00831 * .39);
+	const double	mouse_speed = 0;
+	const double	rotation = key_direction + mouse_speed;
 
-	*dir = point_rotate(*dir, key_direction + mouse_speed);
+	player->dir = point_rotate(player->dir, rotation);
+	player->plane = point_rotate(player->plane, rotation);
 }
