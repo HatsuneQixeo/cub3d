@@ -15,21 +15,17 @@
 void	image_draw_line(t_image *image, const t_colour colour,
 			const t_point start, const t_point end)
 {
-	const t_point	distance = (t_point){
-		end.x - start.x,
-		end.y - start.y
-	};
+	const t_point	distance = point_sub(end, start);
 	const int		total_step = ft_max(fabs(distance.x), fabs(distance.y));
-	const t_point	step_length = (t_point){
-		.x = distance.x / (double)total_step,
-		.y = distance.y / (double)total_step
-	};
+	const t_point	step_length = point_downscale(distance, total_step);
 	int				step;
+	t_point			it;
 
 	step = -1;
+	it = start;
 	while (++step < total_step)
 	{
-		image_draw_pixel(image, colour,
-			point_add(start, point_scale(step_length, step)));
+		image_draw_pixel(image, colour, it);
+		it = point_add(it, step_length);
 	}
 }

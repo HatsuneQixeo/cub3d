@@ -87,7 +87,7 @@ void	image_fill_circle(t_image *image, const t_colour colour)
 	const int		min = ft_min(image->size.x, image->size.y);
 	const double	radius = (double)(min - !(min & 0b1)) / 2;
 
-	image_clear(image);
+	image_clean(image);
 	// printf("image_fill_circle(): center = (%d, %d), radius = %f\n",
 	// 	center.x, center.y, radius);
 	image_draw_circle(image, colour, center, radius);

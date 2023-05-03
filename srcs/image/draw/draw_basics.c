@@ -34,7 +34,7 @@ void	image_draw_pixel(t_image *image, const t_colour colour, const t_point at)
 	if (!(0 <= rounded.y && rounded.y < image->size.y))
 	{
 		if (DRAW_WARNING)
-			printf("ourofrange y: %f, size: %f\n", at.y, image->size.y);
+			printf("outofrange y: %f, size: %f\n", at.y, image->size.y);
 		return ;
 	}
 	ft_assert(image->data != NULL, "image_draw_pixel: NULL image->data");
@@ -61,7 +61,7 @@ void	image_fill(t_image *image, const t_colour colour)
 	ft_intset((int *)image->data, image->size.x * image->size.y, colour);
 }
 
-void	image_clear(t_image *image)
+void	image_clean(t_image *image)
 {
 	image_fill(image, colour_from_rgba(0, 0, 0, 255));
 }

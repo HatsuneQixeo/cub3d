@@ -42,6 +42,8 @@ t_image	image_create(void *p_mlx, const t_point size,
 	a file format error?
 	a file error?
 	a mlx error?
+
+	Anyway, it shouldn't matter since the error should be recorded by errno
 */
 t_image	image_readxpm(void *p_mlx, const char *path,
 			t_offset putoffset_x, t_offset putoffset_y)

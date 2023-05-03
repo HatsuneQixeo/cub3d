@@ -54,7 +54,7 @@ void	image_draw_pixel(t_image *image, const t_colour colour, const t_point at);
 void	image_draw_line(t_image *image, const t_colour colour,
 			const t_point start, const t_point end);
 void	image_fill(t_image *image, const t_colour colour);
-void	image_clear(t_image *image);
+void	image_clean(t_image *image);
 
 /* Rectangle */
 void	image_draw_rectangle(t_image *image, const t_colour colour,
