@@ -14,8 +14,8 @@
 
 void	map_draw_tile(t_image *map, const t_colour colour, const t_point pos)
 {
-	const t_point	map_start = point_scale(pos, MapCellSize);
-	const t_point	map_end = point_scale(point_add(pos, (t_point){1, 1}),
+	const t_point	map_start = point_upscale(pos, MapCellSize);
+	const t_point	map_end = point_upscale(point_add(pos, (t_point){1, 1}),
 				MapCellSize);
 
 	image_draw_rectangle(map, colour,
@@ -30,7 +30,7 @@ t_image	map_texture(void *p_mlx, const t_map map)
 	t_image			image;
 	t_point			it;
 
-	image = image_create(p_mlx, point_add(point_scale(map.size, MapCellSize),
+	image = image_create(p_mlx, point_add(point_upscale(map.size, MapCellSize),
 				point_sub(map.size, (t_point){1, 1})),
 			putoffset_inverted, putoffset_inverted);
 	if (image.data == NULL)
@@ -152,7 +152,7 @@ t_game	game_init(void)
 	ft_assert(game.screen_buffer.p_image != NULL,
 		"image_create() for screen_buffer failed");
 	game.mouse = mouse_init(game.mlx.p_win);
-	ft_intset(game.keys, key_count, Release);
+	ft_intset((int *)game.keys, key_count, Release);
 	game.map = beta_map();
 	game.texture = texture_init(game.mlx.p_mlx, game.map);
 	// game.map /* In map parsing */
@@ -171,6 +171,8 @@ void	events(t_game *game)
 
 	/* hooks and loop */
 	mlx_do_key_autorepeatoff(mlx.p_mlx);
+	// for (int i = 2; i <= 36; i++)
+		// ft_mlx_hook(mlx.p_win, i, hook_log, NULL);
 	ft_mlx_hook(mlx.p_win, DestroyNotify, hook_button_close, EXIT_SUCCESS);
 	ft_mlx_hook(mlx.p_win, KeyPress, hook_key_press, game->keys);
 	ft_mlx_hook(mlx.p_win, KeyRelease, hook_key_release, game->keys);
@@ -181,50 +183,4 @@ void	events(t_game *game)
 	/* Gotta have to dig into this */
 	// mlx_do_sync(mlx.p_mlx);
 	mlx_loop_hook(mlx.p_mlx, hook_loop, game);
-}
-
-/* Temporary background */
-void	beta_screen_buffer(t_image buffer)
-{
-	const t_point	topleft = {
-		.x = ScreenBorderWidth,
-		.y = ScreenBorderHeight
-	};
-	const t_point	bottomright = {
-		.x = ScreenWidth - ScreenBorderWidth,
-		.y = ScreenHeight - ScreenBorderHeight
-	};
-	const t_point	topright = {
-		.x = ScreenWidth - ScreenBorderWidth,
-		.y = ScreenBorderHeight
-	};
-	const t_point	bottomleft = {
-		.x = ScreenBorderWidth,
-		.y = ScreenHeight - ScreenBorderHeight
-	};
-	const t_point	center = {
-		.x = ScreenWidth / 2,
-		.y = ScreenHeight / 2
-	};
-
-	image_fill(&buffer, colour_from_percentage(.1, .5, .5, .4));
-	image_draw_rectangle(&buffer, colour_from_percentage(.1, .3, .35, .60),
-		topleft, bottomright);
-	// for (unsigned int i = 1; i < buffer.size.y; i += 2)
-	// {
-	// 	image_draw_line(&buffer, colour_from_rgba(200, 50, 50, 40), (t_point){.x = 0, .y = i}, (t_point){.x = buffer.size.x, .y = i});
-	// }
-
-	image_draw_line(&buffer, colour_from_rgba(0, 0, 0, 0), bottomright, topleft);
-	image_draw_line(&buffer, colour_from_rgba(0, 0, 0, 0), topright, bottomleft);
-	image_draw_line(&buffer, colour_from_rgba(0, 0, 0, 0),
-		(t_point){.x = center.x, .y = bottomleft.y},
-		(t_point){.x = center.x, .y = topleft.y});
-	image_draw_line(&buffer, colour_from_rgba(0, 0, 0, 0),
-		(t_point){.x = topright.x, .y = center.y},
-		(t_point){.x = topleft.x, .y = center.y});
-	draw_filled_circle(&buffer, colour_from_percentage(0.2, 0.4, 0.9, 0.3),
-		(t_point){.x = center.x + center.x / 2, .y = center.y}, 100);
-	image_draw_circle(&buffer, colour_from_percentage(0.2, 0.4, 0.9, 0.3),
-		(t_point){.x = center.x - center.x / 2, .y = center.y}, 100);
 }
