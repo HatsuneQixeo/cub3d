@@ -3,8 +3,8 @@ NAME		:=	cub3d
 CC			:=	gcc
 CXXFLAGS	:=	-Wall -Werror -Wextra -g
 CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
-# CXXFLAGS	+=	-D DEBUG_RAY=1
 CXXFLAGS	+=	-D DRAW_WARNING=0
+CXXFLAGS	+=	-D DEBUG_RAY=1
 # CXXFLAGS	+=	-D DEBUG_KEY=1
 # CXXFLAGS	+=	-D DEBUG_BUTTON=1
 MLXFLAGS	:=	-lmlx -framework OpenGL -framework AppKit -L /usr/local/lib
@@ -18,7 +18,7 @@ MLX_MAKE	:=	make -C mlx 2> /dev/null
 SRC_DIR		:=	srcs
 SRCS		:=	$(shell find ${SRC_DIR} -name "*.c")
 
-HEADER		:=	$(shell find ${SRC_DIR} -name "*.h") libft/include/libft.h
+HEADER		:=	$(shell find ${SRC_DIR} -name "*.h") libft/include/libft.h libft/experiment/exlib/include/exlib.h
 CFLAGS		:=	$(addprefix -I, $(dir ${HEADER})) -I mlx
 
 OBJ_DIR		:=	objs
@@ -27,13 +27,14 @@ OBJS 		:=	$(patsubst ${SRC_DIR}%.c, ${OBJ_DIR}%.o, ${SRCS})
 LIBFT		:=	libft/libft.a
 LIBFT_MAKE	:=	make -C libft
 
-RM			:=	rm -rf
-
 GREY		:=	\033[30m
 RED			:=	\033[31m
 CYAN		:=	\033[36m
 LIGHT_CYAN	:=	\033[1;36m
 RESET		:=	\033[0m
+
+EXLIB_DIR	:=	libft/experiment/exlib
+EXLIB		:=	${EXLIB_DIR}/exlib.a
 
 all: ${NAME}
 
@@ -48,15 +49,16 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.c ${HEADER} | ${OBJ_DIR}
 
 ${NAME}: ${OBJS}
 	${LIBFT_MAKE}
+	make -C ${EXLIB_DIR}
 	${MLX_MAKE}
 	@printf "${LIGHT_CYAN}${CC} ${CXXFLAGS} $^ -o $@${RESET}\n"
-	@${CC} ${CXXFLAGS} ${LIBFT} $^ ${MLX} ${MLXFLAGS} -o $@
+	@${CC} ${CXXFLAGS} ${LIBFT} ${EXLIB} $^ ${MLX} ${MLXFLAGS} -o $@
 
 clean:
 	${LIBFT_MAKE} clean
 	${MLX_MAKE} clean
 	@printf "${RED}${RM} ${OBJ_DIR}${RESET}\n"
-	@${RM} ${OBJ_DIR}
+	@${RM} -r ${OBJ_DIR}
 
 fclean: clean
 	${LIBFT_MAKE} fclean
@@ -72,7 +74,7 @@ log: ${NAME}
 	./$< > log.log
 
 thisre:
-	${RM} ${NAME} ${OBJ_DIR}
+	${RM} -r ${NAME} ${OBJ_DIR}
 	make all
 
 norm:
