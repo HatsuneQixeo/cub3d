@@ -20,25 +20,17 @@
 # include "texture.h"
 # include "player.h"
 # include "cubmap.h"
+# include "exlib.h"
+# include "ray.h"
 
 # define CELL_SIZE	64
 
-typedef struct s_game
-{
-	t_mlx		mlx;
-	t_image		screen_buffer;
-	t_texture	texture;
-	t_player	player;
-	t_keys		keys;
-	t_mouse		mouse;
-	t_map		map;
-}			t_game;
-
 enum e_screen_size
 {
-	// ScreenWidth = 1000,
 	ScreenWidth = 1280,
 	ScreenHeight = 720,
+	ScreenMidWidth = ScreenWidth / 2,
+	ScreenMidHeight = ScreenHeight / 2,
 	ScreenBorderWidth = ScreenWidth / 16,
 	ScreenBorderHeight = ScreenHeight / 16,
 };
@@ -50,7 +42,26 @@ enum e_minimap_size
 	MinimapLength = MapCellSize * MinimapScale,
 };
 
-void	cast_a_ray(const t_mlx mlx, const t_point player, const t_point vector);
+enum e_ray_amount
+{
+	ray_amount = ScreenWidth
+};
+
+typedef t_ray	t_rays[ray_amount];
+
+typedef struct s_game
+{
+	t_mlx		mlx;
+	t_image		screen_buffer;
+	t_rays		rays;
+	t_texture	texture;
+	t_player	player;
+	t_keys		keys;
+	t_mouse		mouse;
+	t_map		map;
+}			t_game;
+
+void	draw_a_line(const t_mlx mlx, const t_point player, const t_point vector);
 
 int		hook_loop(t_game *game);
 
