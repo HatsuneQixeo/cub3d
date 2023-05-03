@@ -33,82 +33,71 @@ void	point_del(void *content)
 
 void	point_log(const char *prefix, const t_point point)
 {
-	printf("%-20sx: %6.2f, y: %6.2f\n", prefix, point.x, point.y);
+	// printf("[%-20s] x: %6.2f, y: %6.2f\n", prefix, point.x, point.y);
+	printf("[%-20s] x: %f, y: %f\n", prefix, point.x, point.y);
 }
 
 /* Bunch of math I have no idea */
+/* Likely math that won't come in handy in this project */
 
-t_point	point_normalize(const t_point point)
-{
-	t_point			new_point;
-	const double	magnitude = point_magnitude(point);
-
-	new_point.x = point.x / magnitude;
-	new_point.y = point.y / magnitude;
-	return (new_point);
-}
+// t_point	point_normalize(const t_point src)
+// {
+// 	return (point_downscale(src, point_magnitude(src)));
+// }
 
 // t_point	point_lerp(const t_point point1, const t_point point2, const double t)
 // {
-// 	t_point	new_point;
-
-// 	new_point.x = point1.x + (point2.x - point1.x) * t;
-// 	new_point.y = point1.y + (point2.y - point1.y) * t;
-// 	return (new_point);
+// 	return (point_add(point1, point_upscale(point_sub(point2, point1), t)));
 // }
 
 // t_point	point_reflect(const t_point point, const t_point normal)
 // {
-// 	t_point	new_point;
-
-// 	new_point = point_sub(point, point_scale(normal, 2 * point_dot(point, normal)));
-// 	return (new_point);
+// 	return (point_sub(point, point_upscale(normal, 2 * point_dot(point, normal))));
 // }
 
 // t_point	point_midpoint(const t_point point1, const t_point point2)
 // {
-// 	t_point	new_point;
-
-// 	new_point.x = (point1.x + point2.x) / 2;
-// 	new_point.y = (point1.y + point2.y) / 2;
-// 	return (new_point);
+// 	return (point_upscale(point_add(point1, point2), .50));
 // }
 
 // t_point	point_project(const t_point point, const t_point normal)
 // {
-// 	t_point	new_point;
-
-// 	new_point = point_scale(normal, point_dot(point, normal) / point_dot(normal, normal));
-// 	return (new_point);
+// 	return (point_upscale(normal,
+// 			point_dot(point, normal) / point_dot(normal, normal)));
 // }
 
 // t_point	point_reject(const t_point point, const t_point normal)
 // {
-// 	t_point	new_point;
-
-// 	new_point = point_sub(point, point_project(point, normal));
-// 	return (new_point);
+// 	return (point_sub(point, point_project(point, normal)));
 // }
 
 // t_point	point_from_angle(const double angle)
 // {
-// 	t_point	point;
+// 	const t_point	point = {
+// 		.x = cos(angle),
+// 		.y = sin(angle)
+// 	};
 
-// 	point.x = cos(angle);
-// 	point.y = sin(angle);
 // 	return (point);
 // }
 
 // t_point	point_from_polar(const double magnitude, const double angle)
 // {
-// 	t_point	point;
-
-// 	point.x = magnitude * cos(angle);
-// 	point.y = magnitude * sin(angle);
-// 	return (point);
+// 	return (point_upscale(point_from_angle(angle), magnitude));
 // }
 
 double	point_angle(const t_point point)
 {
+	/* Remember to change this back? Or maybe just leave it as it is? */
 	return (atan2(point.y, point.x) + M_PI_2);
+}
+
+t_point	point_sign(const t_point direction)
+{
+	const t_point	point = {
+		.x = -(direction.x < 0) + (direction.x > 0),
+		.y = -(direction.y < 0) + (direction.y > 0)
+	};
+
+	return (point);
 }

@@ -32,7 +32,7 @@ t_point	point_sub(const t_point a, const t_point b)
 	return (new_point);
 }
 
-t_point	point_scale(const t_point point, const double scale)
+t_point	point_upscale(const t_point point, const double scale)
 {
 	const t_point	new_point = {
 		.x = point.x * scale,
@@ -42,7 +42,7 @@ t_point	point_scale(const t_point point, const double scale)
 	return (new_point);
 }
 
-t_point	point_unscale(const t_point point, const double scale)
+t_point	point_downscale(const t_point point, const double scale)
 {
 	const t_point	new_point = {
 		.x = point.x / scale,
