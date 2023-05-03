@@ -35,8 +35,7 @@ enum e_keys_index
 	One interesting things with typedef from enum e_keys_index
 	there will actually be compile error with assigning from different enum type
 */
-// typedef enum e_keys_index	t_keys[key_count];
-typedef int	t_keys[key_count];
+typedef enum e_input	t_keys[key_count];
 
 int	hook_key_press(const int keycode, t_keys keys);
 int	hook_key_release(const int keycode, t_keys keys);

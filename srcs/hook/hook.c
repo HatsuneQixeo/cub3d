@@ -24,7 +24,7 @@ int	hook_button_close(const int status)
 
 int	hook_log(const char *message)
 {
-	ft_printf("%s\n", message);
+	printf("%p\n", message);
 	return (0);
 }
 

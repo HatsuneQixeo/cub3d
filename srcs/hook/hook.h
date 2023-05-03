@@ -23,8 +23,10 @@
  * DESTROY:	refers to the red cross at the upper left corner of the window,
  * 			don't think mlx_close_window can trigger it?
  * 
- * Can't get the rest to trigger,
- * not that any of them really contribute to this project anyway.
+ * Can't get the rest to trigger, despite some of them would be rather useful.
+ * 
+ * The documentaion stated that it only has partial support of events,
+ * makes sense I guess
  */
 enum e_x11events
 {
@@ -67,6 +69,8 @@ enum e_x11events
 
 /**
  * @brief To be honest, I don't believe they are doing anything
+ * 
+ * The documentation did mention maks represents nothing in mac version tho
  */
 enum e_x11masks
 {
