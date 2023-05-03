@@ -1,23 +1,5 @@
 #include "cubmap.h"
 
-/**
- * @brief Makes a duplicate of the given data of given size in heap
- * (Shallow Copy)
- * 
- * @param data 
- * @param size 
- * @return void* 
- */
-void	*ft_memnew(const void *data, const size_t size)
-{
-	void	*ptr;
-
-	ptr = malloc(size);
-	if (ptr == NULL)
-		return (NULL);
-	return (ft_memcpy(ptr, data, size));
-}
-
 t_list	*cubmap_gather_if(const t_map map, t_cubmapis ft_is)
 {
 	t_list	*lst_player;
