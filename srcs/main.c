@@ -134,11 +134,6 @@ int	cub3d(const char *map_path)
 		hook_button_close(1);
 		// return (-1);
 	// hook_button_close(0);
-	game.player.pos = (t_point){2.50, 2.50};
-	game.player.dir = (t_point){.x = 0, .y = -1}; /* N, S, E, W */
-	game.player.plane = point_upscale((t_point){1, 0}, 0.9);
-	game.player.plane = point_rotate(game.player.plane, M_PI_4);
-	game.player.dir = point_rotate(game.player.dir, M_PI_4);
 	events(&game);
 	mlx_loop(game.mlx.p_mlx);
 	return (0);
