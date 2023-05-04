@@ -1,7 +1,7 @@
 #include "cub3d.h"
 #include "element.h"
 
-int	cub3d_get_texture(void *p_mlx, const t_list *lst_elements, t_texture *texture);
+int	cubmap_parse_texture(void *p_mlx, const t_list *lst_elements, t_texture *texture);
 
 char	*ft_strfind_if(const char *str, t_ftis ft_is)
 {
@@ -27,7 +27,7 @@ static t_element	*parse_element(const char *line)
  * Question: What should this function even return
  * Hâtsūñè Mīkù
  */
-void	cub3d_parsecontent(char **strlist, t_list **lst_element, t_map *map)
+static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 {
 	const char		*line;
 	unsigned int	i;
@@ -51,11 +51,10 @@ void	cub3d_parsecontent(char **strlist, t_list **lst_element, t_map *map)
 	point_log("size: ", map->size);
 }
 
-int	cubmap_getmap(const char *path, t_game *game)
+int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
 {
 	char **const	file_content = ft_readfile(path);
 	t_list			*lst_element;
-	t_map			map;
 	int				status;
 
 	if (file_content == NULL)
@@ -65,18 +64,16 @@ int	cubmap_getmap(const char *path, t_game *game)
 		return (-1);
 	}
 	lst_element = NULL;
-	cub3d_parsecontent(file_content, &lst_element, &map);
+	getmap_lexer(file_content, &lst_element, map);
 	ft_lstiter(lst_element, element_show);
-	status = cub3d_get_texture(game->mlx.p_mlx, lst_element, &game->texture);
+	status = cubmap_parse_texture(game->mlx.p_mlx, lst_element, texture);
 	if (status != -1)
-		status = -(cubmap_valid_player(map)
-			+ cubmap_valid_unit(map)
-			+ cubmap_surrounded(map) < 0);
+		status = -(cubmap_valid_player(*map)
+			+ cubmap_valid_unit(*map)
+			+ cubmap_surrounded(*map) < 0);
 	ft_lstclear(&lst_element, element_del);
 	ft_strlistclear(file_content);
-	if (status != -1)
-		game->map = map;
-	else
-		ft_strlistclear(map.layout);
+	if (status == -1)
+		ft_strlistclear(map->layout);
 	return (status);
 }

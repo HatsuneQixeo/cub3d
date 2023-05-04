@@ -123,35 +123,6 @@ int	hook_loop(t_game *game)
 	return (0);
 }
 
-typedef struct s_pair
-{
-	char	c;
-	t_point	direction;
-	t_point	plane;
-}			t_side_pair;
-
-t_player	player_init(const t_point pos, const char orientation)
-{
-	const t_side_pair	arr[] = {
-	{.c = StartUp, .direction = {.x = 0, .y = -1}, .plane = {.x = 1, .y = 0}},
-	{.c = StartLeft, .direction = {.x = -1, .y = 0}, .plane = {.x = 0, .y = 1}},
-	{.c = StartDown, .direction = {.x = 0, .y = 1}, .plane = {.x = -1, .y = 0}},
-	{.c = StartRight, .direction = {.x = 1, .y = 0}, .plane = {.x = 0, .y = -1}}
-	};
-	const unsigned int	length = (sizeof(arr) / sizeof(arr[0]));
-	t_player			player;
-	unsigned int		i;
-
-	i = 0;
-	while (i < length && arr[i].c != orientation)
-		i++;
-	ft_assert(i != length, "player_init: Invalid orentation character");
-	player.pos = point_add(pos, (t_point){.5, .5});
-	player.dir = arr[i].direction;
-	player.plane = arr[i].plane;
-	return (player);
-}
-
 int	cub3d(const char *map_path)
 {
 	t_game	game;
