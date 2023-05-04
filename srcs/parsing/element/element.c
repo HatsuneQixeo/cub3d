@@ -1,5 +1,5 @@
 #include "element.h"
-#include <stdlib.h>
+#include "ft_printf.h"
 
 t_element	*element_new(char *identifier, char *properties)
 {
@@ -18,4 +18,12 @@ void	element_del(void *content)
 	element = content;
 	free(element->identifier);
 	free(element->properties);
+	free(content);
+}
+
+void	element_show(void *content)
+{
+	const t_element	*element = content;
+
+	ft_dprintf(2, "%s: %s\n", element->identifier, element->properties);
 }

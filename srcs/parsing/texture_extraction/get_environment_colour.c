@@ -42,8 +42,8 @@ static int	ft_strtocolour(const char *properties, t_colour *colour)
 	ret = -1;
 	/* Testing required */
 	if (len != expected_len)
-		ft_dprintf(2, "Expected %.*s value: %s\n", properties,
-				expected_len + (expected_len - 1), "R,G,B,A");
+		ft_dprintf(2, "Expected %.*s value: %s\n",
+				expected_len + (expected_len - 1), "R,G,B,A", properties);
 	else
 		ret = colour_convert(strlist_values, colour);
 	ft_strlistclear(strlist_values);
@@ -53,8 +53,8 @@ static int	ft_strtocolour(const char *properties, t_colour *colour)
 int	get_environment_colour(t_list *lst_table[],
 			t_colour *ceiling, t_colour *floor)
 {
-	const t_element	*ele_floor = lst_table[IdxIdentifierFloor]->content;
-	const t_element	*ele_ceiling = lst_table[IdxIdentifierCeiling]->content;
+	const t_element	*ele_floor = lst_table[IdxElemFloor]->content;
+	const t_element	*ele_ceiling = lst_table[IdxElemCeiling]->content;
 	const char		*str_floor = ele_floor->properties;
 	const char		*str_ceiling = ele_ceiling->properties;
 

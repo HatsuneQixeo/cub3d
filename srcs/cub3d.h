@@ -65,7 +65,7 @@ void	draw_a_line(const t_mlx mlx, const t_point player, const t_point vector);
 
 int		hook_loop(t_game *game);
 
-t_game	game_init(void);
+int		game_init(const char *path, t_game *game);
 void	events(t_game *game);
 void	beta_screen_buffer(t_image screen_buffer);
 

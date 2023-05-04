@@ -24,14 +24,14 @@
 // 	return (-1);
 // }
 
-void	ray_draw(t_image *screen_buffer, t_rays rays)
+void	ray_draw_colour(t_image *screen_buffer, t_rays rays)
 {
-	int				line_height;
 	t_point			point_start;
 	t_point			point_end;
 	t_colour		colour;
 	unsigned int	i;
 	unsigned int	index;
+	int				line_height;
 
 	i = -1;
 	while (++i < ScreenWidth)
@@ -104,7 +104,7 @@ int	hook_loop(t_game *game)
 	PROFILE("raycast: ", screen_rays(game->rays, &game->player, game->map.layout));
 	/* Background render */
 	{
-		PROFILE("draw: ", ray_draw(&game->screen_buffer, game->rays));
+		PROFILE("draw: ", ray_draw_colour(&game->screen_buffer, game->rays));
 		PROFILE("put:  ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
 		printf("\n");
 		/* Minimap */
@@ -155,11 +155,14 @@ t_player	player_init(const t_point pos, const char orientation)
 int	cub3d(const char *map_path)
 {
 	t_game	game;
-	t_image	image;
 
-	// if (cmp_strsuffix(map_path, ".cub"))
-		// return (!!ft_dprintf(2, "Invalid File extension: %s\n", map_path));;
-	game = game_init();
+	if (cmp_strsuffix(map_path, ".cub"))
+		return (-!!ft_dprintf(2, "Invalid File extension: %s\n", map_path));
+	ft_bzero(&game, sizeof(t_game));
+	if (game_init(map_path, &game) == -1)
+		hook_button_close(1);
+		// return (-1);
+	// hook_button_close(0);
 	game.player.pos = (t_point){2.50, 2.50};
 	game.player.dir = (t_point){.x = 0, .y = -1}; /* N, S, E, W */
 	game.player.plane = point_upscale((t_point){1, 0}, 0.9);
@@ -172,7 +175,9 @@ int	cub3d(const char *map_path)
 
 int	main(int argc, char **argv)
 {
-	// if (argc != 2)
-	// 	return (!!ft_putendl_fd("usage: cub3d <map>", 2))
+	if (argc != 2)
+		return (!!ft_putendl_fd("usage: cub3d <map>", 2));
 	cub3d(argv[1]);
+	if (!SAN)
+		system("leaks -q cub3d");
 }

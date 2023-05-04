@@ -21,10 +21,10 @@ static t_list	*read_image(void *p_mlx, const char *path, t_image *image)
 static int	read_all_walls(void *p_mlx, t_list *lst_table[], t_wall_textures walls)
 {
 	const char	*paths[] = {
-		[North] = lst_table[IdxIdentifierNorth]->content,
-		[East] = lst_table[IdxIdentifierEast]->content,
-		[South] = lst_table[IdxIdentifierSouth]->content,
-		[West] = lst_table[IdxIdentifierWest]->content,
+		[North] = ((t_element *)lst_table[IdxElemNorth]->content)->properties,
+		[East] = ((t_element *)lst_table[IdxElemEast]->content)->properties,
+		[South] = ((t_element *)lst_table[IdxElemSouth]->content)->properties,
+		[West] = ((t_element *)lst_table[IdxElemWest]->content)->properties,
 	};
 	t_list		*lst_err;
 
@@ -59,7 +59,7 @@ static void	extract_texture(const char *idx_table[], const unsigned int length,
 		ele = lst_element->content;
 		find = ft_arrfind(idx_table, length, find_str, ele->identifier);
 		if (find == NOTFOUND)
-			ft_lstadd_back(&lst_table[IdxIdentifierUnknown], ft_lstnew(ele));
+			ft_lstadd_back(&lst_table[IdxElemUnknown], ft_lstnew(ele));
 		else
 			ft_lstadd_back(&lst_table[find], ft_lstnew(ele));
 		lst_element = lst_element->next;
@@ -69,17 +69,18 @@ static void	extract_texture(const char *idx_table[], const unsigned int length,
 int	cub3d_get_texture(void *p_mlx, const t_list *lst_elements, t_texture *texture)
 {
 	const char			*idx_table[] = {
-		[IdxIdentifierNorth] = "NO",
-		[IdxIdentifierEast] = "EA",
-		[IdxIdentifierSouth] = "SO",
-		[IdxIdentifierWest] = "WE",
-		[IdxIdentifierFloor] = "F",
-		[IdxIdentifierCeiling] = "C"
+		[IdxElemNorth] = "NO",
+		[IdxElemEast] = "EA",
+		[IdxElemSouth] = "SO",
+		[IdxElemWest] = "WE",
+		[IdxElemFloor] = "F",
+		[IdxElemCeiling] = "C"
 	};
 	const unsigned int	length = (sizeof(idx_table) / sizeof(idx_table[0]));
-	t_list				*lst_table[IdxIdentifierAmount];
+	t_list				*lst_table[IdxElemAmount];
 	int					status;
 
+	ft_bzero(lst_table, sizeof(lst_table));
 	extract_texture(idx_table, length, lst_elements, lst_table);
 	status = 0;
 	if (check_table(idx_table, length, lst_table) == -1)
@@ -89,7 +90,7 @@ int	cub3d_get_texture(void *p_mlx, const t_list *lst_elements, t_texture *textur
 		status = -1;
 	else if (read_all_walls(p_mlx, lst_table, texture->walls) == -1)
 		status = -1;
-	ft_lstclear(&lst_table[IdxIdentifierAmount - 1], NULL);
-	ft_aaclear((void **)lst_table, del_shallowlist);
+	for (unsigned int i = 0; i < IdxElemAmount; i++)
+		ft_lstclear(&lst_table[i], NULL);
 	return (status);
 }

@@ -27,8 +27,7 @@ static t_element	*parse_element(const char *line)
  * Question: What should this function even return
  * Hâtsūñè Mīkù
  */
-void	cub3d_parsecontent(char **strlist, t_list **lst_element,
-			char ***map_layout)
+void	cub3d_parsecontent(char **strlist, t_list **lst_element, t_map *map)
 {
 	const char		*line;
 	unsigned int	i;
@@ -37,37 +36,47 @@ void	cub3d_parsecontent(char **strlist, t_list **lst_element,
 	while (strlist[++i] != NULL)
 	{
 		line = strlist[i];
-		if (!stris_empty(line) || stris_only(line, ft_isspace))
+		if (stris_empty(line) || stris_only(line, ft_isspace))
 			continue ;
 		/* Check if it's map start */
 		if (ft_isspace(line[0]) || ft_isdigit(line[0]))
 			break ;
 		ft_lstadd_back(lst_element, ft_lstnew(parse_element(line)));
 	}
-	*map_layout = ft_strlistdup(&strlist[i]);
+	map->layout = ft_strlistpad(&strlist[i], ft_strpad_right, ' ');
+	map->size.y = ft_strcount(map->layout);
+	if (map->size.y != 0)
+		map->size.x = ft_strlen(map->layout[0]);
+	ft_strlistiteri(map->layout, iteri_showstr);
+	point_log("size: ", map->size);
 }
 
 int	cubmap_getmap(const char *path, t_game *game)
 {
 	char **const	file_content = ft_readfile(path);
-	t_list	*lst_element;
-	t_map	map;
-	int		status;
+	t_list			*lst_element;
+	t_map			map;
+	int				status;
 
 	if (file_content == NULL)
 	{
+		ft_putendl_fd("Error", 2);
 		perror(path);
 		return (-1);
 	}
 	lst_element = NULL;
-	ft_bzero(&map, sizeof(map));
-	cub3d_parsecontent(file_content, &lst_element, &map.layout);
+	cub3d_parsecontent(file_content, &lst_element, &map);
+	ft_lstiter(lst_element, element_show);
 	status = cub3d_get_texture(game->mlx.p_mlx, lst_element, &game->texture);
 	if (status != -1)
-		status = (cubmap_valid_player(map)
+		status = -(cubmap_valid_player(map)
 			+ cubmap_valid_unit(map)
-			+ cubmap_surrounded(map)) < 0;
+			+ cubmap_surrounded(map) < 0);
 	ft_lstclear(&lst_element, element_del);
 	ft_strlistclear(file_content);
-	return (-status);
+	if (status != -1)
+		game->map = map;
+	else
+		ft_strlistclear(map.layout);
+	return (status);
 }

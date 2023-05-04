@@ -9,17 +9,18 @@ typedef struct s_element
 
 enum e_table_index
 {
-	IdxIdentifierNorth,
-	IdxIdentifierEast,
-	IdxIdentifierSouth,
-	IdxIdentifierWest,
-	IdxIdentifierFloor,
-	IdxIdentifierCeiling,
-	IdxIdentifierUnknown,
-	IdxIdentifierAmount
+	IdxElemNorth,
+	IdxElemEast,
+	IdxElemSouth,
+	IdxElemWest,
+	IdxElemFloor,
+	IdxElemCeiling,
+	IdxElemUnknown,
+	IdxElemAmount
 };
 
 t_element	*element_new(char *identifier, char *properties);
 void		element_del(void *content);
+void		element_show(void *content);
 
 #endif

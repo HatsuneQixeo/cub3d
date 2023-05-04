@@ -23,8 +23,8 @@ int	check_table(const char *idx_table[], const unsigned int length,
 	unsigned int	i;
 
 	lst_err = NULL;
-	if (lst_table[IdxIdentifierUnknown] != NULL)
-		lst_err = ft_lstmap(lst_table[IdxIdentifierUnknown],
+	if (lst_table[IdxElemUnknown] != NULL)
+		lst_err = ft_lstmap(lst_table[IdxElemUnknown],
 				map_invalid_type, free);
 	i = length;
 	while (i--)

@@ -24,7 +24,7 @@ enum e_mapunit
 typedef int	(*t_cubmapis)(const t_map *map, const t_point point);
 int	cubmap_isplayer(const t_map *map, const t_point pos);
 int	cubmap_isinvalid_unit(const t_map *map, const t_point pos);
-int	cubmap_isspace_atborder(const t_map *map, const t_point pos);
+int	cubmap_ismissingborder(const t_map *map, const t_point pos);
 
 /* Validator */
 int	cubmap_valid_player(const t_map map);

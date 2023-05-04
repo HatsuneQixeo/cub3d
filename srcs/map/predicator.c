@@ -25,23 +25,25 @@ int	cubmap_isinvalid_unit(const t_map *map, const t_point pos)
 			|| cubmap_isplayer(map, pos)));
 }
 
-static int	isspace_orwall(int c)
+static int	isspace_orwall(const t_map *map, const t_point pos)
 {
-	return (c == Space || c == Wall);
+	const char	c = map->layout[(int)pos.y][(int)pos.x];
+
+	return (c == Space || c == Wall || cubmap_isplayer(map, pos));
 }
 
-int	cubmap_isspace_atborder(const t_map *map, const t_point pos)
+int	cubmap_ismissingborder(const t_map *map, const t_point pos)
 {
 	const unsigned int	y = pos.y;
 	const unsigned int	x = pos.x;
 
-	if (map->layout[y][x] != Space)
+	if (!(map->layout[y][x] == Space || cubmap_isplayer(map, pos)))
 		return (0);
 	if (x == 0 || x == map->size.x - 1
 		|| y == 0 || y == map->size.y - 1)
 		return (1);
-	return (!(isspace_orwall(map->layout[y - 1][x])
-		&& isspace_orwall(map->layout[y][x - 1])
-		&& isspace_orwall(map->layout[y + 1][x])
-		&& isspace_orwall(map->layout[y][x + 1])));
+	return (!(isspace_orwall(map, pos)
+		&& isspace_orwall(map, pos)
+		&& isspace_orwall(map, pos)
+		&& isspace_orwall(map, pos)));
 }

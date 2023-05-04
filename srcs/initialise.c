@@ -51,35 +51,31 @@ t_image	map_texture(void *p_mlx, const t_map map)
 	return (image);
 }
 
-static t_texture	texture_init(void *p_mlx, const t_map map)
+static void	texture_init(void *p_mlx, const t_map map, t_texture *texture)
 {
-	t_texture	texture;
-
-	ft_bzero(&texture, sizeof(t_texture));
 	{
-		texture.player_icon = image_create(p_mlx, (t_point){.x = 17, .y = 17},
+		texture->player_icon = image_create(p_mlx, (t_point){.x = 17, .y = 17},
 				putoffset_centered, putoffset_centered);
-		ft_assert(texture.player_icon.p_image != NULL,
+		ft_assert(texture->player_icon.p_image != NULL,
 			"image_create() for player_icon failed");
-		image_fill_circle(&texture.player_icon,
+		image_fill_circle(&texture->player_icon,
 			colour_from_percentage(.3, .7, .5, .75));
 	}
 	{
-		texture.mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
+		texture->mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
 				putoffset_default, putoffset_default);
-		ft_assert(texture.mouse_icon.p_image != NULL,
+		ft_assert(texture->mouse_icon.p_image != NULL,
 			"image_readxpm() for mouse_icon failed");
-		// texture.mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
+		// texture->mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
 		// 		putoffset_centered, putoffset_centered);
-		// image_fill_circle(texture.mouse_icon,
+		// image_fill_circle(texture->mouse_icon,
 		// 	colour_from_percentage(.3, .7, .8, .75));
 	}
 	{
-		texture.map = map_texture(p_mlx, map);
-		ft_assert(texture.map.p_image != NULL,
+		texture->map = map_texture(p_mlx, map);
+		ft_assert(texture->map.p_image != NULL,
 			"image_create() for map failed");
 	}
-	return (texture);
 }
 
 static t_mouse	mouse_init(void *p_win)
@@ -92,12 +88,7 @@ static t_mouse	mouse_init(void *p_win)
 	return (mouse);
 }
 
-t_map	beta_map(void)
-{
-	t_map	map;
-
-	map.layout = ft_strlistdup((char *[]) {
-#if 1
+#if 0
 			"111111111",
 			"100010001",
 			"100011011",
@@ -107,7 +98,7 @@ t_map	beta_map(void)
 			"100010111",
 			"100010001",
 			"111111111",
-#else
+#elif 0
 			"111111111111111",
 			"100000010000001",
 			"100000010000001",
@@ -124,40 +115,32 @@ t_map	beta_map(void)
 			"100000010000001",
 			"111111111111111",
 #endif
-			NULL
-		});
-	map.size = (t_point){
-		.x = ft_strlen(map.layout[0]),
-		.y = ft_strcount(map.layout)
-	};
-	return (map);
-}
+int	cubmap_getmap(const char *path, t_game *game);
 
 /* Initialization and assertion */
-t_game	game_init(void)
+int	game_init(const char *path, t_game *game)
 {
-	t_game		game;
 	const t_mlx	mlx = {
 		.p_mlx = mlx_init(),
 		.p_win = mlx_new_window(mlx.p_mlx, ScreenWidth, ScreenHeight, "cub3d")
 	};
 
-	ft_bzero(&game, sizeof(t_game));
-	ft_assert(mlx.p_mlx != NULL, "mlx_init() failed");
-	ft_assert(mlx.p_win != NULL, "mlx_new_window() failed");
-	game.mlx = mlx;
-	game.screen_buffer = image_create(game.mlx.p_mlx,
+	game->mlx = mlx;
+	if (cubmap_getmap(path, game) == -1)
+		return (-1);
+	ft_assert(game->mlx.p_mlx != NULL, "mlx_init() failed");
+	ft_assert(game->mlx.p_win != NULL, "mlx_new_window() failed");
+	game->screen_buffer = image_create(game->mlx.p_mlx,
 			(t_point){.x = ScreenWidth, .y = ScreenHeight},
 			putoffset_default, putoffset_default);
-	ft_assert(game.screen_buffer.p_image != NULL,
+	ft_assert(game->screen_buffer.p_image != NULL,
 		"image_create() for screen_buffer failed");
-	game.mouse = mouse_init(game.mlx.p_win);
-	ft_intset((int *)game.keys, key_count, Release);
-	game.map = beta_map();
-	game.texture = texture_init(game.mlx.p_mlx, game.map);
-	// game.map /* In map parsing */
-	// game.player /* In map parsing */
-	return (game);
+	game->mouse = mouse_init(game->mlx.p_win);
+	ft_intset((int *)game->keys, key_count, Release);
+	texture_init(game->mlx.p_mlx, game->map, &game->texture);
+	// game->map /* In map parsing */
+	// game->player /* In map parsing */
+	return (0);
 }
 
 static void	ft_mlx_hook(void *win_ptr, int x_event, int (*func)(), void *param)
