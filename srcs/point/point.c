@@ -101,3 +101,9 @@ t_point	point_sign(const t_point direction)
 
 	return (point);
 }
+
+int	point_inbound(const t_point point, const t_point size)
+{
+	return ((0 <= point.x && point.x < size.x)
+		&& (0 <= point.y && point.y < size.y));
+}

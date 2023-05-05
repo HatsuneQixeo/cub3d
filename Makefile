@@ -3,8 +3,8 @@ NAME		:=	cub3d
 CC			:=	gcc
 CXXFLAGS	:=	-Wall -Werror -Wextra -g
 CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
-CXXFLAGS	+=	-D DRAW_WARNING=0
-CXXFLAGS	+=	-D DEBUG_RAY=1
+# CXXFLAGS	+=	-D DRAW_WARNING=0
+CXXFLAGS	+=	-D NO_PROFILE=1
 # CXXFLAGS	+=	-D DEBUG_KEY=1
 # CXXFLAGS	+=	-D DEBUG_BUTTON=1
 MLXFLAGS	:=	-lmlx -framework OpenGL -framework AppKit -L /usr/local/lib
@@ -56,7 +56,7 @@ ${NAME}: ${OBJS}
 
 clean:
 	${LIBFT_MAKE} clean
-	${MLX_MAKE} clean
+	# ${MLX_MAKE} clean
 	@printf "${RED}${RM} ${OBJ_DIR}${RESET}\n"
 	@${RM} -r ${OBJ_DIR}
 

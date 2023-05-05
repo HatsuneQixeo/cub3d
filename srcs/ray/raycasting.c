@@ -18,12 +18,6 @@ static t_point	side_distance_offset(const t_point pos, const t_point direction,
 	return (side_distance);
 }
 
-int	point_inbound(const t_point point, const t_point size)
-{
-	return ((0 <= point.x && point.x < size.x)
-		&& (0 <= point.y && point.y < size.y));
-}
-
 static t_point	go_until_hit(char **map, const t_point mapsize, const t_point pos, t_ray *ray)
 {
 	const t_point	delta_distance = {
@@ -52,7 +46,7 @@ static t_point	go_until_hit(char **map, const t_point mapsize, const t_point pos
 		}
 	}
 	if (!point_inbound(ray->hit, mapsize) || !point_inbound(pos, mapsize))
-		return ((t_point){(double)1 / 0, (double)1 / 0});
+		return ((t_point){INFINITY, INFINITY});
 	return (point_sub(side_distance, delta_distance));
 }
 

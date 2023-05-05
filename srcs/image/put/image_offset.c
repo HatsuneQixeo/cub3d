@@ -19,7 +19,7 @@ double	putoffset_default(const double pos, const double size)
 
 double	putoffset_centered(const double pos, const double size)
 {
-	return (pos - size / 2);
+	return (pos - (size / 2));
 }
 
 double	putoffset_inverted(const double pos, const double size)
