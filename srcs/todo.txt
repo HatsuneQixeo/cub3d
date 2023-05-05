@@ -1,1 +1,3 @@
 Shearing, shifting start and end to create an illusion of up and down
+more map test cases and related norm
+profile on inbound check performance degrade for raycasting
