@@ -66,7 +66,7 @@ static void	extract_texture(const char *idx_table[], const unsigned int length,
 	}
 }
 
-int	cub3d_get_texture(void *p_mlx, const t_list *lst_elements, t_texture *texture)
+int	cubmap_parse_texture(void *p_mlx, const t_list *lst_elements, t_texture *texture)
 {
 	const char			*idx_table[] = {
 		[IdxElemNorth] = "NO",

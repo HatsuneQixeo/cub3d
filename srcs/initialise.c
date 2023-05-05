@@ -115,7 +115,6 @@ static t_mouse	mouse_init(void *p_win)
 			"100000010000001",
 			"111111111111111",
 #endif
-int	cubmap_getmap(const char *path, t_game *game);
 
 /* Initialization and assertion */
 int	game_init(const char *path, t_game *game)
@@ -126,7 +125,7 @@ int	game_init(const char *path, t_game *game)
 	};
 
 	game->mlx = mlx;
-	if (cubmap_getmap(path, game) == -1)
+	if (cubmap_getmap(game->mlx.p_mlx, path, &game->map, &game->texture) == -1)
 		return (-1);
 	ft_assert(game->mlx.p_mlx != NULL, "mlx_init() failed");
 	ft_assert(game->mlx.p_win != NULL, "mlx_new_window() failed");
@@ -138,8 +137,7 @@ int	game_init(const char *path, t_game *game)
 	game->mouse = mouse_init(game->mlx.p_win);
 	ft_intset((int *)game->keys, key_count, Release);
 	texture_init(game->mlx.p_mlx, game->map, &game->texture);
-	// game->map /* In map parsing */
-	// game->player /* In map parsing */
+	game->player = cubmap_getplayer(game->map);
 	return (0);
 }
 
