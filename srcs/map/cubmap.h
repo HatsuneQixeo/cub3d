@@ -14,6 +14,7 @@ typedef struct s_map
 
 enum e_mapunit
 {
+	Void = ' ',
 	Space = '0',
 	Wall = '1',
 	StartUp = 'N',

@@ -40,11 +40,11 @@ static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 		if (stris_empty(line) || stris_only(line, ft_isspace))
 			continue ;
 		/* Check if it's map start */
-		if (line[0] == ' ' || ft_isdigit(line[0]))
+		if (line[0] == Void || ft_isdigit(line[0]))
 			break ;
 		ft_lstadd_back(lst_element, ft_lstnew(parse_element(line)));
 	}
-	map->layout = ft_strlistpad(&strlist[i], ft_strpad_right, ' ');
+	map->layout = ft_strlistpad(&strlist[i], ft_strpad_right, Void);
 	map->size.y = ft_strcount(map->layout);
 	if (map->size.y != 0)
 		map->size.x = ft_strlen(map->layout[0]);
