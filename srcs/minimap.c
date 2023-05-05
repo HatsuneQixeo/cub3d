@@ -45,7 +45,7 @@ void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_
 				&& 0 <= put.y && put.y < image.size.y)
 			{
 				image_put(mlx, player_icon, put);
-				draw_a_line(mlx, put, point_upscale(player->dir, 39));
+				put_a_line(mlx, put, point_upscale(player->dir, 39));
 			}
 		}
 		image_destroy(mlx.p_mlx, &image);

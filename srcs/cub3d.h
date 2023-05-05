@@ -61,7 +61,7 @@ typedef struct s_game
 	t_map		map;
 }			t_game;
 
-void	draw_a_line(const t_mlx mlx, const t_point player, const t_point vector);
+void	put_a_line(const t_mlx mlx, const t_point player, const t_point vector);
 
 int		hook_loop(t_game *game);
 

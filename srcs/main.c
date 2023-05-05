@@ -122,7 +122,7 @@ int	hook_loop(t_game *game)
 	{
 		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
 		// if (game->mouse.left_click == Press)
-			// draw_a_line(game->mlx, game->player.pos, point_sub(game->mouse.pos, game->player.pos));
+			// put_a_line(game->mlx, game->player.pos, point_sub(game->mouse.pos, game->player.pos));
 	}
 	image_clean(&game->screen_buffer);
 	return (0);
