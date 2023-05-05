@@ -9,11 +9,11 @@ typedef struct s_player
 {
 	t_point	pos;
 	t_point	dir;
-	t_point	plane;
 }			t_player;
 
 t_point	player_direction(const t_keys keys);
-void	player_move(t_player *player, const t_point direction);
+void	player_move(t_player *player, const t_point direction,
+			char **map, const t_point mapsize);
 void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys);
 
 #endif

@@ -48,13 +48,22 @@ t_point	player_direction(const t_keys keys)
 	return (keys_to_vector(keys, key_vectors, len));
 }
 
-// t_point	vector_collision(const t_point start, const t_point vector,
-// 			char **map, const t_point mapsize)
-// {
-// 	if ()
-// }
+static t_point	vector_collision(const t_point start, const t_point vector,
+			char **map, const t_point mapsize)
+{
+	t_point	end;
 
-void	player_move(t_player *player, const t_point direction)
+	end.x = ft_dminmax(0, start.x + vector.x, mapsize.x - 1);
+	end.y = ft_dminmax(0, start.y + vector.y, mapsize.y - 1);
+	if (map[(int)start.y][(int)end.x] == '1')
+		end.x = start.x;
+	if (map[(int)end.y][(int)start.x] == '1')
+		end.y = start.y;
+	return (end);
+}
+
+void	player_move(t_player *player, const t_point direction,
+			char **map, const t_point mapsize)
 {
 	const t_point	rotate = point_rotate(direction, point_angle(player->dir));
 	t_point			vector;
@@ -66,7 +75,7 @@ void	player_move(t_player *player, const t_point direction)
 	else
 		vector = point_upscale(rotate, .1);
 	// vector = point_upscale(vector, .2);
-	player->pos = point_add(player->pos, vector);
+	player->pos = vector_collision(player->pos, vector, map, mapsize);
 }
 
 void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys)
@@ -78,6 +87,5 @@ void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys)
 	const double	rotation = key_direction + mouse_speed;
 
 	player->dir = point_rotate(player->dir, rotation);
-	player->plane = point_rotate(player->plane, rotation);
 	(void)mouse;
 }

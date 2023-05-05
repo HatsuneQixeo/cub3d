@@ -65,12 +65,13 @@ static t_point	scale_plane(const t_point plane, const unsigned int i)
 
 void	screen_rays(t_rays rays, const t_player *player, const t_map map)
 {
+	const t_point	plane = point_rotate(player->dir, M_PI_2);
 	unsigned int	i;
 
 	i = -1;
 	while (++i < ray_amount)
 		rays[i] = raycast(map.layout, map.size, player->pos,
-				point_add(player->dir, scale_plane(player->plane, i)));
+				point_add(player->dir, scale_plane(plane, i)));
 }
 
 int	display_mouse(const t_mouse mouse)
@@ -103,7 +104,7 @@ int	hook_loop(t_game *game)
 		// game->mouse.prev_pos = (t_point){.x = ScreenMidWidth, .y = ScreenMidHeight};
 	}
 	/* Move the player */
-	player_move(&game->player, player_direction(game->keys));
+	player_move(&game->player, player_direction(game->keys), game->map.layout, game->map.size);
 	// point_log("player: ", game->player.pos);
 	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 	/* Raycasting */
