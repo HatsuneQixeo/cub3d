@@ -1,7 +1,8 @@
 #include "cub3d.h"
 #include "element.h"
 
-int	cubmap_parse_texture(void *p_mlx, const t_list *lst_elements, t_texture *texture);
+int	cubmap_parse_texture(void *p_mlx, const t_list *lst_elements,
+			t_texture *texture);
 
 char	*ft_strfind_if(const char *str, t_ftis ft_is)
 {
@@ -39,7 +40,7 @@ static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 		if (stris_empty(line) || stris_only(line, ft_isspace))
 			continue ;
 		/* Check if it's map start */
-		if (ft_isspace(line[0]) || ft_isdigit(line[0]))
+		if (line[0] == ' ' || ft_isdigit(line[0]))
 			break ;
 		ft_lstadd_back(lst_element, ft_lstnew(parse_element(line)));
 	}
