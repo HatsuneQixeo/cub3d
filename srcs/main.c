@@ -29,7 +29,7 @@ void	ray_draw_colour(t_image *screen_buffer, t_rays rays)
 	t_colour		colour;
 	unsigned int	i;
 	unsigned int	index;
-	int				line_height;
+	double			line_height;
 	t_point			point_start;
 	t_point			point_end;
 
@@ -38,6 +38,8 @@ void	ray_draw_colour(t_image *screen_buffer, t_rays rays)
 	{
 		index = i * ((double)ray_amount / ScreenWidth);
 		colour = colour_from_rgba(20, 150, 180, 39);
+		if (rays[index].distance_traveled == 0)
+			colour = 0x393939;
 		if (rays[index].side == Vertical)
 			colour_setmask(&colour, 39 + 39 + 39, ValueA);
 		point_start = (t_point){.x = i, .y = 0};
@@ -101,13 +103,15 @@ int	hook_loop(t_game *game)
 	}
 	/* Move the player */
 	player_move(&game->player, player_direction(game->keys));
+	point_log("player: ", game->player.pos);
 	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 	PROFILE("raycast: ", screen_rays(game->rays, &game->player, game->map));
 	/* Background render */
 	{
 		PROFILE("draw: ", ray_draw_colour(&game->screen_buffer, game->rays));
 		PROFILE("put:  ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
-		printf("\n");
+		if (!NO_PROFILE)
+			printf("\n");
 		/* Minimap */
 		{
 			put_minimap(game->mlx, &game->texture.map, &game->player, &game->texture.player_icon);
