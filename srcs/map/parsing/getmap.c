@@ -66,7 +66,7 @@ int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
 	lst_element = NULL;
 	getmap_lexer(file_content, &lst_element, map);
 	ft_lstiter(lst_element, element_show);
-	status = cubmap_parse_texture(game->mlx.p_mlx, lst_element, texture);
+	status = cubmap_parse_texture(p_mlx, lst_element, texture);
 	if (status != -1)
 		status = -(cubmap_valid_player(*map)
 			+ cubmap_valid_unit(*map)

@@ -31,17 +31,17 @@ static t_player	player_init(const t_point pos, const char orientation)
 
 t_player    cubmap_getplayer(const t_map map)
 {
-    t_point it;
+	t_point it;
 
-    it.y = -1'
-    while (++it.y < map.size.y)
-    {
-        it.x = -1
-        while (++it.x < map.size.x)
-        {
-            if (cubmap_isplayer(&map, it))
-                return (player_init(it, map[(int)it.y][(int)it.x]));
-        }
-    }
-    return ((t_player){0});
+	it.y = -1;
+	while (++it.y < map.size.y)
+	{
+		it.x = -1;
+		while (++it.x < map.size.x)
+		{
+			if (cubmap_isplayer(&map, it))
+				return (player_init(it, map.layout[(int)it.y][(int)it.x]));
+		}
+	}
+	return ((t_player){0});
 }
