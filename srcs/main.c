@@ -26,12 +26,12 @@
 
 void	ray_draw_colour(t_image *screen_buffer, t_rays rays)
 {
-	t_point			point_start;
-	t_point			point_end;
 	t_colour		colour;
 	unsigned int	i;
 	unsigned int	index;
 	int				line_height;
+	t_point			point_start;
+	t_point			point_end;
 
 	i = -1;
 	while (++i < ScreenWidth)
@@ -61,17 +61,18 @@ static t_point	scale_plane(const t_point plane, const unsigned int i)
 	return (scaled_plane);
 }
 
-void	screen_rays(t_rays rays, const t_player *player, char **map)
+void	screen_rays(t_rays rays, const t_player *player, const t_map map)
 {
 	unsigned int	i;
 
 	i = -1;
 	while (++i < ray_amount)
-		rays[i] = raycast(map, player->pos,
+		rays[i] = raycast(map.layout, map.size, player->pos,
 				point_add(player->dir, scale_plane(player->plane, i)));
 }
 
 void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_image *player_icon);
+
 int	display_mouse(const t_mouse mouse)
 {
 	static int	custom_cursor = 0;
@@ -101,7 +102,7 @@ int	hook_loop(t_game *game)
 	/* Move the player */
 	player_move(&game->player, player_direction(game->keys));
 	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
-	PROFILE("raycast: ", screen_rays(game->rays, &game->player, game->map.layout));
+	PROFILE("raycast: ", screen_rays(game->rays, &game->player, game->map));
 	/* Background render */
 	{
 		PROFILE("draw: ", ray_draw_colour(&game->screen_buffer, game->rays));

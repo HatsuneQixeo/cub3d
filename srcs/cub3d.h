@@ -39,7 +39,7 @@ enum e_minimap_size
 {
 	MapCellSize = CELL_SIZE / 2,
 	MinimapScale = 7,
-	MinimapLength = MapCellSize * MinimapScale,
+	MinimapLength = MapCellSize * MinimapScale
 };
 
 enum e_ray_amount

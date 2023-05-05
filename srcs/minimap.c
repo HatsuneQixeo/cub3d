@@ -50,7 +50,7 @@ void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_
 		image_destroy(mlx.p_mlx, &image);
 	}
 	/* Puts the whole map */
-#if 0
+#if 1
 	image_put(mlx, map, (t_point){.x = ScreenWidth, .y = ScreenHeight});
 	const t_point	offset = {
 		.x = ScreenWidth - map->size.x,
