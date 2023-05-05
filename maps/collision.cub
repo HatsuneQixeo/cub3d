@@ -1,0 +1,17 @@
+SO ./sprites/Normal-Select.xpm
+WE ./sprites/Normal-Select.xpm
+EA ./sprites/Normal-Select.xpm
+NO ./sprites/Normal-Select.xpm
+
+C 135,206,235
+F 131,101,57
+
+ 1111111 
+100010001
+10001101 
+100010001
+ 10100001
+10S000001
+10001011 
+100010001
+ 111 111 
