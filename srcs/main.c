@@ -73,8 +73,6 @@ void	screen_rays(t_rays rays, const t_player *player, const t_map map)
 				point_add(player->dir, scale_plane(player->plane, i)));
 }
 
-void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_image *player_icon);
-
 int	display_mouse(const t_mouse mouse)
 {
 	static int	custom_cursor = 0;
@@ -89,6 +87,9 @@ int	display_mouse(const t_mouse mouse)
 	return (custom_cursor);
 }
 
+t_image	minimap_show_ray(void *p_mlx, const t_image *img_map, const t_rays rays,
+			const t_point player_map_pos);
+void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_image *player_icon);
 // ft_printf("くるり廻る廻る廻る世界\n");
 int	hook_loop(t_game *game)
 {
@@ -103,27 +104,27 @@ int	hook_loop(t_game *game)
 	}
 	/* Move the player */
 	player_move(&game->player, player_direction(game->keys));
-	point_log("player: ", game->player.pos);
+	// point_log("player: ", game->player.pos);
 	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
-	PROFILE("raycast: ", screen_rays(game->rays, &game->player, game->map));
-	/* Background render */
+	/* Raycasting */
 	{
+		PROFILE("raycast: ", screen_rays(game->rays, &game->player, game->map));
 		PROFILE("draw: ", ray_draw_colour(&game->screen_buffer, game->rays));
 		PROFILE("put:  ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
 		if (!NO_PROFILE)
 			printf("\n");
-		/* Minimap */
-		{
-			put_minimap(game->mlx, &game->texture.map, &game->player, &game->texture.player_icon);
-		}
 	}
-	/* Put the cursor */
-	if (display_mouse(game->mouse))
+	/* Minimap */
 	{
-		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
-		// if (game->mouse.left_click == Press)
-			// put_a_line(game->mlx, game->player.pos, point_sub(game->mouse.pos, game->player.pos));
+		t_image	raymap;
+
+		raymap = minimap_show_ray(game->mlx.p_mlx, &game->texture.map, game->rays, game->player.pos);
+		put_minimap(game->mlx, &raymap, &game->player, &game->texture.player_icon);
+		image_destroy(game->mlx.p_mlx, &raymap);
 	}
+	/* Put the temporary cursor */
+	if (display_mouse(game->mouse))
+		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
 	image_clean(&game->screen_buffer);
 	return (0);
 }

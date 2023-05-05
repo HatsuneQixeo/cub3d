@@ -43,7 +43,7 @@ int	cubmap_ismissingborder(const t_map *map, const t_point pos)
 		|| y == 0 || y == map->size.y - 1)
 		return (1);
 	return (!(isspace_orwall(map, pos)
-		&& isspace_orwall(map, pos)
-		&& isspace_orwall(map, pos)
-		&& isspace_orwall(map, pos)));
+			&& isspace_orwall(map, pos)
+			&& isspace_orwall(map, pos)
+			&& isspace_orwall(map, pos)));
 }

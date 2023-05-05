@@ -18,12 +18,20 @@ static t_point	side_distance_offset(const t_point pos, const t_point direction,
 	return (side_distance);
 }
 
-static t_point	go_until_hit(char **map, const t_point mapsize, const t_point pos, t_ray *ray)
+t_point	get_delta(const t_point ray_direction)
 {
 	const t_point	delta_distance = {
-		.x = fabs(1 / ray->direction.x),
-		.y = fabs(1 / ray->direction.y)
+		.x = fabs(1 / ray_direction.x),
+		.y = fabs(1 / ray_direction.y)
 	};
+
+	return (delta_distance);
+}
+
+static t_point	go_until_hit(char **map, const t_point mapsize,
+			const t_point pos, t_ray *ray)
+{
+	const t_point	delta_distance = get_delta(ray->direction);
 	const t_point	step = point_sign(ray->direction);
 	t_point			side_distance;
 

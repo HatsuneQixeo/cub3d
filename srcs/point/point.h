@@ -38,6 +38,7 @@ t_point	point_round(const t_point point, double (*ft_round)(double));
 t_point	*point_new(const double x, const double y);
 void	point_del(void *content);
 void	point_log(const char *prefix, const t_point point);
+int		point_inbound(const t_point point, const t_point size);
 
 t_point	point_multiply(const t_point point1, const t_point point2);
 t_point	point_normalize(const t_point point);

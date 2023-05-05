@@ -16,7 +16,7 @@ enum e_table_index
 	IdxElemFloor,
 	IdxElemCeiling,
 	IdxElemUnknown,
-	IdxElemAmount
+	IDX_ELEM_AMOUNT
 };
 
 t_element	*element_new(char *identifier, char *properties);

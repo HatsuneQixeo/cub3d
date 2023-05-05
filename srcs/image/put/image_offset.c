@@ -15,6 +15,7 @@
 double	putoffset_default(const double pos, const double size)
 {
 	return (pos);
+	(void)size;
 }
 
 double	putoffset_centered(const double pos, const double size)

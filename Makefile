@@ -2,9 +2,10 @@ NAME		:=	cub3d
 
 CC			:=	gcc
 CXXFLAGS	:=	-Wall -Werror -Wextra -g
-CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
+# CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 # CXXFLAGS	+=	-D DRAW_WARNING=0
 CXXFLAGS	+=	-D NO_PROFILE=1
+# CXXFLAGS	+=	-D SHOW_RAY=1 # Not used yet
 # CXXFLAGS	+=	-D DEBUG_KEY=1
 # CXXFLAGS	+=	-D DEBUG_BUTTON=1
 MLXFLAGS	:=	-lmlx -framework OpenGL -framework AppKit -L /usr/local/lib
@@ -18,7 +19,9 @@ MLX_MAKE	:=	make -C mlx 2> /dev/null
 SRC_DIR		:=	srcs
 SRCS		:=	$(shell find ${SRC_DIR} -name "*.c")
 
-HEADER		:=	$(shell find ${SRC_DIR} -name "*.h") libft/include/libft.h libft/experiment/exlib/include/exlib.h
+HEADER		:=	$(shell find ${SRC_DIR} -name "*.h")
+HEADER		+=	libft/include/libft.h
+HEADER		+=	libft/experiment/exlib/include/exlib.h
 CFLAGS		:=	$(addprefix -I, $(dir ${HEADER})) -I mlx
 
 OBJ_DIR		:=	objs
@@ -81,4 +84,4 @@ norm:
 	@norminette ${SRC_DIR} ${HEADER}
 
 normltr:
-	@norminette -R CheckForbiddenSourceHeader ${SRC_DIR} ${HEADER} | grep -v INVALID_HEADER | grep -v WRONG_SCOPE_COMMENT # | grep -v LINE_TOO_LONG
+	@norminette -R CheckForbiddenSourceHeader ${SRC_DIR} $(filter-out libft/experiment/exlib/include/exlib.h, ${HEADER}) | grep -v INVALID_HEADER | grep -v WRONG_SCOPE_COMMENT # | grep -v LINE_TOO_LONG

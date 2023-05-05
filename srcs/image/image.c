@@ -36,6 +36,18 @@ t_image	image_create(void *p_mlx, const t_point size,
 	return (image);
 }
 
+t_image	image_dup(void *p_mlx, const t_image *src)
+{
+	t_image	image;
+
+	image = image_create(p_mlx, src->size, src->putoffset_x, src->putoffset_y);
+	if (image.data == NULL)
+		return (image);
+	ft_memcpy(image.data, src->data,
+		(image.size.y * image.size.x) * sizeof(t_colour));
+	return (image);
+}
+
 /*
 	Not sure if the return value is really describing anything about the error
 
@@ -43,7 +55,8 @@ t_image	image_create(void *p_mlx, const t_point size,
 	a file error?
 	a mlx error?
 
-	Anyway, it shouldn't matter since the error should be recorded by errno
+	Anyway, it shouldn't matter since the error should be recorded by errno,
+	except invalid suffix I guess
 */
 t_image	image_readxpm(void *p_mlx, const char *path,
 			t_offset putoffset_x, t_offset putoffset_y)

@@ -35,6 +35,6 @@ int			cubmap_surrounded(const t_map map);
 
 int			cubmap_getmap(void *p_mlx, const char *path,
 				t_map *map, t_texture *texture);
-t_player    cubmap_getplayer(const t_map map);
+t_player	cubmap_getplayer(const t_map map);
 
 #endif

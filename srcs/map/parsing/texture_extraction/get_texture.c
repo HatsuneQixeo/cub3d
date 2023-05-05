@@ -5,9 +5,9 @@
 #include <errno.h>
 
 int	get_environment_colour(t_list *lst_table[],
-			t_colour *ceiling, t_colour *floor);
+		t_colour *ceiling, t_colour *floor);
 int	check_table(const char *idx_table[], unsigned int length,
-			t_list *lst_table[]);
+		t_list *lst_table[]);
 
 static t_list	*read_image(void *p_mlx, const char *path, t_image *image)
 {
@@ -18,13 +18,13 @@ static t_list	*read_image(void *p_mlx, const char *path, t_image *image)
 		return (NULL);
 }
 
-static int	read_all_walls(void *p_mlx, t_list *lst_table[], t_wall_textures walls)
+static int	read_walls(void *p_mlx, t_list *lst_table[], t_wall_textures walls)
 {
 	const char	*paths[] = {
-		[North] = ((t_element *)lst_table[IdxElemNorth]->content)->properties,
-		[East] = ((t_element *)lst_table[IdxElemEast]->content)->properties,
-		[South] = ((t_element *)lst_table[IdxElemSouth]->content)->properties,
-		[West] = ((t_element *)lst_table[IdxElemWest]->content)->properties,
+	[North] = ((t_element *)lst_table[IdxElemNorth]->content)->properties,
+	[East] = ((t_element *)lst_table[IdxElemEast]->content)->properties,
+	[South] = ((t_element *)lst_table[IdxElemSouth]->content)->properties,
+	[West] = ((t_element *)lst_table[IdxElemWest]->content)->properties,
 	};
 	t_list		*lst_err;
 
@@ -66,18 +66,19 @@ static void	extract_texture(const char *idx_table[], const unsigned int length,
 	}
 }
 
-int	cubmap_parse_texture(void *p_mlx, const t_list *lst_elements, t_texture *texture)
+int	cubmap_parse_texture(void *p_mlx, const t_list *lst_elements,
+			t_texture *texture)
 {
 	const char			*idx_table[] = {
-		[IdxElemNorth] = "NO",
-		[IdxElemEast] = "EA",
-		[IdxElemSouth] = "SO",
-		[IdxElemWest] = "WE",
-		[IdxElemFloor] = "F",
-		[IdxElemCeiling] = "C"
+	[IdxElemNorth] = "NO",
+	[IdxElemEast] = "EA",
+	[IdxElemSouth] = "SO",
+	[IdxElemWest] = "WE",
+	[IdxElemFloor] = "F",
+	[IdxElemCeiling] = "C"
 	};
 	const unsigned int	length = (sizeof(idx_table) / sizeof(idx_table[0]));
-	t_list				*lst_table[IdxElemAmount];
+	t_list				*lst_table[IDX_ELEM_AMOUNT];
 	int					status;
 
 	ft_bzero(lst_table, sizeof(lst_table));
@@ -88,9 +89,9 @@ int	cubmap_parse_texture(void *p_mlx, const t_list *lst_elements, t_texture *tex
 	else if (get_environment_colour(lst_table,
 			&texture->colour_ceiling, &texture->colour_floor) < 0)
 		status = -1;
-	else if (read_all_walls(p_mlx, lst_table, texture->walls) == -1)
+	else if (read_walls(p_mlx, lst_table, texture->walls) == -1)
 		status = -1;
-	for (unsigned int i = 0; i < IdxElemAmount; i++)
+	for (unsigned int i = 0; i < IDX_ELEM_AMOUNT; i++)
 		ft_lstclear(&lst_table[i], NULL);
 	return (status);
 }

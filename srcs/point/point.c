@@ -34,57 +34,8 @@ void	point_del(void *content)
 void	point_log(const char *prefix, const t_point point)
 {
 	// printf("[%-20s] x: %6.2f, y: %6.2f\n", prefix, point.x, point.y);
-	printf("[%-20s] x: %f, y: %f\n", prefix, point.x, point.y);
+	printf("%s[x: %f, y: %f]\n", prefix, point.x, point.y);
 }
-
-/* Bunch of math I have no idea */
-/* Likely math that won't come in handy in this project */
-
-// t_point	point_normalize(const t_point src)
-// {
-// 	return (point_downscale(src, point_magnitude(src)));
-// }
-
-// t_point	point_lerp(const t_point point1, const t_point point2, const double t)
-// {
-// 	return (point_add(point1, point_upscale(point_sub(point2, point1), t)));
-// }
-
-// t_point	point_reflect(const t_point point, const t_point normal)
-// {
-// 	return (point_sub(point, point_upscale(normal, 2 * point_dot(point, normal))));
-// }
-
-// t_point	point_midpoint(const t_point point1, const t_point point2)
-// {
-// 	return (point_upscale(point_add(point1, point2), .50));
-// }
-
-// t_point	point_project(const t_point point, const t_point normal)
-// {
-// 	return (point_upscale(normal,
-// 			point_dot(point, normal) / point_dot(normal, normal)));
-// }
-
-// t_point	point_reject(const t_point point, const t_point normal)
-// {
-// 	return (point_sub(point, point_project(point, normal)));
-// }
-
-// t_point	point_from_angle(const double angle)
-// {
-// 	const t_point	point = {
-// 		.x = cos(angle),
-// 		.y = sin(angle)
-// 	};
-
-// 	return (point);
-// }
-
-// t_point	point_from_polar(const double magnitude, const double angle)
-// {
-// 	return (point_upscale(point_from_angle(angle), magnitude));
-// }
 
 double	point_angle(const t_point point)
 {

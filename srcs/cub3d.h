@@ -67,6 +67,5 @@ int		hook_loop(t_game *game);
 
 int		game_init(const char *path, t_game *game);
 void	events(t_game *game);
-void	beta_screen_buffer(t_image screen_buffer);
 
 #endif

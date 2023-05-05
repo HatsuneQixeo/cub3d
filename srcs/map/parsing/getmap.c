@@ -69,8 +69,8 @@ int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
 	status = cubmap_parse_texture(p_mlx, lst_element, texture);
 	if (status != -1)
 		status = -(cubmap_valid_player(*map)
-			+ cubmap_valid_unit(*map)
-			+ cubmap_surrounded(*map) < 0);
+				+ cubmap_valid_unit(*map)
+				+ cubmap_surrounded(*map) < 0);
 	ft_lstclear(&lst_element, element_del);
 	ft_strlistclear(file_content);
 	if (status == -1)

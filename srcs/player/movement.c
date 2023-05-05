@@ -48,6 +48,12 @@ t_point	player_direction(const t_keys keys)
 	return (keys_to_vector(keys, key_vectors, len));
 }
 
+// t_point	vector_collision(const t_point start, const t_point vector,
+// 			char **map, const t_point mapsize)
+// {
+// 	if ()
+// }
+
 void	player_move(t_player *player, const t_point direction)
 {
 	const t_point	rotate = point_rotate(direction, point_angle(player->dir));
@@ -73,4 +79,5 @@ void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys)
 
 	player->dir = point_rotate(player->dir, rotation);
 	player->plane = point_rotate(player->plane, rotation);
+	(void)mouse;
 }

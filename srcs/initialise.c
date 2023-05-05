@@ -78,11 +78,10 @@ static void	texture_init(void *p_mlx, const t_map map, t_texture *texture)
 	}
 }
 
-static t_mouse	mouse_init(void *p_win)
+static t_mouse	mouse_init(void)
 {
 	t_mouse	mouse;
 
-	// mlx_mouse_move(p_win, ScreenWidth / 2, ScreenHeight / 2);
 	// mouse.press = (t_point){.x = -1, .y = -1};
 	mouse.left_click = Release;
 	return (mouse);
@@ -134,7 +133,7 @@ int	game_init(const char *path, t_game *game)
 			putoffset_default, putoffset_default);
 	ft_assert(game->screen_buffer.p_image != NULL,
 		"image_create() for screen_buffer failed");
-	game->mouse = mouse_init(game->mlx.p_win);
+	game->mouse = mouse_init();
 	ft_intset((int *)game->keys, key_count, Release);
 	texture_init(game->mlx.p_mlx, game->map, &game->texture);
 	game->player = cubmap_getplayer(game->map);

@@ -29,9 +29,9 @@ static t_player	player_init(const t_point pos, const char orientation)
 	return (player);
 }
 
-t_player    cubmap_getplayer(const t_map map)
+t_player	cubmap_getplayer(const t_map map)
 {
-	t_point it;
+	t_point	it;
 
 	it.y = -1;
 	while (++it.y < map.size.y)

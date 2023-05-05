@@ -43,7 +43,7 @@ static int	ft_strtocolour(const char *properties, t_colour *colour)
 	/* Testing required */
 	if (len != expected_len)
 		ft_dprintf(2, "Expected %.*s value: %s\n",
-				expected_len + (expected_len - 1), "R,G,B,A", properties);
+			expected_len + (expected_len - 1), "R,G,B,A", properties);
 	else
 		ret = colour_convert(strlist_values, colour);
 	ft_strlistclear(strlist_values);
