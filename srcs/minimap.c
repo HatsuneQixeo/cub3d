@@ -3,8 +3,9 @@
 /* Doesn't work the way I think because the map is not always rectangular */
 void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_image *player_icon)
 {
-	const t_point	player_map_pos = point_upscale(player->pos, MapCellSize);
+	const t_point	player_map_pos = point_add(player->pos, point_upscale(player->pos, MapCellSize));
 
+	point_log("scaled map pos: ", player_map_pos);
 	/* Sectioned Minimap */
 	{
 		t_image			image;
