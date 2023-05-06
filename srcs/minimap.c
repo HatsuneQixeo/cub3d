@@ -15,7 +15,6 @@ t_image	minimap_show_ray(void *p_mlx, const t_image *img_map, const t_rays rays,
 	const t_colour	ray_colour = colour_from_rgba(200, 0, 0, 0);
 	t_image			image;
 	unsigned int	i;
-	unsigned int	index;
 
 	image = image_dup(p_mlx, img_map);
 	ft_assert(image.data != NULL, "minimap_show_ray: image creation failed");
@@ -24,9 +23,8 @@ t_image	minimap_show_ray(void *p_mlx, const t_image *img_map, const t_rays rays,
 	i = -1;
 	while (++i < ray_amount)
 	{
-		index = i * ((double)ray_amount / ScreenWidth);
 		image_draw_line(&image, ray_colour, player_map_pos,
-			point_add(player_map_pos, scale_ray_vector(rays[index])));
+			point_add(player_map_pos, scale_ray_vector(rays[i])));
 	}
 	return (image);
 }
