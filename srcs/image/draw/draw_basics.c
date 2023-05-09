@@ -21,7 +21,7 @@ int	image_getindex(const t_image *image, const t_point pos)
 	return ((pos.y * image->size.x) + pos.x);
 }
 
-void	image_draw_pixel(t_image *image, const t_colour colour, const t_point at)
+void	image_setpixel(t_image *image, const t_colour colour, const t_point at)
 {
 	const t_point	rounded = point_round(at, trunc);
 
@@ -37,8 +37,15 @@ void	image_draw_pixel(t_image *image, const t_colour colour, const t_point at)
 			printf("outofrange y: %f, size: %f\n", at.y, image->size.y);
 		return ;
 	}
-	ft_assert(image->data != NULL, "image_draw_pixel: NULL image->data");
+	ft_assert(image->data != NULL, "image_setpixel: NULL image->data");
 	image->data[image_getindex(image, rounded)] = colour;
+}
+
+t_colour	image_getpixel(const t_image *image, const t_point pos)
+{
+	const unsigned int	index = image_getindex(image, pos);
+
+	return (image->data[index]);
 }
 
 void	image_draw_rectangle(t_image *image, const t_colour colour,
@@ -51,7 +58,7 @@ void	image_draw_rectangle(t_image *image, const t_colour colour,
 	{
 		it.x = start.x - 1;
 		while (++it.x < end.x)
-			image_draw_pixel(image, colour, it);
+			image_setpixel(image, colour, it);
 	}
 }
 

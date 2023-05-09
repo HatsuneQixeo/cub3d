@@ -15,21 +15,21 @@
 static void	doro(t_image *image, const t_colour colour, const t_point center,
 			const t_point point)
 {
-	image_draw_pixel(image, colour,
+	image_setpixel(image, colour,
 		(t_point){center.x + point.x, center.y + point.y});
-	image_draw_pixel(image, colour,
+	image_setpixel(image, colour,
 		(t_point){center.x + point.y, center.y + point.x});
-	image_draw_pixel(image, colour,
+	image_setpixel(image, colour,
 		(t_point){center.x - point.x, center.y + point.y});
-	image_draw_pixel(image, colour,
+	image_setpixel(image, colour,
 		(t_point){center.x - point.y, center.y + point.x});
-	image_draw_pixel(image, colour,
+	image_setpixel(image, colour,
 		(t_point){center.x + point.x, center.y - point.y});
-	image_draw_pixel(image, colour,
+	image_setpixel(image, colour,
 		(t_point){center.x + point.y, center.y - point.x});
-	image_draw_pixel(image, colour,
+	image_setpixel(image, colour,
 		(t_point){center.x - point.x, center.y - point.y});
-	image_draw_pixel(image, colour,
+	image_setpixel(image, colour,
 		(t_point){center.x - point.y, center.y - point.x});
 }
 
@@ -73,7 +73,7 @@ void	draw_filled_circle(t_image *image, const t_colour colour,
 		while (++index.x < center.x + radius)
 		{
 			if (point_distance(index, center) <= radius)
-				image_draw_pixel(image, colour, index);
+				image_setpixel(image, colour, index);
 		}
 	}
 }

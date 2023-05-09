@@ -41,33 +41,34 @@ typedef struct s_image
 	t_point		size;
 }				t_image;
 
-int		image_getindex(const t_image *image, t_point pos);
+int			image_getindex(const t_image *image, t_point pos);
+t_colour	image_getpixel(const t_image *image, const t_point pos);
 /* Image Creation */
-t_image	image_create(void *p_mlx, t_point size,
+t_image		image_create(void *p_mlx, t_point size,
 			t_offset putoffset_x, t_offset putoffset_y);
-t_image	image_dup(void *p_mlx, const t_image *src);
-t_image	image_readxpm(void *p_mlx, const char *path,
+t_image		image_dup(void *p_mlx, const t_image *src);
+t_image		image_readxpm(void *p_mlx, const char *path,
 			t_offset putoffset_x, t_offset putoffset_y);
-void	image_destroy(void *p_mlx, t_image *image);
+void		image_destroy(void *p_mlx, t_image *image);
 
 /* Image Manipulation */
-void	image_draw_pixel(t_image *image, t_colour colour, t_point at);
-void	image_draw_line(t_image *image, t_colour colour,
+void		image_setpixel(t_image *image, t_colour colour, t_point at);
+void		image_draw_line(t_image *image, t_colour colour,
 			t_point start, t_point end);
-void	image_fill(t_image *image, t_colour colour);
-void	image_clean(t_image *image);
+void		image_fill(t_image *image, t_colour colour);
+void		image_clean(t_image *image);
 
 /* Rectangle */
-void	image_draw_rectangle(t_image *image, t_colour colour,
+void		image_draw_rectangle(t_image *image, t_colour colour,
 			t_point start, t_point end);
 
 /* Circle */
-void	image_draw_circle(t_image *image, t_colour colour,
+void		image_draw_circle(t_image *image, t_colour colour,
 			t_point center, unsigned int radius);
-void	draw_filled_circle(t_image *image, t_colour colour,
+void		draw_filled_circle(t_image *image, t_colour colour,
 			t_point center, int radius);
-void	image_fill_circle(t_image *image, t_colour colour);
+void		image_fill_circle(t_image *image, t_colour colour);
 
 /* Image Render */
-void	image_put(t_mlx mlx, const t_image *image, t_point pos);
+void		image_put(t_mlx mlx, const t_image *image, t_point pos);
 #endif
