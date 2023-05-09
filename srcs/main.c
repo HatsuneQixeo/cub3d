@@ -12,45 +12,69 @@
 
 #include "cub3d.h"
 
-// enum e_wall_texture_index	direction_to_face(const t_point direction,
-// 			const enum e_side side)
-// {
-// 	if (side == Horizontal)
-// 		return ((enum e_wall_texture_index []){East, West}[direction.x < 0]);
-// 	else if (side == Vertical)
-// 		return ((enum e_wall_texture_index []){South, North}[direction.y < 0]);
-// 	else
-// 		ft_assert(0, "direction_to_face: Invalid side");
-// 	return (-1);
-// }
-
-void	ray_draw_colour(t_image *screen_buffer, t_rays rays)
+enum e_wall_texture_index	direction_to_face(const t_point direction,
+			const enum e_side side)
 {
-	t_colour		colour;
+	if (side == Horizontal)
+		return ((enum e_wall_texture_index []){East, West}[direction.x > 0]);
+	else if (side == Vertical)
+		return ((enum e_wall_texture_index []){South, North}[direction.y > 0]);
+	else
+		ft_assert(0, "direction_to_face: Invalid side");
+	return (-1);
+}
+
+int	get_image_x(const t_image *image, const t_ray ray, const t_point player_pos)
+{
+	const t_point	dist = point_upscale(ray.direction, ray.distance_traveled);
+	const t_point	hit = point_add(player_pos, dist);
+	const t_point	offset = point_sub(hit, point_round(hit, trunc));
+	const double	wall_x = (ray.side == Vertical ? offset.x : offset.y);
+	const int		image_x = wall_x * image->size.x;
+
+	if ((ray.side == Horizontal && ray.direction.x < 0)
+		|| (ray.side == Vertical && ray.direction.y > 0))
+		return (image->size.x - image_x - 1);
+	else
+		return (image_x);
+}
+
+static void	draw_line(t_image *screen_buffer, const t_image *image,
+			const double line_height, const unsigned int image_x, const unsigned int buffer_x)
+{
+	const double	image_step = (image->size.y / line_height);
+	double			screen_y;
+	const double	screen_end_y = ft_dmin(ScreenHeight,
+			(line_height + ScreenHeight) / 2);
+	double			it_img_y;
+
+	screen_y = ft_dmax(0, (ScreenHeight - line_height) / 2);
+	it_img_y = (screen_y + ((line_height - ScreenHeight) / 2)) * image_step;
+	screen_y--;
+	while (++screen_y < screen_end_y)
+	{
+		const t_colour	colour = image_getpixel(image, (t_point){.x = image_x, .y = trunc(it_img_y)});
+
+		image_setpixel(screen_buffer, colour, (t_point){.x = buffer_x, .y = screen_y});
+		it_img_y += image_step;
+	}
+}
+
+void	ray_draw_texture(t_image *screen_buffer, const t_rays rays,
+			const t_wall_textures walls, const t_point player_pos)
+{
 	unsigned int	i;
-	unsigned int	index;
-	double			line_height;
-	t_point			point_start;
-	t_point			point_end;
 
 	i = -1;
 	while (++i < ScreenWidth)
 	{
-		index = i * ((double)ray_amount / ScreenWidth);
-		colour = colour_from_rgba(20, 150, 180, 39);
-		if (rays[index].distance_traveled == 0)
-			colour = 0x393939;
-		if (rays[index].side == Vertical)
-			colour_setmask(&colour, 39 + 39 + 39, ValueA);
-		point_start = (t_point){.x = i, .y = 0};
-		point_end = (t_point){.x = i, .y = ScreenHeight};
-		if (rays[index].distance_traveled != 0)
-		{
-			line_height = ScreenHeight / rays[index].distance_traveled;
-			point_start.y = ft_max(0, (ScreenHeight - line_height) / 2);
-			point_end.y = ft_min(point_end.y, (line_height + ScreenHeight) / 2);
-		}
-		image_draw_line(screen_buffer, colour, point_start, point_end);
+		const unsigned int	i_ray = i * ((double)ray_amount / ScreenWidth);
+		const t_ray			ray = rays[i_ray];
+		const t_image		*image = &walls[direction_to_face(ray.direction, ray.side)];
+		const double		line_height = ScreenHeight / ray.distance_traveled;
+		const int			image_x = get_image_x(image, ray, player_pos);
+
+		draw_line(screen_buffer, image, line_height, image_x, i);
 	}
 }
 
@@ -76,7 +100,7 @@ void	screen_rays(t_rays rays, const t_player *player, const t_map map)
 
 int	display_mouse(const t_mouse mouse)
 {
-	static int	custom_cursor = 0;
+	static int	custom_cursor;
 	const int	in_screen = (unsigned int)mouse.pos.x < ScreenWidth
 		&& (unsigned int)mouse.pos.y < ScreenHeight;
 
@@ -88,6 +112,16 @@ int	display_mouse(const t_mouse mouse)
 	return (custom_cursor);
 }
 
+void	image_copy_opaque(t_image *dst, const t_image *src)
+{
+	unsigned int	i;
+
+	i = -1;
+	while (++i < dst->size.x * dst->size.y)
+		if (colour_getmask(src->data[i], ValueA) != 255)
+			dst->data[i] = src->data[i];
+}
+
 t_image	minimap_show_ray(void *p_mlx, const t_image *img_map, const t_rays rays,
 			const t_point player_map_pos);
 void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_image *player_icon);
@@ -96,6 +130,12 @@ int	hook_loop(t_game *game)
 {
 	if (game->keys[Key_ESC] == Press)
 		hook_button_close(EXIT_SUCCESS);
+	image_draw_rectangle(&game->screen_buffer, game->texture.colour_ceiling,
+		(t_point){.x = 0, .y = 0},
+		(t_point){.x = ScreenWidth, .y = ScreenMidHeight});
+	image_draw_rectangle(&game->screen_buffer, game->texture.colour_floor,
+		(t_point){.x = 0, .y = ScreenMidHeight},
+		(t_point){.x = ScreenWidth, .y = ScreenHeight});
 	/* Rotate the player direction, based on the mouse movement and left right keys */
 	{
 		player_rotate(&game->player, game->mouse, game->keys);
@@ -110,7 +150,8 @@ int	hook_loop(t_game *game)
 	/* Raycasting */
 	{
 		PROFILE("raycast: ", screen_rays(game->rays, &game->player, game->map));
-		PROFILE("draw: ", ray_draw_colour(&game->screen_buffer, game->rays));
+		// PROFILE("draw: ", ray_draw_colour(&game->screen_buffer, game->rays));
+		PROFILE("draw: ", ray_draw_texture(&game->screen_buffer, game->rays, game->texture.walls, game->player.pos));
 		PROFILE("put:  ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
 		if (!NO_PROFILE)
 			printf("\n");
@@ -126,7 +167,6 @@ int	hook_loop(t_game *game)
 	/* Put the temporary cursor */
 	if (display_mouse(game->mouse))
 		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
-	image_clean(&game->screen_buffer);
 	return (0);
 }
 
