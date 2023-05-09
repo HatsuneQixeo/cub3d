@@ -57,7 +57,7 @@ t_point	player_direction(const t_keys keys)
 static t_point	vector_collision(const t_point start, const t_point vector,
 			char **map, const t_point mapsize)
 {
-	const t_point	offset = point_upscale(point_sign(vector), -.000001);
+	const t_point	offset = point_upscale(point_sign(vector), -.00831);
 	t_point			end;
 
 	end.x = ft_dminmax(0, start.x + vector.x, mapsize.x - 1);

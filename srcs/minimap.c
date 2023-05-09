@@ -71,8 +71,7 @@ void	put_minimap(t_mlx mlx, const t_image *img_map, const t_player *player,
 		{
 			it.x = start.x - 1;
 			while (++it.x < end.x)
-				image_draw_pixel(&image,
-					img_map->data[image_getindex(img_map, it)],
+				image_setpixel(&image, image_getpixel(img_map, it),
 					point_sub(it, start));
 		}
 		image_put(mlx, &image, (t_point){0, 0});

@@ -18,7 +18,7 @@ static t_point	side_distance_offset(const t_point pos, const t_point direction,
 	return (side_distance);
 }
 
-t_point	get_delta(const t_point ray_direction)
+static t_point	get_delta(const t_point ray_direction)
 {
 	const t_point	delta_distance = {
 		.x = fabs(1 / ray_direction.x),

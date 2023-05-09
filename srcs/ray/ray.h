@@ -5,8 +5,8 @@
 
 enum e_side
 {
+	Horizontal,
 	Vertical,
-	Horizontal
 };
 
 typedef struct s_ray
