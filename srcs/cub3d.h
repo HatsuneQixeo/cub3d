@@ -63,6 +63,10 @@ typedef struct s_game
 
 void	put_a_line(const t_mlx mlx, const t_point player, const t_point vector);
 
+void	screen_rays(t_rays rays, const t_player *player, const t_map map);
+void	ray_draw_texture(t_image *screen_buffer, const t_rays rays,
+			const t_wall_textures walls, const t_point player_pos);
+
 int		hook_loop(t_game *game);
 
 int		game_init(const char *path, t_game *game);

@@ -40,7 +40,7 @@ static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 		if (stris_empty(line) || stris_only(line, ft_isspace))
 			continue ;
 		/* Check if it's map start */
-		if (line[0] == Void || ft_isdigit(line[0]))
+		if (ft_isspace(line[0]) || ft_isdigit(line[0]))
 			break ;
 		ft_lstadd_back(lst_element, ft_lstnew(parse_element(line)));
 	}
