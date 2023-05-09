@@ -1,17 +1,17 @@
-SO ./sprites/Normal-Select.xpm
+SO ./sprites/Wall48.xpm
 WE ./sprites/Normal-Select.xpm
 EA ./sprites/Normal-Select.xpm
-NO ./sprites/Normal-Select.xpm
+NO ./sprites/Wall48.xpm
 
 C 135,206,235
 F 131,101,57
 
 111111111
 100010001
-100011011
+10N011011
 100010001
 110110001
-10S000001
+100000001
 100010111
 100010001
 111111111
