@@ -14,13 +14,11 @@
 
 void	map_draw_tile(t_image *map, const t_colour colour, const t_point pos)
 {
-	const t_point	map_start = point_upscale(pos, MapCellSize);
-	const t_point	map_end = point_upscale(point_add(pos, (t_point){1, 1}),
-				MapCellSize);
+	const t_point	map_start = point_upscale(pos, MapCellSize + 1);
+	const t_point	map_end = point_add(map_start,
+			(t_point){MapCellSize, MapCellSize});
 
-	image_draw_rectangle(map, colour,
-		point_add(map_start, pos),
-		point_add(map_end, pos));
+	image_draw_rectangle(map, colour, map_start, map_end);
 }
 
 t_image	map_texture(void *p_mlx, const t_map map)
@@ -30,8 +28,8 @@ t_image	map_texture(void *p_mlx, const t_map map)
 	t_image			image;
 	t_point			it;
 
-	image = image_create(p_mlx, point_add(point_upscale(map.size, MapCellSize),
-				point_sub(map.size, (t_point){1, 1})),
+	image = image_create(p_mlx, point_add((t_point){-1, -1},
+				point_upscale(map.size, MapCellSize + 1)),
 			putoffset_inverted, putoffset_inverted);
 	if (image.data == NULL)
 		return (image);
@@ -42,7 +40,7 @@ t_image	map_texture(void *p_mlx, const t_map map)
 		it.x = -1;
 		while (++it.x < map.size.x)
 		{
-			if (map.layout[(unsigned int)it.y][(unsigned int)it.x] == '1')
+			if (map.layout[(int)it.y][(int)it.x] == '1')
 				map_draw_tile(&image, wall_colour, it);
 			else
 				map_draw_tile(&image, space_colour, it);
@@ -76,67 +74,33 @@ static void	texture_init(void *p_mlx, const t_map map, t_texture *texture)
 		ft_assert(texture->map.p_image != NULL,
 			"image_create() for map failed");
 	}
+	{
+		texture->walls[Invalid] = image_create(p_mlx,
+				(t_point){.x = 1, .y = 1}, putoffset_default, putoffset_default);
+		ft_assert(texture->walls[Invalid].p_image != NULL,
+			"image_create() for invalid texture failed");
+		texture->walls[Invalid].data[0] = 0x00000000;
+	}
 }
-
-static t_mouse	mouse_init(void)
-{
-	t_mouse	mouse;
-
-	// mouse.press = (t_point){.x = -1, .y = -1};
-	mouse.left_click = Release;
-	return (mouse);
-}
-
-#if 0
-			"111111111",
-			"100010001",
-			"100011011",
-			"100010001",
-			"110110001",
-			"100000001",
-			"100010111",
-			"100010001",
-			"111111111",
-#elif 0
-			"111111111111111",
-			"100000010000001",
-			"100000010000001",
-			"100011111100111",
-			"100000010000001",
-			"100000010000001",
-			"100000010000001",
-			"110011110000001",
-			"100000000000001",
-			"100000000000001",
-			"100000010011111",
-			"100000010000001",
-			"100000010000001",
-			"100000010000001",
-			"111111111111111",
-#endif
 
 /* Initialization and assertion */
 int	game_init(const char *path, t_game *game)
 {
-	const t_mlx	mlx = {
-		.p_mlx = mlx_init(),
-		.p_win = mlx_new_window(mlx.p_mlx, ScreenWidth, ScreenHeight, "cub3d")
-	};
-
-	game->mlx = mlx;
+	game->mlx.p_mlx = mlx_init();
+	ft_assert(game->mlx.p_mlx != NULL, "mlx_init() failed");
 	if (cubmap_getmap(game->mlx.p_mlx, path, &game->map, &game->texture) == -1)
 		return (-1);
-	ft_assert(game->mlx.p_mlx != NULL, "mlx_init() failed");
-	ft_assert(game->mlx.p_win != NULL, "mlx_new_window() failed");
 	game->screen_buffer = image_create(game->mlx.p_mlx,
 			(t_point){.x = ScreenWidth, .y = ScreenHeight},
 			putoffset_default, putoffset_default);
 	ft_assert(game->screen_buffer.p_image != NULL,
 		"image_create() for screen_buffer failed");
-	game->mouse = mouse_init();
 	ft_intset((int *)game->keys, key_count, Release);
 	texture_init(game->mlx.p_mlx, game->map, &game->texture);
-	game->player = cubmap_getplayer(game->map);
+	game->player = cubmap_getplayer(game->map); 
+	game->mouse.left_click = Release;
+	game->mlx.p_win = mlx_new_window(game->mlx.p_mlx, ScreenWidth, ScreenHeight, "Miku love cub3d");
+	ft_assert(game->mlx.p_win != NULL, "mlx_new_window() failed");
 	return (0);
 }
 
