@@ -13,6 +13,10 @@
 #include "libft.h"
 #include "player.h"
 
+#ifndef COLLISION
+# define COLLISION 1
+#endif
+
 typedef struct s_key_vector
 {
 	int		key_index;
@@ -54,6 +58,7 @@ t_point	player_direction(const t_keys keys)
 
 	Why not fix it? Not that this game has any speed boost effect anyway.
 */
+
 static t_point	vector_collision(const t_point start, const t_point vector,
 			char **map, const t_point mapsize)
 {
@@ -82,7 +87,10 @@ void	player_move(t_player *player, const t_point direction,
 	else
 		vector = point_upscale(rotate, .1);
 	// vector = point_upscale(vector, 1);
-	player->pos = vector_collision(player->pos, vector, map, mapsize);
+	if (!COLLISION)
+		player->pos = point_add(player->pos, vector);
+	else
+		player->pos = vector_collision(player->pos, vector, map, mapsize);
 }
 
 void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys)
