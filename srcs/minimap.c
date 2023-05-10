@@ -8,25 +8,21 @@ static t_point	scale_ray_vector(const t_ray ray)
 	return (ray_vector);
 }
 
-t_image	minimap_show_ray(void *p_mlx, const t_image *img_map, const t_rays rays,
+void	minimap_show_ray(t_image *img_map, const t_rays rays,
 			const t_point player_pos)
 {
 	const t_point	player_map_pos = point_upscale(player_pos, MapCellSize + 1);
-	const t_colour	ray_colour = colour_from_rgba(200, 0, 0, 0);
-	t_image			image;
+	const t_colour	ray_colour = colour_from_rgba(180, 00, 00, 150);
 	unsigned int	i;
 
-	image = image_dup(p_mlx, img_map);
-	ft_assert(image.data != NULL, "minimap_show_ray: image creation failed");
 	if (!point_inbound(player_map_pos, img_map->size))
-		return (image);
+		return ;
 	i = -1;
 	while (++i < ray_amount)
 	{
-		image_draw_line(&image, ray_colour, player_map_pos,
+		image_draw_line(img_map, ray_colour, player_map_pos,
 			point_add(player_map_pos, scale_ray_vector(rays[i])));
 	}
-	return (image);
 }
 
 static void	starttoend(const t_point img_mapsize, const t_point player_map_pos,

@@ -41,30 +41,59 @@ void	image_copy_opaque(t_image *dst, const t_image *src)
 			dst->data[i] = src->data[i];
 }
 
-t_image	minimap_show_ray(void *p_mlx, const t_image *img_map, const t_rays rays,
+void	map_draw_tile(t_image *map, const t_colour colour, const t_point pos);
+
+void	minimap_show_interact(t_image *img_map, const t_player *player)
+{
+	const t_point	pos = point_add(player->pos, player->dir);
+	const t_point	rounded = point_round(pos, trunc);
+
+	point_log("pos: ", pos);
+	point_log("rounded: ", rounded);
+	printf("\n");
+	map_draw_tile(img_map, colour_from_rgba(0, 255, 0, 0), rounded);
+}
+
+void	minimap_draw_player_delta(t_image *img_map, const t_player *player)
+{
+	const t_point	delta = {
+		.x = 1 / player->dir.x,
+		.y = 1 / player->dir.y
+	};
+	const t_point	player_map_pos = point_upscale(player->pos, MapCellSize + 1);
+
+	image_draw_line(img_map, colour_from_percentage(.2, .2, .2, 0),
+		player_map_pos, point_add(player_map_pos, point_upscale(delta, MapCellSize)));
+}
+
+void	minimap_show_ray(t_image *img_map, const t_rays rays,
 			const t_point player_map_pos);
 void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_image *player_icon);
 // ft_printf("くるり廻る廻る廻る世界\n");
 int	hook_loop(t_game *game)
 {
+	const t_point	screen_center = {
+		.x = ScreenWidth / 2,
+		.y = ScreenHeight / 2
+	};
+
 	if (game->keys[Key_ESC] == Press)
 		hook_button_close(EXIT_SUCCESS);
 	image_draw_rectangle(&game->screen_buffer, game->texture.colour_ceiling,
 		(t_point){.x = 0, .y = 0},
-		(t_point){.x = ScreenWidth, .y = ScreenMidHeight});
+		(t_point){.x = ScreenWidth, .y = screen_center.y});
 	image_draw_rectangle(&game->screen_buffer, game->texture.colour_floor,
-		(t_point){.x = 0, .y = ScreenMidHeight},
+		(t_point){.x = 0, .y = screen_center.y},
 		(t_point){.x = ScreenWidth, .y = ScreenHeight});
 	/* Rotate the player direction, based on the mouse movement and left right keys */
 	{
 		player_rotate(&game->player, game->mouse, game->keys);
-		// mlx_mouse_move(game->mlx.p_win, ScreenMidWidth, ScreenMidHeight);
-		// game->mouse.pos = (t_point){.x = ScreenMidWidth, .y = ScreenMidHeight};
-		// game->mouse.prev_pos = (t_point){.x = ScreenMidWidth, .y = ScreenMidHeight};
+		// mlx_mouse_move(game->mlx.p_win, screen_center.x, screen_center.y);
+		// game->mouse.pos = screen_center;
+		// game->mouse.prev_pos = screen_center;
 	}
 	/* Move the player */
 	player_move(&game->player, player_direction(game->keys), game->map.layout, game->map.size);
-	// point_log("player: ", game->player.pos);
 	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 	/* Raycasting */
 	{
@@ -78,13 +107,18 @@ int	hook_loop(t_game *game)
 	{
 		t_image	raymap;
 
-		raymap = minimap_show_ray(game->mlx.p_mlx, &game->texture.map, game->rays, game->player.pos);
+		raymap = image_dup(game->mlx.p_mlx, &game->texture.map);
+		ft_assert(raymap.data != NULL, "raymap image creation failed");
+		minimap_show_ray(&raymap, game->rays, game->player.pos);
+		// minimap_draw_player_delta(&raymap, &game->player);
+		// minimap_show_interact(&raymap, &game->player);
 		put_minimap(game->mlx, &raymap, &game->player, &game->texture.player_icon);
 		image_destroy(game->mlx.p_mlx, &raymap);
 	}
 	/* Put the temporary cursor */
 	if (display_mouse(game->mouse))
 		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
+	image_put(game->mlx, &game->texture.mouse_icon, screen_center);
 	return (0);
 }
 
