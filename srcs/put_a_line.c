@@ -42,4 +42,5 @@ void	put_a_line(const t_mlx mlx, const t_point pos, const t_point vector)
 	image_clean(&ray);
 	image_draw_line(&ray, colour_from_rgba(255, 255, 255, 20), start, end);
 	image_put(mlx, &ray, pos);
+	image_destroy(mlx.p_mlx, &ray);
 }
