@@ -16,6 +16,6 @@ void	screen_rays(t_rays rays, const t_player *player, const t_map map)
 
 	i = -1;
 	while (++i < ray_amount)
-		rays[i] = raycast(map.layout, map.size, player->pos,
-				point_add(player->dir, scale_plane(plane, i)));
+		rays[i] = raycast(&map, player->pos,
+				point_add(player->dir, scale_plane(plane, i)), Wall);
 }

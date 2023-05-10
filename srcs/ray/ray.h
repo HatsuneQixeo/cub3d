@@ -2,11 +2,13 @@
 # define RAY_H
 
 # include "point.h"
+# include "cubmap.h"
 
 enum e_side
 {
-	Horizontal,
-	Vertical,
+	SideUnknown = -1,
+	SideHorizontal,
+	SideVertical,
 };
 
 typedef struct s_ray
@@ -17,7 +19,6 @@ typedef struct s_ray
 	enum e_side	side;
 }			t_ray;
 
-t_ray	raycast(char **map, const t_point mapsize,
-			const t_point pos, const t_point ray_direction);
+t_ray	raycast(const t_map *map, t_point pos, t_point ray_direction, char hit);
 
 #endif

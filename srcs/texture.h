@@ -9,7 +9,8 @@ enum e_wall_texture_index
 	East,
 	South,
 	West,
-	wall_texture_count
+	Invalid,
+	wall_texture_count,
 };
 
 typedef t_image	t_wall_textures[wall_texture_count];

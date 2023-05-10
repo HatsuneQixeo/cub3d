@@ -28,8 +28,8 @@ static t_point	get_delta(const t_point ray_direction)
 	return (delta_distance);
 }
 
-static t_point	go_until_hit(char **map, const t_point mapsize,
-			const t_point pos, t_ray *ray)
+static t_point	go_until_hit(const t_map *map,
+			const t_point pos, t_ray *ray, const char hit)
 {
 	const t_point	delta_distance = get_delta(ray->direction);
 	const t_point	step = point_sign(ray->direction);
@@ -37,35 +37,36 @@ static t_point	go_until_hit(char **map, const t_point mapsize,
 
 	side_distance = side_distance_offset(pos, ray->direction, delta_distance);
 	ray->hit = point_round(pos, trunc);
-	while (point_inbound(ray->hit, mapsize)
-		&& map[(int)ray->hit.y][(int)ray->hit.x] != '1')
+	while (point_inbound(ray->hit, map->size)
+		&& map->layout[(int)ray->hit.y][(int)ray->hit.x] != hit)
 	{
 		if (side_distance.x < side_distance.y)
 		{
 			side_distance.x += delta_distance.x;
 			ray->hit.x += step.x;
-			ray->side = Horizontal;
+			ray->side = SideHorizontal;
 		}
 		else
 		{
 			side_distance.y += delta_distance.y;
 			ray->hit.y += step.y;
-			ray->side = Vertical;
+			ray->side = SideVertical;
 		}
 	}
-	if (!point_inbound(ray->hit, mapsize) || !point_inbound(pos, mapsize))
+	if (!point_inbound(ray->hit, map->size) || !point_inbound(pos, map->size))
 		return ((t_point){INFINITY, INFINITY});
 	return (point_sub(side_distance, delta_distance));
 }
 
-t_ray	raycast(char **map, const t_point mapsize,
-			const t_point pos, const t_point ray_direction)
+t_ray	raycast(const t_map *map, const t_point pos,
+			const t_point ray_direction, const char hit)
 {
 	t_ray	ray;
 	t_point	distance;
 
 	ray.direction = ray_direction;
-	distance = go_until_hit(map, mapsize, pos, &ray);
+	ray.side = SideUnknown;
+	distance = go_until_hit(map, pos, &ray, hit);
 	ray.distance_traveled = ft_dmax(0, ft_dmax(distance.y, distance.x));
 	return (ray);
 }
