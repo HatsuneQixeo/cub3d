@@ -94,3 +94,30 @@ t_colour	colour_invert(const t_colour colour, const enum e_colour_value value)
 
 	return ((colour & ~mask) | (~colour & mask));
 }
+
+/*
+	(1 - transparency) is inverting the percentage into opacity,
+	which the is how the formula calculates.
+
+	Vise versa, (1 - opacity) is inverting it back to transparency.
+*/
+t_colour	colour_add(const t_colour x, const t_colour y)
+{
+	const double	x_opacity = 1 - (colour_getmask(x, ValueA) / 255.0);
+	const double	y_opacity = 1 - (colour_getmask(y, ValueA) / 255.0);
+	const double	sum_opacity = x_opacity + y_opacity;
+	const t_colour	result[4] = {
+		((colour_getmask(x, ValueR) * x_opacity)
+			+ (colour_getmask(y, ValueR) * y_opacity))
+		/ sum_opacity,
+		((colour_getmask(x, ValueG) * x_opacity)
+			+ (colour_getmask(y, ValueG) * y_opacity))
+		/ sum_opacity,
+		((colour_getmask(x, ValueB) * x_opacity)
+			+ (colour_getmask(y, ValueB) * y_opacity))
+		/ sum_opacity,
+		(1 - x_opacity) * (1 - y_opacity)
+	};
+
+	return (colour_from_rgba(result[0], result[1], result[2], result[3]));
+}

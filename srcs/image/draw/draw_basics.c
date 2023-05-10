@@ -48,6 +48,14 @@ t_colour	image_getpixel(const t_image *image, const t_point pos)
 	return (image->data[index]);
 }
 
+void	image_addcolour(const t_image *image, const t_colour colour,
+			const t_point pos)
+{
+	const unsigned int	index = image_getindex(image, pos);
+
+	image->data[index] = colour_add(image->data[index], colour);
+}
+
 void	image_draw_rectangle(t_image *image, const t_colour colour,
 				const t_point start, const t_point end)
 {
