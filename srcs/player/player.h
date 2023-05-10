@@ -12,8 +12,8 @@ typedef struct s_player
 }			t_player;
 
 t_point	player_direction(const t_keys keys);
-void	player_move(t_player *player, const t_point direction,
-			char **map, const t_point mapsize);
-void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys);
+void	player_move(t_player *player, t_point direction,
+			char **map, t_point mapsize);
+void	player_rotate(t_player *player, t_mouse mouse, const t_keys keys);
 
 #endif

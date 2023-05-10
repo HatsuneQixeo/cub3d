@@ -22,26 +22,26 @@ typedef struct s_point
 }			t_point;
 
 /* Utilities */
-double	point_magnitude(const t_point point);
-double	point_distance(const t_point point1, const t_point point2);
-double	point_dot(const t_point point1, const t_point point2);
-double	point_cross(const t_point point1, const t_point point2);
-t_point	point_rotate(const t_point point, const double angle);
+double	point_magnitude(t_point point);
+double	point_distance(t_point point1, t_point point2);
+double	point_dot(t_point point1, t_point point2);
+double	point_cross(t_point point1, t_point point2);
+t_point	point_rotate(t_point point, double angle);
 
 /* Operators */
-t_point	point_add(const t_point point1, const t_point point2);
-t_point	point_sub(const t_point point1, const t_point point2);
-t_point	point_upscale(const t_point point, const double scale);
-t_point	point_downscale(const t_point point, const double scale);
-t_point	point_round(const t_point point, double (*ft_round)(double));
+t_point	point_add(t_point point1, t_point point2);
+t_point	point_sub(t_point point1, t_point point2);
+t_point	point_upscale(t_point point, double scale);
+t_point	point_downscale(t_point point, double scale);
+t_point	point_round(t_point point, double (*ft_round)(double));
 
-t_point	*point_new(const double x, const double y);
+t_point	*point_new(double x, double y);
 void	point_del(void *content);
-void	point_log(const char *prefix, const t_point point);
-int		point_inbound(const t_point point, const t_point size);
+void	point_log(const char *prefix, t_point point);
+int		point_inbound(t_point point, t_point size);
 
-t_point	point_multiply(const t_point point1, const t_point point2);
-t_point	point_normalize(const t_point point);
-double	point_angle(const t_point point);
-t_point	point_sign(const t_point direction);
+t_point	point_multiply(t_point point1, t_point point2);
+t_point	point_normalize(t_point point);
+double	point_angle(t_point point);
+t_point	point_sign(t_point direction);
 #endif
