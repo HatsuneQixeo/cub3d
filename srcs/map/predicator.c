@@ -21,7 +21,7 @@ int	cubmap_isinvalid_unit(const t_map *map, const t_point pos)
 {
 	const char	c = map->layout[(int)pos.y][(int)pos.x];
 
-	return (!(c == Void|| c == Space || c == Wall
+	return (!(c == Void|| c == Space || c == Wall || c == Door
 			|| cubmap_isplayer(map, pos)));
 }
 
@@ -39,8 +39,8 @@ int	cubmap_ismissingborder(const t_map *map, const t_point pos)
 
 	if (!(map->layout[y][x] == Space || cubmap_isplayer(map, pos)))
 		return (0);
-	if (x == 0 || x == map->size.x - 1
-		|| y == 0 || y == map->size.y - 1)
+	if ((x == 0 || x == map->size.x - 1)
+		|| (y == 0 || y == map->size.y - 1))
 		return (1);
 	return (!(isspace_orwall(map, pos)
 			&& isspace_orwall(map, pos)

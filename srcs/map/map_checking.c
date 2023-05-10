@@ -78,3 +78,33 @@ int	cubmap_surrounded(const t_map map)
 	ft_lstclear(&lst_missing, point_del);
 	return (-1);
 }
+
+int	cubmap_isinvalid_door(const t_map *map, const t_point it)
+{
+	const unsigned int	x = it.x;
+	const unsigned int	y = it.y;
+	const char			c = map->layout[y][x];
+
+	if (c != Door)
+		return (0);
+	if ((x == 0 || x == map->size.x - 1)
+		|| (y == 0 || y == map->size.y - 1))
+		return (1);
+	return (!((map->layout[y - 1][x] == Wall
+				&& map->layout[y + 1][x] == Wall)
+			|| (map->layout[y][x - 1] == Wall
+				&& map->layout[y][x + 1] == Wall)));
+}
+
+int	cubmap_valid_door(const t_map map)
+{
+	t_list	*lst_invalid_door;
+
+	lst_invalid_door = cubmap_gather_if(map, cubmap_isinvalid_door);
+	if (lst_invalid_door == NULL)
+		return (0);
+	cubmap_showlsterror(map, lst_invalid_door,
+		"Door cannot be placed without walls on either side: ");
+	ft_lstclear(&lst_invalid_door, point_del);
+	return (-1);
+}

@@ -29,10 +29,6 @@ enum e_screen_size
 {
 	ScreenWidth = 1280,
 	ScreenHeight = 720,
-	ScreenMidWidth = ScreenWidth / 2,
-	ScreenMidHeight = ScreenHeight / 2,
-	ScreenBorderWidth = ScreenWidth / 16,
-	ScreenBorderHeight = ScreenHeight / 16,
 };
 
 enum e_minimap_size
@@ -46,6 +42,21 @@ enum e_ray_amount
 {
 	ray_amount = ScreenWidth
 };
+
+typedef struct s_door
+{
+	t_point	pos;
+	int		is_open;
+	int		current_frame;
+	int		step;
+}			t_door;
+
+typedef struct s_lstdoor
+{
+	t_door			*doors;
+	t_image			*animation;
+	unsigned int	animation_size;
+}			t_lstdoor;
 
 typedef t_ray	t_rays[ray_amount];
 
@@ -61,15 +72,18 @@ typedef struct s_game
 	t_map		map;
 }			t_game;
 
-void	put_a_line(const t_mlx mlx, const t_point player, const t_point vector);
+void	put_a_line(t_mlx mlx, t_point player, t_point vector);
 
-void	screen_rays(t_rays rays, const t_player *player, const t_map map);
+void	screen_rays(t_rays rays, const t_player *player, t_map map);
 void	ray_draw_texture(t_image *screen_buffer, const t_rays rays,
-			const t_wall_textures walls, const t_point player_pos);
+			const t_wall_textures walls, t_point player_pos);
 
 int		hook_loop(t_game *game);
 
 int		game_init(const char *path, t_game *game);
 void	events(t_game *game);
+
+int		hook_expose(t_game *game);
+int		hook_loop(t_game *game);
 
 #endif
