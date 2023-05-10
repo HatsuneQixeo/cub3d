@@ -6,6 +6,8 @@ t_element	*element_new(char *identifier, char *properties)
 	t_element	*element;
 
 	element = malloc(sizeof(t_element));
+	if (element == NULL)
+		return (NULL);
 	element->identifier = identifier;
 	element->properties = properties;
 	return (element);

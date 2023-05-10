@@ -24,10 +24,6 @@ static t_element	*parse_element(const char *line)
 				ft_strdup(ft_strskip_is(delimiter, ft_isspace))));
 }
 
-/**
- * Question: What should this function even return
- * Hâtsūñè Mīkù
- */
 static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 {
 	const char		*line;
@@ -66,6 +62,7 @@ int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
 	}
 	lst_element = NULL;
 	getmap_lexer(file_content, &lst_element, map);
+	ft_strlistclear(file_content);
 	ft_lstiter(lst_element, element_show);
 	status = cubmap_parse_texture(p_mlx, lst_element, texture);
 	if (status != -1)
@@ -73,7 +70,6 @@ int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
 				+ cubmap_valid_unit(*map)
 				+ cubmap_surrounded(*map) < 0);
 	ft_lstclear(&lst_element, element_del);
-	ft_strlistclear(file_content);
 	if (status == -1)
 		ft_strlistclear(map->layout);
 	return (status);
