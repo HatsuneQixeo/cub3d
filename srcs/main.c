@@ -97,10 +97,10 @@ int	hook_loop(t_game *game)
 	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 	/* Raycasting */
 	{
-		PROFILE("raycast: ", screen_rays(game->rays, &game->player, game->map));
-		PROFILE("draw: ", ray_draw_texture(&game->screen_buffer, game->rays, game->texture.walls, game->player.pos));
-		PROFILE("put:  ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
-		if (!NO_PROFILE)
+		TIME("raycast: ", screen_rays(game->rays, &game->player, game->map));
+		TIME("draw: ", ray_draw_texture(&game->screen_buffer, game->rays, game->texture.walls, game->player.pos));
+		TIME("put:  ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
+		if (BENCHMARK)
 			printf("\n");
 	}
 	/* Minimap */

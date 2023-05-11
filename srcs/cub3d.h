@@ -45,10 +45,10 @@ enum e_ray_amount
 
 typedef struct s_door
 {
-	t_point	pos;
-	int		is_open;
-	int		current_frame;
-	int		step;
+	t_point			pos;
+	int				is_open;
+	unsigned int	current_frame;
+	int				step;
 }			t_door;
 
 typedef struct s_lstdoor

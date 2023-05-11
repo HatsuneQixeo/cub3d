@@ -4,3 +4,4 @@ objs
 libmlx.a
 cub3d
 log
+.DS_Store

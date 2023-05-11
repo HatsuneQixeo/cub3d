@@ -4,7 +4,7 @@ CC			:=	gcc
 CXXFLAGS	:=	-Wall -Werror -Wextra -g
 CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 # CXXFLAGS	+=	-D DRAW_WARNING=0
-CXXFLAGS	+=	-D NO_PROFILE=1
+# CXXFLAGS	+=	-D BENCHMARK=1
 # CXXFLAGS	+=	-D COLLISION=0
 # CXXFLAGS	+=	-D SHOW_RAY=1 # Not used yet
 # CXXFLAGS	+=	-D DEBUG_KEY=1
