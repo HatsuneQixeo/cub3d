@@ -18,27 +18,33 @@
 
 int	image_getindex(const t_image *image, const t_point pos)
 {
-	return ((pos.y * image->size.x) + pos.x);
+	const int	index = (pos.y * image->size.x) + pos.x;
+
+	if (DRAW_WARNING && index >= image->size.y * image->size.x)
+	{
+		point_log("image_getindex: outofbound", pos);
+		point_log("image_getindex: size", image->size);
+	}
+	return (index);
 }
 
-void	image_setpixel(t_image *image, const t_colour colour, const t_point at)
+/* Took out the round safety for performance */
+void	image_setpixel(t_image *image, const t_colour colour, const t_point pos)
 {
-	const t_point	rounded = point_round(at, trunc);
-
-	if (!(0 <= rounded.x && rounded.x < image->size.x))
+	if (!(0 <= pos.x && pos.x < image->size.x))
 	{
 		if (DRAW_WARNING)
-			printf("outofrange x: %f, size: %f\n", at.x, image->size.x);
+			printf("outofrange x: %f, size: %f\n", pos.x, image->size.x);
 		return ;
 	}
-	if (!(0 <= rounded.y && rounded.y < image->size.y))
+	if (!(0 <= pos.y && pos.y < image->size.y))
 	{
 		if (DRAW_WARNING)
-			printf("outofrange y: %f, size: %f\n", at.y, image->size.y);
+			printf("outofrange y: %f, size: %f\n", pos.y, image->size.y);
 		return ;
 	}
 	ft_assert(image->data != NULL, "image_setpixel: NULL image->data");
-	image->data[image_getindex(image, rounded)] = colour;
+	image->data[image_getindex(image, pos)] = colour;
 }
 
 t_colour	image_getpixel(const t_image *image, const t_point pos)
@@ -46,14 +52,6 @@ t_colour	image_getpixel(const t_image *image, const t_point pos)
 	const unsigned int	index = image_getindex(image, pos);
 
 	return (image->data[index]);
-}
-
-void	image_addcolour(const t_image *image, const t_colour colour,
-			const t_point pos)
-{
-	const unsigned int	index = image_getindex(image, pos);
-
-	image->data[index] = colour_add(image->data[index], colour);
 }
 
 void	image_draw_rectangle(t_image *image, const t_colour colour,
