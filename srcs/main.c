@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include "minimap.h"
 
 int	display_mouse(const t_mouse mouse)
 {
@@ -29,7 +30,8 @@ int	display_mouse(const t_mouse mouse)
 /*
 	Originally made because a gif conversion seems to have missing pixel.
 	My deduction is because certain gif image default into transparent
-	if the pixel is the same as the last image
+	if the pixel is the same as the last image,
+	probably for optimisation purpose?
 */
 void	image_copy_opaque(t_image *dst, const t_image *src)
 {
@@ -43,10 +45,10 @@ void	image_copy_opaque(t_image *dst, const t_image *src)
 
 void	map_draw_tile(t_image *map, const t_colour colour, const t_point pos);
 
-void	minimap_show_interact(t_image *img_map, const t_player *player)
+void	minimap_layer_interact(t_image *img_map, const t_player *player)
 {
 	const t_point	pos = point_add(player->pos, player->dir);
-	const t_point	rounded = point_round(pos, trunc);
+	const t_point	rounded = point_apply(pos, trunc);
 
 	point_log("pos: ", pos);
 	point_log("rounded: ", rounded);
@@ -54,21 +56,6 @@ void	minimap_show_interact(t_image *img_map, const t_player *player)
 	map_draw_tile(img_map, colour_from_rgba(0, 255, 0, 0), rounded);
 }
 
-void	minimap_draw_player_delta(t_image *img_map, const t_player *player)
-{
-	const t_point	delta = {
-		.x = 1 / player->dir.x,
-		.y = 1 / player->dir.y
-	};
-	const t_point	player_map_pos = point_upscale(player->pos, MapCellSize + 1);
-
-	image_draw_line(img_map, colour_from_percentage(.2, .2, .2, 0),
-		player_map_pos, point_add(player_map_pos, point_upscale(delta, MapCellSize)));
-}
-
-void	minimap_show_ray(t_image *img_map, const t_rays rays,
-			const t_point player_map_pos);
-void	put_minimap(t_mlx mlx, const t_image *map, const t_player *player, const t_image *player_icon);
 // ft_printf("くるり廻る廻る廻る世界\n");
 int	hook_loop(t_game *game)
 {
@@ -79,6 +66,7 @@ int	hook_loop(t_game *game)
 
 	if (game->keys[Key_ESC] == Press)
 		hook_button_close(EXIT_SUCCESS);
+	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 	image_draw_rectangle(&game->screen_buffer, game->texture.colour_ceiling,
 		(t_point){.x = 0, .y = 0},
 		(t_point){.x = ScreenWidth, .y = screen_center.y});
@@ -94,7 +82,6 @@ int	hook_loop(t_game *game)
 	}
 	/* Move the player */
 	player_move(&game->player, player_direction(game->keys), game->map.layout, game->map.size);
-	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 	/* Raycasting */
 	{
 		TIME("raycast: ", screen_rays(game->rays, &game->player, game->map));
@@ -105,15 +92,7 @@ int	hook_loop(t_game *game)
 	}
 	/* Minimap */
 	{
-		t_image	raymap;
-
-		raymap = image_dup(game->mlx.p_mlx, &game->texture.map);
-		ft_assert(raymap.data != NULL, "raymap image creation failed");
-		minimap_show_ray(&raymap, game->rays, game->player.pos);
-		// minimap_draw_player_delta(&raymap, &game->player);
-		// minimap_show_interact(&raymap, &game->player);
-		put_minimap(game->mlx, &raymap, &game->player, &game->texture.player_icon);
-		image_destroy(game->mlx.p_mlx, &raymap);
+		put_minimap(game->mlx, &game->texture.map, game->rays, &game->player);
 	}
 	/* Put the temporary cursor */
 	if (display_mouse(game->mouse))

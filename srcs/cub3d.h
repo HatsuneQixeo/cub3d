@@ -23,19 +23,10 @@
 # include "exlib.h"
 # include "ray.h"
 
-# define CELL_SIZE	64
-
 enum e_screen_size
 {
 	ScreenWidth = 1280,
 	ScreenHeight = 720,
-};
-
-enum e_minimap_size
-{
-	MapCellSize = CELL_SIZE / 2,
-	MinimapScale = 7,
-	MinimapLength = MapCellSize * MinimapScale
 };
 
 enum e_ray_amount

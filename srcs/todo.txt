@@ -1,2 +1,4 @@
 Shearing, shifting start and end to create an illusion of up and down (Let's not, Think I've spent enough time on this project, don't have any idea how to handle at close space either)
 more map test cases and related norm
+t_point putoffset
+fix minimap header connection
