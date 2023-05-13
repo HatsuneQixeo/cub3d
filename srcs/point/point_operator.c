@@ -52,11 +52,11 @@ t_point	point_downscale(const t_point point, const double scale)
 	return (new_point);
 }
 
-t_point	point_round(const t_point point, double (*ft_round)(double))
+t_point	point_apply(const t_point point, double (*func)(double))
 {
 	const t_point	new_point = {
-		.x = ft_round(point.x),
-		.y = ft_round(point.y)
+		.x = func(point.x),
+		.y = func(point.y)
 	};
 
 	return (new_point);

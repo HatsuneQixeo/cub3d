@@ -33,7 +33,7 @@ t_point	point_add(t_point point1, t_point point2);
 t_point	point_sub(t_point point1, t_point point2);
 t_point	point_upscale(t_point point, double scale);
 t_point	point_downscale(t_point point, double scale);
-t_point	point_round(t_point point, double (*ft_round)(double));
+t_point	point_apply(t_point point, double (*func)(double));
 
 t_point	*point_new(double x, double y);
 void	point_del(void *content);
