@@ -48,6 +48,27 @@ t_image	image_dup(void *p_mlx, const t_image *src)
 	return (image);
 }
 
+t_image	image_crop(void *p_mlx, const t_image *src,
+			const t_point start, const t_point end)
+{
+	const t_point	size = point_sub(end, start);
+	t_image			image;
+	t_point			it;
+
+	image = image_create(p_mlx, size, src->putoffset_x, src->putoffset_y);
+	if (image.data == NULL)
+		return (image);
+	it.y = start.y - 1;
+	while (++it.y < end.y)
+	{
+		it.x = start.x - 1;
+		while (++it.x < end.x)
+			image_setpixel(&image, image_getpixel(src, it),
+				point_sub(it, start));
+	}
+	return (image);
+}
+
 /*
 	Not sure if the return value is really describing anything about the error
 
