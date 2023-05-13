@@ -80,15 +80,10 @@ void	draw_filled_circle(t_image *image, const t_colour colour,
 
 void	image_fill_circle(t_image *image, const t_colour colour)
 {
-	const t_point	center = (t_point){
-		.x = image->size.x / 2,
-		.y = image->size.y / 2
-	};
+	const t_point	center = point_round(point_upscale(image->size, .5), trunc);
 	const int		min = ft_min(image->size.x, image->size.y);
 	const double	radius = (double)(min - !(min & 0b1)) / 2;
 
 	image_clean(image);
-	// printf("image_fill_circle(): center = (%d, %d), radius = %f\n",
-	// 	center.x, center.y, radius);
 	image_draw_circle(image, colour, center, radius);
 }
