@@ -83,17 +83,16 @@ int	cubmap_isinvalid_door(const t_map *map, const t_point it)
 {
 	const unsigned int	x = it.x;
 	const unsigned int	y = it.y;
-	const char			c = map->layout[y][x];
+	char **const		layout = map->layout;
+	const char			c = layout[y][x];
 
 	if (c != Door)
 		return (0);
 	if ((x == 0 || x == map->size.x - 1)
 		|| (y == 0 || y == map->size.y - 1))
 		return (1);
-	return (!((map->layout[y - 1][x] == Wall
-				&& map->layout[y + 1][x] == Wall)
-			|| (map->layout[y][x - 1] == Wall
-				&& map->layout[y][x + 1] == Wall)));
+	return (!((layout[y - 1][x] == Wall && layout[y + 1][x] == Wall)
+			|| (layout[y][x - 1] == Wall && layout[y][x + 1] == Wall)));
 }
 
 int	cubmap_valid_door(const t_map map)

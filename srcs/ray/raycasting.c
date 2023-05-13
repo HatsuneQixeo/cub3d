@@ -4,7 +4,7 @@
 static t_point	side_distance_offset(const t_point pos, const t_point direction,
 			const t_point delta_distance)
 {
-	const t_point	offset = point_sub(pos, point_round(pos, trunc));
+	const t_point	offset = point_sub(pos, point_apply(pos, trunc));
 	t_point			side_distance;
 
 	if (direction.x < 0)
@@ -36,7 +36,7 @@ static t_point	go_until_hit(const t_map *map,
 	t_point			side_distance;
 
 	side_distance = side_distance_offset(pos, ray->direction, delta_distance);
-	ray->hit = point_round(pos, trunc);
+	ray->hit = point_apply(pos, trunc);
 	while (point_inbound(ray->hit, map->size)
 		&& map->layout[(int)ray->hit.y][(int)ray->hit.x] != hit)
 	{

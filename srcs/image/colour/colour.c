@@ -14,6 +14,52 @@
 #include "libft.h"
 
 /**
+ * No, I don't really recommend this approach,
+ * it's too inconvenient to access the individual byte value.
+ * 
+ * This approach is much more convenient for getting the individual byte value:
+ * union u_colour
+ * {
+ * 	uint32_t	value;
+ * 	struct
+ * 	{
+ * 		uint8_t	blue;
+ * 		uint8_t	green;
+ * 		uint8_t	red;
+ * 		uint8_t	alpha;
+ * 	}			comp;
+ * };
+ * 
+ * But I didn't actually use any of the byte manipulation functions anyway,
+ * outside of a failed attempt at implementing colour addition function.
+ */
+
+t_colour	colour_from_rgba(const t_colour_byte red,
+				const t_colour_byte green,
+				const t_colour_byte blue,
+				const t_colour_byte alpha)
+{
+	return ((red * ValueR)
+		+ (green * ValueG)
+		+ (blue * ValueB)
+		+ (alpha * ValueA));
+}
+
+t_colour	colour_from_percentage(const double red, const double green,
+				const double blue, const double alpha)
+{
+	ft_assert(0 <= red && red <= 1, "red is not between 0 and 1");
+	ft_assert(0 <= green && green <= 1, "green is not between 0 and 1");
+	ft_assert(0 <= blue && blue <= 1, "blue is not between 0 and 1");
+	ft_assert(0 <= alpha && alpha <= 1, "alpha is not between 0 and 1");
+	return (colour_from_rgba(
+			red * 0xff,
+			green * 0xff,
+			blue * 0xff,
+			alpha * 0xff));
+}
+
+/**
  * @brief 
  * (value * 0xff)
  * turns the value into mask
@@ -58,31 +104,6 @@ void	colour_setmask(t_colour *colour, const t_colour_byte set,
 	*colour = (*colour & ~(value * 0xff)) | (set * value);
 }
 
-t_colour	colour_from_rgba(const t_colour_byte red,
-				const t_colour_byte green,
-				const t_colour_byte blue,
-				const t_colour_byte alpha)
-{
-	return ((red * ValueR)
-		+ (green * ValueG)
-		+ (blue * ValueB)
-		+ (alpha * ValueA));
-}
-
-t_colour	colour_from_percentage(const double red, const double green,
-				const double blue, const double alpha)
-{
-	ft_assert(0 <= red && red <= 1, "red is not between 0 and 1");
-	ft_assert(0 <= green && green <= 1, "green is not between 0 and 1");
-	ft_assert(0 <= blue && blue <= 1, "blue is not between 0 and 1");
-	ft_assert(0 <= alpha && alpha <= 1, "alpha is not between 0 and 1");
-	return (colour_from_rgba(
-			red * 0xff,
-			green * 0xff,
-			blue * 0xff,
-			alpha * 0xff));
-}
-
 /**
  * Chose this approach over getmask and setmask to support multiple masks,
  * which is not possible with getmask,
@@ -93,31 +114,4 @@ t_colour	colour_invert(const t_colour colour, const enum e_colour_value value)
 	const t_colour	mask = value * 0xff;
 
 	return ((colour & ~mask) | (~colour & mask));
-}
-
-/*
-	(1 - transparency) is inverting the percentage into opacity,
-	which the is how the formula calculates.
-
-	Vise versa, (1 - opacity) is inverting it back to transparency.
-*/
-t_colour	colour_add(const t_colour x, const t_colour y)
-{
-	const double	x_opacity = 1 - (colour_getmask(x, ValueA) / 255.0);
-	const double	y_opacity = 1 - (colour_getmask(y, ValueA) / 255.0);
-	const double	sum_opacity = x_opacity + y_opacity;
-	const t_colour	result[4] = {
-		((colour_getmask(x, ValueR) * x_opacity)
-			+ (colour_getmask(y, ValueR) * y_opacity))
-		/ sum_opacity,
-		((colour_getmask(x, ValueG) * x_opacity)
-			+ (colour_getmask(y, ValueG) * y_opacity))
-		/ sum_opacity,
-		((colour_getmask(x, ValueB) * x_opacity)
-			+ (colour_getmask(y, ValueB) * y_opacity))
-		/ sum_opacity,
-		(1 - x_opacity) * (1 - y_opacity)
-	};
-
-	return (colour_from_rgba(result[0], result[1], result[2], result[3]));
 }

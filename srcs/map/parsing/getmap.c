@@ -2,7 +2,7 @@
 #include "element.h"
 
 int	cubmap_parse_texture(void *p_mlx, const t_list *lst_elements,
-			t_texture *texture);
+		t_texture *texture);
 
 char	*ft_strfind_if(const char *str, t_ftis ft_is)
 {

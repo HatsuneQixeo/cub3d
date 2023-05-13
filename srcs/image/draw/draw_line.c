@@ -15,15 +15,13 @@
 void	image_draw_line(t_image *image, const t_colour colour,
 			const t_point begin, const t_point end)
 {
-	const t_point	vector = point_sub(end, begin);
-	const int		total_step = ft_max(fabs(vector.x), fabs(vector.y));
-	const t_point	step_length = point_downscale(vector, total_step);
-	int				step;
-	t_point			it;
+	const t_point		vector = point_sub(end, begin);
+	const unsigned int	total_step = ft_dmax(fabs(vector.x), fabs(vector.y));
+	const t_point		step_length = point_downscale(vector, total_step);
+	unsigned int		step;
+	t_point				it;
 
 	step = -1;
-	if (isnan(step_length.x) || isnan(step_length.y))
-		return (point_log("image_draw_line: step_length is NaN", step_length));
 	it = begin;
 	while (++step < total_step)
 	{

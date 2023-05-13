@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include "minimap.h"
+
+t_point	minimap_scale_point(const t_point point)
+{
+	return (point_upscale(point, MapCellSize + 1));
+}
 
 void	map_draw_tile(t_image *map, const t_colour colour, const t_point pos)
 {
@@ -57,7 +63,7 @@ static void	texture_init(void *p_mlx, const t_map map, t_texture *texture)
 		ft_assert(texture->player_icon.p_image != NULL,
 			"image_create() for player_icon failed");
 		image_fill_circle(&texture->player_icon,
-			colour_from_percentage(.3, .7, .5, .75));
+			colour_from_percentage(.2, .9, .6, .60));
 	}
 	{
 		texture->mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",

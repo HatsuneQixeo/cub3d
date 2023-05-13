@@ -36,7 +36,6 @@ t_colour		colour_from_rgba(t_colour_byte red, t_colour_byte green,
 t_colour		colour_from_percentage(double red, double green,
 					double blue, double alpha);
 t_colour		colour_invert(t_colour colour, enum e_colour_value value);
-t_colour		colour_add(t_colour a, t_colour b);
 
 void			ft_intset(int *arr, unsigned int size, int value);
 

@@ -21,7 +21,7 @@ int	cubmap_isinvalid_unit(const t_map *map, const t_point pos)
 {
 	const char	c = map->layout[(int)pos.y][(int)pos.x];
 
-	return (!(c == Void|| c == Space || c == Wall || c == Door
+	return (!(c == Void || c == Space || c == Wall || c == Door
 			|| cubmap_isplayer(map, pos)));
 }
 

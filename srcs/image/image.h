@@ -22,9 +22,9 @@
 
 typedef double	(*t_offset)(double pos, double size);
 /* Image Offset */
-double	putoffset_default(double pos, double size);
-double	putoffset_centered(double pos, double size);
-double	putoffset_inverted(double pos, double size);
+double		putoffset_default(double pos, double size);
+double		putoffset_centered(double pos, double size);
+double		putoffset_inverted(double pos, double size);
 
 typedef struct s_mlx
 {
@@ -32,6 +32,7 @@ typedef struct s_mlx
 	void	*p_win;
 }			t_mlx;
 
+/* Pretty sure I could just make putoffset a const t_point */
 typedef struct s_image
 {
 	void		*p_image;
@@ -45,28 +46,30 @@ int			image_getindex(const t_image *image, t_point pos);
 t_colour	image_getpixel(const t_image *image, t_point pos);
 /* Image Creation */
 t_image		image_create(void *p_mlx, t_point size,
-			t_offset putoffset_x, t_offset putoffset_y);
+				t_offset putoffset_x, t_offset putoffset_y);
+t_image	image_crop(void *p_mlx, const t_image *src,
+				const t_point start, const t_point end);
 t_image		image_dup(void *p_mlx, const t_image *src);
 t_image		image_readxpm(void *p_mlx, const char *path,
-			t_offset putoffset_x, t_offset putoffset_y);
+				t_offset putoffset_x, t_offset putoffset_y);
 void		image_destroy(void *p_mlx, t_image *image);
 
 /* Image Manipulation */
 void		image_setpixel(t_image *image, t_colour colour, t_point at);
 void		image_draw_line(t_image *image, t_colour colour,
-			t_point start, t_point end);
+				t_point start, t_point end);
 void		image_fill(t_image *image, t_colour colour);
 void		image_clean(t_image *image);
 
 /* Rectangle */
 void		image_draw_rectangle(t_image *image, t_colour colour,
-			t_point start, t_point end);
+				t_point start, t_point end);
 
 /* Circle */
 void		image_draw_circle(t_image *image, t_colour colour,
-			t_point center, unsigned int radius);
+				t_point center, unsigned int radius);
 void		draw_filled_circle(t_image *image, t_colour colour,
-			t_point center, int radius);
+				t_point center, int radius);
 void		image_fill_circle(t_image *image, t_colour colour);
 
 /* Image Render */
