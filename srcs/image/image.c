@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "image.h"
+#include <errno.h>
 
 static t_colour	*image_getdata(void *p_image)
 {
@@ -88,7 +89,10 @@ t_image	image_readxpm(void *p_mlx, const char *path,
 
 	ft_bzero(&image, sizeof(image));
 	if (cmp_strsuffix(path, ".xpm"))
+	{
+		errno = ENOEXEC;
 		return (image);
+	}
 	image.p_image = mlx_xpm_file_to_image(p_mlx, (char *)path, &width, &height);
 	if (image.p_image == NULL)
 		return (image);
