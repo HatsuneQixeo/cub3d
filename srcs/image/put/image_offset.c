@@ -27,13 +27,3 @@ double	putoffset_inverted(const double size)
 {
 	return (-size);
 }
-
-t_point	image_getoffset(const t_image *image)
-{
-	const t_point	offset = {
-		.x = image->putoffset_x(image->size.x),
-		.y = image->putoffset_y(image->size.y)
-	};
-
-	return (offset);
-}

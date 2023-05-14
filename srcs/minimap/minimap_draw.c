@@ -45,14 +45,6 @@ t_point	point_multiply(const t_point a, const t_point b)
 	return (point);
 }
 
-t_point	point_normalize(const t_point point)
-{
-	const double	magnitude = sqrt(pow(point.x, 2) + pow(point.y, 2));
-	const t_point	normalized = point_downscale(point, magnitude);
-
-	return (normalized);
-}
-
 static void	layer_player_delta(t_image *image, const t_player *player)
 {
 	const t_point	map_pos = point_upscale(player->pos, MapCellSize + 1);
@@ -98,11 +90,11 @@ typedef t_image	t_minimap_layers[layer_count];
 
 /* Should be fine since putoffset will be replaced by t_point offset */
 void	minimap_layers_init(t_minimap_layers layers, void *p_mlx,
-			const t_point size, t_offset putoffset_x, t_offset putoffset_y)
+			const t_point size, const t_point putoffset)
 {
 	for (unsigned int i = 0; i < layer_count; i++)
 	{
-		layers[i] = image_create(p_mlx, size, putoffset_x, putoffset_y);
+		layers[i] = image_create(p_mlx, size, putoffset);
 		ft_assert(layers[i].data != NULL, "minimap_layers_init: layers creation failed");
 		image_clean(&layers[i]);
 	}
@@ -149,8 +141,6 @@ void	minimap_layers_crop(t_minimap_layers layers_cropped,
 	for (unsigned int i = 0; i < layer_count; i++)
 	{
 		layers_cropped[i] = image_crop(p_mlx, &layers[i], start, end);
-		layers_cropped[i].putoffset_x = putoffset_default;
-		layers_cropped[i].putoffset_y = putoffset_default;
 		ft_assert(layers_cropped[i].data != NULL, "minimap_layers_crop: "IMAGE_CREATION_FAILED);
 	}
 }
@@ -164,7 +154,7 @@ void	put_minimap(t_mlx mlx, const t_image *map_texture, const t_rays rays,
 	/* Init */
 	{
 		minimap_layers_init(layers, mlx.p_mlx, map_texture->size,
-			map_texture->putoffset_x, map_texture->putoffset_y);
+			map_texture->putoffset);
 		minimap_layer_player(&layers[LayerPlayer], mlx.p_mlx, player);
 		minimap_layer_ray(&layers[LayerRay], rays, player->pos);
 		ft_memcpy(layers[LayerMap].data, map_texture->data,

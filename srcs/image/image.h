@@ -37,19 +37,16 @@ typedef struct s_image
 {
 	void		*p_image;
 	t_colour	*data;
-	t_offset	putoffset_x;
-	t_offset	putoffset_y;
+	t_point		putoffset;
 	t_point		size;
 }				t_image;
 
 /* Image Getters */
 int			image_getindex(const t_image *image, t_point pos);
 t_colour	image_getpixel(const t_image *image, t_point pos);
-t_point		image_getoffset(const t_image *image);
 /* Image Creation */
-t_image		image_create(void *p_mlx, t_point size,
-				t_offset putoffset_x, t_offset putoffset_y);
-t_image	image_crop(void *p_mlx, const t_image *src,
+t_image		image_create(void *p_mlx, t_point size, t_point putoffset);
+t_image		image_crop(void *p_mlx, const t_image *src,
 				const t_point start, const t_point end);
 t_image		image_dup(void *p_mlx, const t_image *src);
 t_image		image_readxpm(void *p_mlx, const char *path,

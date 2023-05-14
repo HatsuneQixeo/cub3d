@@ -31,12 +31,12 @@ t_image	map_texture(void *p_mlx, const t_map map)
 {
 	const t_colour	wall_colour = colour_from_percentage(.70, .90, .90, .70);
 	const t_colour	space_colour = colour_from_percentage(.20, .30, .40, .70);
+	const t_point	size = point_add((t_point){-1, -1},
+			point_upscale(map.size, MapCellSize + 1));
 	t_image			image;
 	t_point			it;
 
-	image = image_create(p_mlx, point_add((t_point){-1, -1},
-				point_upscale(map.size, MapCellSize + 1)),
-			putoffset_inverted, putoffset_inverted);
+	image = image_create(p_mlx, size, point_apply(size, putoffset_inverted));
 	if (image.data == NULL)
 		return (image);
 	image_fill(&image, colour_from_percentage(.0, .20, .20, .50));
@@ -58,8 +58,10 @@ t_image	map_texture(void *p_mlx, const t_map map)
 static void	texture_init(void *p_mlx, const t_map map, t_texture *texture)
 {
 	{
-		texture->player_icon = image_create(p_mlx, (t_point){.x = 17, .y = 17},
-				putoffset_centered, putoffset_centered);
+		const t_point	size = {17, 17};
+
+		texture->player_icon = image_create(p_mlx, size,
+				point_apply(size, putoffset_centered));
 		ft_assert(texture->player_icon.p_image != NULL,
 			"image_create() for player_icon failed");
 		image_fill_circle(&texture->player_icon,
@@ -81,8 +83,7 @@ static void	texture_init(void *p_mlx, const t_map map, t_texture *texture)
 			"image_create() for map failed");
 	}
 	{
-		texture->walls[Invalid] = image_create(p_mlx,
-				(t_point){.x = 1, .y = 1}, putoffset_default, putoffset_default);
+		texture->walls[Invalid] = image_create(p_mlx, (t_point){1, 1}, (t_point){0, 0});
 		ft_assert(texture->walls[Invalid].p_image != NULL,
 			"image_create() for invalid texture failed");
 		texture->walls[Invalid].data[0] = 0x00000000;
@@ -98,7 +99,7 @@ int	game_init(const char *path, t_game *game)
 		return (-1);
 	game->screen_buffer = image_create(game->mlx.p_mlx,
 			(t_point){.x = ScreenWidth, .y = ScreenHeight},
-			putoffset_default, putoffset_default);
+			(t_point){0, 0});
 	ft_assert(game->screen_buffer.p_image != NULL,
 		"image_create() for screen_buffer failed");
 	ft_intset((int *)game->keys, key_count, Release);

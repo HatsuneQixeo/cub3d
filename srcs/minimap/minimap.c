@@ -2,7 +2,7 @@
 
 void	image_draw_image(t_image *dst, const t_image *src, const t_point pos)
 {
-	const t_point	offset = point_apply(image_getoffset(src), trunc);
+	const t_point	offset = point_apply(src->putoffset, trunc);
 	const t_point	begin = {
 		.x = ft_dmax(0, pos.x + offset.x),
 		.y = ft_dmax(0, pos.x + offset.y)

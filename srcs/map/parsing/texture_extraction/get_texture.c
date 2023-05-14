@@ -11,7 +11,7 @@ int	check_table(const char *idx_table[], unsigned int length,
 
 static t_list	*read_image(void *p_mlx, const char *path, t_image *image)
 {
-	*image = image_readxpm(p_mlx, path, NULL, NULL);
+	*image = image_readxpm(p_mlx, path, putoffset_default, putoffset_default);
 	if (image->p_image == NULL)
 		return (ft_lstnew(ft_strmerge("%s: %s", strerror(errno), path)));
 	else

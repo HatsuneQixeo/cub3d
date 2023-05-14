@@ -21,8 +21,7 @@ static t_colour	*image_getdata(void *p_image)
 			&var_void, &var_void, &var_void));
 }
 
-t_image	image_create(void *p_mlx, const t_point size,
-			t_offset putoffset_x, t_offset putoffset_y)
+t_image	image_create(void *p_mlx, const t_point size, const t_point putoffset)
 {
 	t_image	image;
 
@@ -31,8 +30,7 @@ t_image	image_create(void *p_mlx, const t_point size,
 	if (image.p_image == NULL)
 		return (image);
 	image.data = image_getdata(image.p_image);
-	image.putoffset_x = putoffset_x;
-	image.putoffset_y = putoffset_y;
+	image.putoffset = putoffset;
 	image.size = size;
 	return (image);
 }
@@ -41,7 +39,7 @@ t_image	image_dup(void *p_mlx, const t_image *src)
 {
 	t_image	image;
 
-	image = image_create(p_mlx, src->size, src->putoffset_x, src->putoffset_y);
+	image = image_create(p_mlx, src->size, src->putoffset);
 	if (image.data == NULL)
 		return (image);
 	ft_memcpy(image.data, src->data,
@@ -56,7 +54,7 @@ t_image	image_crop(void *p_mlx, const t_image *src,
 	t_image			image;
 	t_point			it;
 
-	image = image_create(p_mlx, size, src->putoffset_x, src->putoffset_y);
+	image = image_create(p_mlx, size, (t_point){0, 0});
 	if (image.data == NULL)
 		return (image);
 	it.y = start.y - 1;
@@ -98,8 +96,10 @@ t_image	image_readxpm(void *p_mlx, const char *path,
 		return (image);
 	image.size = (t_point){.x = width, .y = height};
 	image.data = image_getdata(image.p_image);
-	image.putoffset_x = putoffset_x;
-	image.putoffset_y = putoffset_y;
+	image.putoffset = (t_point){
+		.x = putoffset_x(image.size.x),
+		.y = putoffset_y(image.size.y)
+	};
 	return (image);
 }
 

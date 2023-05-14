@@ -31,12 +31,15 @@ void	put_a_line(const t_mlx mlx, const t_point pos, const t_point vector)
 		.x = ft_max(fabs(vector.x), 1),
 		.y = ft_max(fabs(vector.y), 1)
 	};
+	const t_point	putoffset = {
+		.x = offset_vector(vector.x)(size.x),
+		.y = offset_vector(vector.y)(size.y)
+	};
 	t_image			ray;
 	t_point			start;
 	t_point			end;
 
-	ray = image_create(mlx.p_mlx, size,
-			offset_vector(vector.x), offset_vector(vector.y));
+	ray = image_create(mlx.p_mlx, size, putoffset);
 	ft_assert(ray.data != NULL, "put_a_line: "IMAGE_CREATION_FAILED);
 	start_to_end(&start, &end, size, vector);
 	image_clean(&ray);

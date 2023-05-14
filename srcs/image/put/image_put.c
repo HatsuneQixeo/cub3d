@@ -14,11 +14,9 @@
 
 void	image_put(const t_mlx mlx, const t_image *image, const t_point pos)
 {
+	const t_point	put = point_add(pos, image->putoffset);
+
 	ft_assert(image != NULL, "image_put: NULL image");
 	ft_assert(image->p_image != NULL, "image_put: NULL image.p_image");
-	ft_assert(image->putoffset_x != NULL, "image_put: NULL putoffset_x");
-	ft_assert(image->putoffset_y != NULL, "image_put: NULL putoffset_y");
-	const t_point	put = point_add(pos, image_getoffset(image));
-
 	mlx_put_image_to_window(mlx.p_mlx, mlx.p_win, image->p_image, put.x, put.y);
 }
