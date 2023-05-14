@@ -91,9 +91,7 @@ int	hook_loop(t_game *game)
 			printf("\n");
 	}
 	/* Minimap */
-	{
-		put_minimap(game->mlx, &game->texture.map, game->rays, &game->player);
-	}
+	cub3d_map_render(game);
 	/* Put the temporary cursor */
 	if (display_mouse(game->mouse))
 		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);

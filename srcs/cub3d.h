@@ -22,18 +22,24 @@
 # include "cubmap.h"
 # include "exlib.h"
 # include "ray.h"
+# include "minimap.h"
 
+/* Screen */
 enum e_screen_size
 {
 	ScreenWidth = 1280,
 	ScreenHeight = 720,
 };
 
+/* Ray */
 enum e_ray_amount
 {
 	ray_amount = ScreenWidth
 };
 
+typedef t_ray	t_rays[ray_amount];
+
+/* Door */
 typedef struct s_door
 {
 	t_point			pos;
@@ -48,8 +54,6 @@ typedef struct s_lstdoor
 	t_image			*animation;
 	unsigned int	animation_size;
 }			t_lstdoor;
-
-typedef t_ray	t_rays[ray_amount];
 
 typedef struct s_game
 {
@@ -76,5 +80,7 @@ void	events(t_game *game);
 
 int		hook_expose(t_game *game);
 int		hook_loop(t_game *game);
+
+void	cub3d_map_render(const t_game *game);
 
 #endif
