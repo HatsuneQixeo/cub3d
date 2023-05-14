@@ -17,18 +17,14 @@ static int	get_image_x(const t_image *image, const t_ray ray,
 {
 	const t_point	dist = point_upscale(ray.direction, ray.distance_traveled);
 	const t_point	hit = point_add(player_pos, dist);
-	const t_point	offset = point_sub(hit, point_apply(hit, trunc));
-	const double	wall_x = (double []){
-		offset.y,
-		offset.x
-	}[ray.side == SideVertical];
-	const int		image_x = wall_x * image->size.x;
+	const t_point	offst = point_sub(hit, point_apply(hit, trunc));
+	const double	x = (double []){offst.y, offst.x}[ray.side == SideVertical];
 
 	if ((ray.side == SideHorizontal && ray.direction.x < 0)
 		|| (ray.side == SideVertical && ray.direction.y > 0))
-		return ((image->size.x - 1) - image_x);
+		return ((1 - x) * image->size.x);
 	else
-		return (image_x);
+		return (x * image->size.x);
 }
 
 static void	draw_line(t_image *screen_buffer, const t_image *image,
@@ -36,8 +32,8 @@ static void	draw_line(t_image *screen_buffer, const t_image *image,
 			const unsigned int screen_x)
 {
 	const double	image_step = (image->size.y / line_height);
-	const double	screen_end_y = ft_dmin(ScreenHeight,
-			(line_height + ScreenHeight) / 2);
+	const double	screen_end_y = trunc(ft_dmin(ScreenHeight,
+			(line_height + ScreenHeight) / 2));
 	double			screen_y;
 	double			it_img_y;
 
@@ -45,7 +41,7 @@ static void	draw_line(t_image *screen_buffer, const t_image *image,
 	it_img_y = (screen_y + ((line_height - ScreenHeight) / 2)) * image_step;
 	if (isnan(it_img_y))
 		it_img_y = 0;
-	screen_y--;
+	screen_y = trunc(screen_y - 1);
 	while (++screen_y < screen_end_y)
 	{
 		const t_colour	colour = image_getpixel(image, (t_point){
@@ -55,7 +51,7 @@ static void	draw_line(t_image *screen_buffer, const t_image *image,
 
 		image_setpixel(screen_buffer, colour, (t_point){
 			.x = screen_x,
-			.y = trunc(screen_y)
+			.y = screen_y
 		});
 		it_img_y += image_step;
 	}
