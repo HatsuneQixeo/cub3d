@@ -2,17 +2,14 @@
 
 void	image_draw_image(t_image *dst, const t_image *src, const t_point pos)
 {
-	const t_point	offset = {
-		.x = trunc(src->putoffset_x(pos.x, src->size.x)),
-		.y = trunc(src->putoffset_x(pos.y, src->size.y)),
-	};
+	const t_point	offset = point_apply(image_getoffset(src), trunc);
 	const t_point	begin = {
-		.x = ft_dmax(0, offset.x),
-		.y = ft_dmax(0, offset.y)
+		.x = ft_dmax(0, pos.x + offset.x),
+		.y = ft_dmax(0, pos.x + offset.y)
 	};
 	const t_point	end = {
-		.x = ft_dmin(dst->size.x, pos.x + src->size.x),
-		.y = ft_dmin(dst->size.y, pos.y + src->size.y),
+		.x = ft_dmin(dst->size.x, pos.x + offset.x + src->size.x),
+		.y = ft_dmin(dst->size.y, pos.y + offset.y + src->size.y),
 	};
 	t_point			it;
 

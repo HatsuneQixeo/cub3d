@@ -20,11 +20,11 @@
 
 # define IMAGE_CREATION_FAILED	"Image Creation Failed"
 
-typedef double	(*t_offset)(double pos, double size);
+typedef double	(*t_offset)(double size);
 /* Image Offset */
-double		putoffset_default(double pos, double size);
-double		putoffset_centered(double pos, double size);
-double		putoffset_inverted(double pos, double size);
+double		putoffset_default(double size);
+double		putoffset_centered(double size);
+double		putoffset_inverted(double size);
 
 typedef struct s_mlx
 {
@@ -42,8 +42,10 @@ typedef struct s_image
 	t_point		size;
 }				t_image;
 
+/* Image Getters */
 int			image_getindex(const t_image *image, t_point pos);
 t_colour	image_getpixel(const t_image *image, t_point pos);
+t_point		image_getoffset(const t_image *image);
 /* Image Creation */
 t_image		image_create(void *p_mlx, t_point size,
 				t_offset putoffset_x, t_offset putoffset_y);

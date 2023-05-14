@@ -12,18 +12,28 @@
 
 #include "image.h"
 
-double	putoffset_default(const double pos, const double size)
+double	putoffset_default(const double size)
 {
-	return (pos);
+	return (0);
 	(void)size;
 }
 
-double	putoffset_centered(const double pos, const double size)
+double	putoffset_centered(const double size)
 {
-	return (pos - (size / 2));
+	return (-(size / 2));
 }
 
-double	putoffset_inverted(const double pos, const double size)
+double	putoffset_inverted(const double size)
 {
-	return (pos - size);
+	return (-size);
+}
+
+t_point	image_getoffset(const t_image *image)
+{
+	const t_point	offset = {
+		.x = image->putoffset_x(image->size.x),
+		.y = image->putoffset_y(image->size.y)
+	};
+
+	return (offset);
 }
