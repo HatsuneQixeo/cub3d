@@ -109,7 +109,8 @@ void	colour_setmask(t_colour *colour, const t_colour_byte set,
  * which is not possible with getmask,
  * and setmask can only set a given value for all the given mask
  */
-t_colour	colour_invert(const t_colour colour, const enum e_colour_value value)
+t_colour	colour_invert(const t_colour colour,
+			const enum e_colour_value value)
 {
 	const t_colour	mask = value * 0xff;
 

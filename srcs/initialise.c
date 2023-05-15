@@ -72,10 +72,10 @@ static void	texture_init(void *p_mlx, const t_map map, t_texture *texture)
 				putoffset_default, putoffset_default);
 		ft_assert(texture->mouse_icon.p_image != NULL,
 			"image_readxpm() for mouse_icon failed");
-		// texture->mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
-		// 		putoffset_centered, putoffset_centered);
-		// image_fill_circle(texture->mouse_icon,
-		// 	colour_from_percentage(.3, .7, .8, .75));
+		//texture->mouse_icon = image_create(p_mlx, (t_point){.x = 25, .y = 25},
+		//		putoffset_centered, putoffset_centered);
+		//image_fill_circle(texture->mouse_icon,
+		//	colour_from_percentage(.3, .7, .8, .75));
 	}
 	{
 		texture->map = map_texture(p_mlx, map);
@@ -104,9 +104,10 @@ int	game_init(const char *path, t_game *game)
 		"image_create() for screen_buffer failed");
 	ft_intset((int *)game->keys, key_count, Release);
 	texture_init(game->mlx.p_mlx, game->map, &game->texture);
-	game->player = cubmap_getplayer(game->map); 
+	game->player = cubmap_getplayer(game->map);
 	game->mouse.left_click = Release;
-	game->mlx.p_win = mlx_new_window(game->mlx.p_mlx, ScreenWidth, ScreenHeight, "Miku love cub3d");
+	game->mlx.p_win = mlx_new_window(game->mlx.p_mlx, ScreenWidth, ScreenHeight,
+			"cub3d");
 	ft_assert(game->mlx.p_win != NULL, "mlx_new_window() failed");
 	return (0);
 }

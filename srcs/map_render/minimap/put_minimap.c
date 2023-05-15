@@ -44,7 +44,8 @@ static void	starttoend(const t_point img_mapsize, const t_point player_map_pos,
 
 void	put_minimap(t_mlx mlx, const t_image *map, const t_point player_pos)
 {
-	const t_point	player_map_pos = point_apply(point_upscale(player_pos, MapCellSize + 1), trunc);
+	const t_point	player_map_pos = point_apply(
+			point_upscale(player_pos, MapCellSize + 1), trunc);
 	t_point			start;
 	t_point			end;
 	t_image			cropped;

@@ -18,7 +18,7 @@ static void	map_layers_destroy(void *p_mlx, t_map_layers layers)
 	unsigned int	i;
 
 	i = -1;
-	while(++i < layer_count)
+	while (++i < layer_count)
 		image_destroy(p_mlx, &layers[i]);
 }
 
@@ -38,7 +38,7 @@ static void	map_layers_destroy(void *p_mlx, t_map_layers layers)
 	and it keeps thing simple for not having more files to maintain.
 */
 static void	map_layers_render(t_mlx mlx, const t_map_layers layers,
-			const t_point pos, void	(*put)(t_mlx, const t_map_layers, t_point))
+			const t_point pos, void (*put)(t_mlx, const t_map_layers, t_point))
 {
 	unsigned int	i;
 
@@ -56,7 +56,8 @@ static void	layers_create(void *p_mlx, t_map_layers layers,
 	while (++i < layer_count)
 	{
 		layers[i] = image_create(p_mlx, size, putoffset);
-		ft_assert(layers[i].data != NULL, "layers_create: "IMAGE_CREATION_FAILED);
+		ft_assert(layers[i].data != NULL,
+			"layers_create: "IMAGE_CREATION_FAILED);
 		image_clean(&layers[i]);
 	}
 }

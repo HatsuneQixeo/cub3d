@@ -24,12 +24,13 @@ static void	layer_player_delta(t_image *layer, const t_player *player)
 {
 	const t_point	map_pos = point_upscale(player->pos, MapCellSize + 1);
 	const t_colour	colour = colour_from_percentage(.2, .2, .2, 0);
-	t_point	delta = {
+	t_point			delta;
+	t_point			end;
+
+	delta = (t_point){
 		.x = sqrt((1 + pow(player->dir.y, 2) / pow(player->dir.x, 2))),
 		.y = sqrt((1 + pow(player->dir.x, 2) / pow(player->dir.y, 2))),
 	};
-	t_point	end;
-
 	delta = point_upscale(delta, MapCellSize);
 	if (player->dir.x == 0)
 		delta.x = 0;
@@ -44,7 +45,8 @@ static void	layer_player_delta(t_image *layer, const t_player *player)
 
 void	map_layers_player(t_image *layer, const t_player *player)
 {
-	const t_point	map_pos = point_apply(point_upscale(player->pos, MapCellSize + 1), trunc);
+	const t_point	map_pos = point_apply(
+			point_upscale(player->pos, MapCellSize + 1), trunc);
 
 	if (!point_inbound(map_pos, layer->size))
 		return ;
