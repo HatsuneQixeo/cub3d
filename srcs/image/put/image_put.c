@@ -12,7 +12,7 @@
 
 #include "image.h"
 
-void	image_put(const t_mlx mlx, const t_image *image, const t_point pos)
+void	image_put(t_mlx mlx, const t_image *image, const t_point pos)
 {
 	const t_point	put = point_add(pos, image->putoffset);
 

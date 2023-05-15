@@ -84,18 +84,18 @@ int	hook_loop(t_game *game)
 	player_move(&game->player, player_direction(game->keys), game->map.layout, game->map.size);
 	/* Raycasting */
 	{
-		TIME("raycast: ", screen_rays(game->rays, &game->player, game->map));
-		TIME("draw: ", ray_draw_texture(&game->screen_buffer, game->rays, game->texture.walls, game->player.pos));
-		TIME("put:  ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
-		if (BENCHMARK)
-			printf("\n");
+		TIME("raycast   ", screen_rays(game->rays, &game->player, game->map));
+		TIME("draw      ", ray_draw_texture(&game->screen_buffer, game->rays, game->texture.walls, game->player.pos));
+		TIME("put       ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
 	}
 	/* Minimap */
-	cub3d_map_render(game);
+	TIME("render map", cub3d_map_render(game));
 	/* Put the temporary cursor */
 	if (display_mouse(game->mouse))
 		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
 	image_put(game->mlx, &game->texture.mouse_icon, screen_center);
+	if (BENCHMARK)
+		printf("\n");
 	return (0);
 }
 

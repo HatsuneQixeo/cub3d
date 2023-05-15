@@ -46,7 +46,7 @@ t_image	map_texture(void *p_mlx, const t_map map)
 		it.x = -1;
 		while (++it.x < map.size.x)
 		{
-			if (map.layout[(int)it.y][(int)it.x] == '1')
+			if (map.layout[(int)it.y][(int)it.x] == Wall)
 				map_draw_tile(&image, wall_colour, it);
 			else
 				map_draw_tile(&image, space_colour, it);

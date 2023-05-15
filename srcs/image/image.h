@@ -73,4 +73,5 @@ void		image_fill_circle(t_image *image, t_colour colour);
 
 /* Image Render */
 void		image_put(t_mlx mlx, const t_image *image, t_point pos);
+
 #endif

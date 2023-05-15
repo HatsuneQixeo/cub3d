@@ -7,8 +7,7 @@ static enum e_wall_texture_index	get_texture_index(const t_point direction,
 		return ((enum e_wall_texture_index []){East, West}[direction.x > 0]);
 	else if (side == SideVertical)
 		return ((enum e_wall_texture_index []){South, North}[direction.y > 0]);
-	else if (side != SideUnknown)
-		ft_assert(0, "get_texture_index: Invalid side");
+	ft_assert(side == SideUnknown, "get_texture_index: Invalid side");
 	return (Invalid);
 }
 
@@ -31,7 +30,7 @@ static void	draw_line(t_image *screen_buffer, const t_image *image,
 			const double line_height, const unsigned int image_x,
 			const unsigned int screen_x)
 {
-	const double	image_step = (image->size.y / line_height);
+	const double	image_step = image->size.y / line_height;
 	const double	screen_end_y = trunc(ft_dmin(ScreenHeight,
 			(line_height + ScreenHeight) / 2));
 	double			screen_y;
@@ -61,16 +60,18 @@ void	ray_draw_texture(t_image *screen_buffer, const t_rays rays,
 			const t_wall_textures walls, const t_point player_pos)
 {
 	unsigned int	i;
+	t_ray			ray;
+	const t_image	*image;
+	double			line_height;
+	int				image_x;
 
 	i = -1;
 	while (++i < ScreenWidth)
 	{
-		const unsigned int	i_ray = i * ((double)ray_amount / ScreenWidth);
-		const t_ray			ray = rays[i_ray];
-		const t_image		*image = &walls[get_texture_index(ray.direction, ray.side)];
-		const double		line_height = ScreenHeight / ray.distance_traveled;
-		const int			image_x = get_image_x(image, ray, player_pos);
-
+		ray = rays[(int)(i * ((double)ray_amount / ScreenWidth))];
+		image = &walls[get_texture_index(ray.direction, ray.side)];
+		line_height = ScreenHeight / ray.distance_traveled;
+		image_x = get_image_x(image, ray, player_pos);
 		draw_line(screen_buffer, image, line_height, image_x, i);
 	}
 }

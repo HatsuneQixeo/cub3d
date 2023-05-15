@@ -47,7 +47,7 @@ t_point	player_direction(const t_keys keys)
 	{.key_index = Key_S, .vector = {.x = 00, .y = +1}},
 	{.key_index = Key_D, .vector = {.x = +1, .y = 00}},
 	};
-	const size_t		len = sizeof(key_vectors) / sizeof(key_vectors[0]);
+	const unsigned int	len = sizeof(key_vectors) / sizeof(key_vectors[0]);
 
 	return (keys_to_vector(keys, key_vectors, len));
 }
@@ -57,6 +57,31 @@ t_point	player_direction(const t_keys keys)
 	Bug: Go through walls if the player speed is too high
 
 	Why not fix it? Not that this game has any speed boost effect anyway.
+*/
+/*
+	There's the questionable '1', I might need to provide a predicator
+
+	Things about predicator:
+		- I could probably get away with it if it's just wall on it's own,
+			door makes things complicated as I don't have the status recorded in map layout.
+			Even if I put the status in map_layout,
+			I still need to provide the necessary details about the data structure.
+	
+	LETS JUST HAVE '3' AS OPENED_DOOR/OPENING_DOOR, THAT FIXED SO MANY FKING CONCERN
+	Multiple layers of maps? Door, Wall, what about (opened/opening)_door
+	consider I need to render the things behind the opening and opened door, they should be grouped together
+
+	Having a half transparent door as opened door would complicate things a lot,
+	Like I need to to stack up the amount and put multiple layers onto the screen
+
+	About modifying map layout for communication purpose
+		- It would be quite terribly optimized since a copy of map would need to be generated each update
+			Not to mention current plan for raycasting is also relying on this (making char hit char *set would fix it, one for "1" and other for "12"), (not really, the ray shouldn't stop at the first '2', it should )
+			would be doing so many inefficient checks and 
+
+	Even so, how can I know the map unit without any external context?
+	I need to know the details of the map, I can't keep this independent
+	It's gonna be a spagetti for sure
 */
 
 static t_point	vector_collision(const t_point start, const t_point vector,
