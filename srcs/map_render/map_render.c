@@ -77,11 +77,13 @@ static void	map_layers_init(t_map_layers layers, const t_game *game)
 void	cub3d_map_render(const t_game *game)
 {
 	t_map_layers	layers;
+	const t_point	map_pos = point_sub(game->screen_buffer.size,
+			game->texture.map.size);
 
 	map_layers_init(layers, game);
 	map_layers_player(&layers[LayerPlayer], &game->player);
 	map_layers_ray(&layers[LayerRay], game->rays, game->player.pos);
 	map_layers_render(game->mlx, layers, game->player.pos, put_minimap);
-	map_layers_render(game->mlx, layers, game->screen_buffer.size, image_put);
+	map_layers_render(game->mlx, layers, map_pos, image_put);
 	map_layers_destroy(game->mlx.p_mlx, layers);
 }

@@ -36,7 +36,7 @@ t_image	map_texture(void *p_mlx, const t_map map)
 	t_image			image;
 	t_point			it;
 
-	image = image_create(p_mlx, size, point_apply(size, putoffset_inverted));
+	image = image_create(p_mlx, size, (t_point){0, 0});
 	if (image.data == NULL)
 		return (image);
 	image_fill(&image, colour_from_percentage(.0, .20, .20, .50));
