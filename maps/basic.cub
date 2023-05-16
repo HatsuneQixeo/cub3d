@@ -1,4 +1,4 @@
-SO ./sprites/Wall48.xpm
+SO ./sprites/rgb.xpm
 WE ./sprites/Normal-Select.xpm
 EA ./sprites/Normal-Select.xpm
 NO ./sprites/Wall48.xpm
