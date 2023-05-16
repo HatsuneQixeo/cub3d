@@ -66,7 +66,7 @@ int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
 	ft_lstiter(lst_element, element_show);
 	status = cubmap_parse_texture(p_mlx, lst_element, texture);
 	if (status != -1)
-		status = -(cubmap_valid_player(*map)
+		status = -(cubmap_valid_door(*map)
 				+ cubmap_valid_unit(*map)
 				+ cubmap_surrounded(*map) < 0);
 	ft_lstclear(&lst_element, element_del);

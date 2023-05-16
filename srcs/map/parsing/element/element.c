@@ -1,5 +1,5 @@
 #include "element.h"
-#include "ft_printf.h"
+#include "libft.h"
 
 t_element	*element_new(char *identifier, char *properties)
 {

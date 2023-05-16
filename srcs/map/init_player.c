@@ -1,4 +1,4 @@
-#include "cubmap.h"
+#include "player.h"
 
 typedef struct s_pair
 {
@@ -27,19 +27,22 @@ static t_player	player_init(const t_point pos, const char orientation)
 	return (player);
 }
 
-t_player	cubmap_getplayer(const t_map map)
+int	cubmap_player_init(const t_map map, t_player *player)
 {
-	t_point	it;
+	t_list			*lst_player;
+	const t_point	*pos;
+	int				status;
 
-	it.y = -1;
-	while (++it.y < map.size.y)
-	{
-		it.x = -1;
-		while (++it.x < map.size.x)
-		{
-			if (cubmap_isplayer(&map, it))
-				return (player_init(it, map.layout[(int)it.y][(int)it.x]));
-		}
-	}
-	return ((t_player){0});
+	lst_player = cubmap_gather_if(map, cubmap_isplayer);
+	status = -1;
+	if (lst_player == NULL)
+		ft_putendl_fd("Error\nMissing Player", 2);
+	else if (lst_player->next != NULL)
+		cubmap_showlsterror(map, lst_player, "Duplicate Players");
+	else
+		status = 0;
+	pos = lst_player->content;
+	*player = player_init(*pos, map.layout[(int)pos->y][(int)pos->x]);
+	ft_lstclear(&lst_player, point_del);
+	return (status);
 }

@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "player.h"
 
 #ifndef COLLISION
@@ -66,7 +65,12 @@ t_point	player_direction(const t_keys keys)
 			door makes things complicated as I don't have the status recorded in map layout.
 			Even if I put the status in map_layout,
 			I still need to provide the necessary details about the data structure.
-	
+
+	Logically speaking, it's hard to really define a player without proper context about where the player is,
+	I need to include map data to justify player,
+	I need map data to know where the player heading,
+	and some external context for door, whether it's opened
+
 	LETS JUST HAVE '3' AS OPENED_DOOR/OPENING_DOOR, THAT FIXED SO MANY FKING CONCERN
 	Multiple layers of maps? Door, Wall, what about (opened/opening)_door
 	consider I need to render the things behind the opening and opened door, they should be grouped together
@@ -76,50 +80,51 @@ t_point	player_direction(const t_keys keys)
 
 	About modifying map layout for communication purpose
 		- It would be quite terribly optimized since a copy of map would need to be generated each update
-			Not to mention current plan for raycasting is also relying on this (making char hit char *set would fix it, one for "1" and other for "12"), (not really, the ray shouldn't stop at the first '2', it should )
+			Not to mention current plan for raycasting is also relying on this
+			(making char hit char *set would fix it, one for "1" and other for "12"),
+			(not really, the ray shouldn't stop at the first '2', it should )
 			would be doing so many inefficient checks and 
 
 	Even so, how can I know the map unit without any external context?
 	I need to know the details of the map, I can't keep this independent
 	It's gonna be a spagetti for sure
 */
-
 static t_point	vector_collision(const t_point start, const t_point vector,
-			char **map, const t_point mapsize)
+			const t_map *map)
 {
-	const t_point	offset = point_upscale(point_sign(vector), -.00831);
+	const t_point	offset = point_upscale(point_sign(vector), -.0831);
 	t_point			end;
 
-	end.x = ft_dminmax(0, start.x + vector.x, mapsize.x - 1);
-	end.y = ft_dminmax(0, start.y + vector.y, mapsize.y - 1);
-	if (map[(int)start.y][(int)end.x] == '1')
-		end.x = roundf(start.x) + offset.x;
-	if (map[(int)end.y][(int)start.x] == '1')
-		end.y = roundf(start.y) + offset.y;
+	end.x = ft_dminmax(0, start.x + vector.x, map->size.x - 1);
+	end.y = ft_dminmax(0, start.y + vector.y, map->size.y - 1);
+	if (!cubmap_iswalkable(map, (t_point){.x = end.x - offset.x, .y = start.y}))
+		end.x = roundf(end.x) + offset.x;
+	if (!cubmap_iswalkable(map, (t_point){.x = start.x, .y = end.y - offset.y}))
+		end.y = roundf(end.y) + offset.y;
 	return (end);
 }
 
-void	player_move(t_player *player, const t_point direction,
-			char **map, const t_point mapsize)
+void	player_move(t_player *player, const t_point direction, const t_map *map)
 {
 	const t_point	rotate = point_rotate(direction, point_angle(player->dir));
 	t_point			vector;
 
-	if (rotate.x == 0 && rotate.y == 0)
+	if (direction.x == 0 && direction.y == 0)
 		return ;
-	else if (rotate.x != 0 && rotate.y != 0)
-		vector = point_upscale(rotate, .05);
-	else
-		vector = point_upscale(rotate, .1);
-	// vector = point_upscale(vector, 1);
+	vector = point_downscale(rotate, ((rotate.x != 0) + (rotate.y != 0)) * 10);
 	if (!COLLISION)
 		player->pos = point_add(player->pos, vector);
 	else
-		player->pos = vector_collision(player->pos, vector, map, mapsize);
+		player->pos = vector_collision(player->pos, vector, map);
 }
 
 void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys)
 {
+	/*
+		Have to fix this scope things,
+		this function should rotate it with given parameter as value not key press,
+		that's something should be defined outside this function
+	*/
 	const double	key_direction = ((keys[Key_Right] == Press)
 			- (keys[Key_Left] == Press)) * 0.039;
 	// const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) * (.00831 * .39);

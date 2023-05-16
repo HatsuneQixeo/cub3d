@@ -13,7 +13,7 @@
 #ifndef IMAGE_H
 # define IMAGE_H
 
-# include "libft.h" /* ? */
+# include "libft.h"
 # include "point.h"
 # include "colour.h"
 # include <mlx.h>

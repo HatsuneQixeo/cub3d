@@ -13,6 +13,8 @@
 #ifndef HOOK_H
 # define HOOK_H
 
+# include "libft.h"
+
 /**
  * @brief These are events that will trigger the hook based on given condition
  * 

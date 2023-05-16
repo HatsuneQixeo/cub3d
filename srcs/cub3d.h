@@ -14,13 +14,13 @@
 # define CUB3D_H
 
 # include "libft.h"
+# include "exlib.h"
 # include "point.h"
 # include "hook_key.h"
 # include "hook_mouse.h"
 # include "texture.h"
 # include "player.h"
 # include "cubmap.h"
-# include "exlib.h"
 # include "ray.h"
 # include "minimap.h"
 
@@ -38,22 +38,6 @@ enum e_ray_amount
 };
 
 typedef t_ray	t_rays[ray_amount];
-
-/* Door */
-typedef struct s_door
-{
-	t_point			pos;
-	int				is_open;
-	unsigned int	current_frame;
-	int				step;
-}			t_door;
-
-typedef struct s_lstdoor
-{
-	t_door			*doors;
-	t_image			*animation;
-	unsigned int	animation_size;
-}			t_lstdoor;
 
 typedef struct s_game
 {

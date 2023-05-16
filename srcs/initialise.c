@@ -95,7 +95,8 @@ int	game_init(const char *path, t_game *game)
 {
 	game->mlx.p_mlx = mlx_init();
 	ft_assert(game->mlx.p_mlx != NULL, "mlx_init() failed");
-	if (cubmap_getmap(game->mlx.p_mlx, path, &game->map, &game->texture) == -1)
+	if (cubmap_getmap(game->mlx.p_mlx, path, &game->map, &game->texture) == -1
+		|| cubmap_player_init(game->map, &game->player) == -1)
 		return (-1);
 	game->screen_buffer = image_create(game->mlx.p_mlx,
 			(t_point){.x = ScreenWidth, .y = ScreenHeight},
@@ -104,7 +105,6 @@ int	game_init(const char *path, t_game *game)
 		"image_create() for screen_buffer failed");
 	ft_intset((int *)game->keys, key_count, Release);
 	texture_init(game->mlx.p_mlx, game->map, &game->texture);
-	game->player = cubmap_getplayer(game->map);
 	game->mouse.left_click = Release;
 	game->mlx.p_win = mlx_new_window(game->mlx.p_mlx, ScreenWidth, ScreenHeight,
 			"cub3d");

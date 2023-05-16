@@ -35,6 +35,7 @@ static void	draw_line(t_image *screen_buffer, const t_image *image,
 				(line_height + ScreenHeight) / 2));
 	double			screen_y;
 	double			it_img_y;
+	t_colour		colour;
 
 	screen_y = ft_dmax(0, (ScreenHeight - line_height) / 2);
 	it_img_y = (screen_y + ((line_height - ScreenHeight) / 2)) * image_step;
@@ -43,11 +44,10 @@ static void	draw_line(t_image *screen_buffer, const t_image *image,
 	screen_y = trunc(screen_y - 1);
 	while (++screen_y < screen_end_y)
 	{
-		const t_colour	colour = image_getpixel(image, (t_point){
+		colour = image_getpixel(image, (t_point){
 				.x = image_x,
 				.y = trunc(it_img_y) - (it_img_y >= image->size.y)
 			});
-
 		image_setpixel(screen_buffer, colour, (t_point){
 			.x = screen_x,
 			.y = screen_y

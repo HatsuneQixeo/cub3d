@@ -13,6 +13,17 @@
 #include "cub3d.h"
 #include "minimap.h"
 
+int	hook_expose(t_game *game)
+{
+	int	x;
+	int	y;
+
+	mlx_mouse_get_pos(game->mlx.p_win, &x, &y);
+	game->mouse.pos = (t_point){.x = x, .y = y};
+	game->mouse.prev_pos = game->mouse.pos;
+	return (0);
+}
+
 int	display_mouse(const t_mouse mouse)
 {
 	static int	custom_cursor;
@@ -81,7 +92,7 @@ int	hook_loop(t_game *game)
 		// game->mouse.prev_pos = screen_center;
 	}
 	/* Move the player */
-	player_move(&game->player, player_direction(game->keys), game->map.layout, game->map.size);
+	player_move(&game->player, player_direction(game->keys), &game->map);
 	/* Raycasting */
 	{
 		TIME("raycast   ", screen_rays(game->rays, &game->player, game->map));

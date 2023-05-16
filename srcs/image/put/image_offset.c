@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "image.h"
-
 double	putoffset_default(const double size)
 {
 	return (0);

@@ -23,6 +23,8 @@ typedef struct s_texture
 	t_image			mouse_icon;
 	t_colour		colour_floor;
 	t_colour		colour_ceiling;
+	t_image			*door_animation;
+	unsigned int	door_animation_len;
 }			t_texture;
 
 #endif

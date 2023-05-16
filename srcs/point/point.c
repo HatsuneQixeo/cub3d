@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "point.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 t_point	*point_new(const double x, const double y)
 {

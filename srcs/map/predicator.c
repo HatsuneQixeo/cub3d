@@ -1,11 +1,19 @@
 #include "cubmap.h"
 
+
 /**
  * The identifier started off using t_ftis prototype,
  * but since these identifier are specifically designed for cubmap,
  * I figured it should be appropriate to make them smarter
  * to support more complex comfirmation
  */
+
+int	cubmap_isdoor(const t_map *map, const t_point pos)
+{
+	const char	c = map->layout[(int)pos.y][(int)pos.x];
+
+	return (c == DoorOpen || c == DoorClose);
+}
 
 int	cubmap_isplayer(const t_map *map, const t_point pos)
 {
@@ -17,33 +25,28 @@ int	cubmap_isplayer(const t_map *map, const t_point pos)
 		|| c == StartRight);
 }
 
-int	cubmap_isinvalid_unit(const t_map *map, const t_point pos)
+/*
+	Theorically this should be find instead of cmp,
+	but due to the technical difficulty of determining the end of array,
+	The door is instead created as 2darray, and terminating with NULL
+*/
+static int	cmp_doorpos(const void *p_door, const void *pos)
 {
-	const char	c = map->layout[(int)pos.y][(int)pos.x];
+	const t_door	*door = p_door;
 
-	return (!(c == Void || c == Space || c == Wall || c == Door
-			|| cubmap_isplayer(map, pos)));
+	return (ft_memcmp(&door->pos, pos, sizeof(t_point)));
 }
 
-static int	isspace_orwall(const t_map *map, const t_point pos)
+int	cubmap_iswalkable(const t_map *map, const t_point pos)
 {
-	const char	c = map->layout[(int)pos.y][(int)pos.x];
+	const char		c = map->layout[(int)pos.y][(int)pos.x];
+	const t_door	**find;
 
-	return (c == Space || c == Wall || cubmap_isplayer(map, pos));
-}
-
-int	cubmap_ismissingborder(const t_map *map, const t_point pos)
-{
-	const unsigned int	y = pos.y;
-	const unsigned int	x = pos.x;
-
-	if (!(map->layout[y][x] == Space || cubmap_isplayer(map, pos)))
+	if (c == Wall)
 		return (0);
-	if ((x == 0 || x == map->size.x - 1)
-		|| (y == 0 || y == map->size.y - 1))
+	else if (!cubmap_isdoor(map, pos))
 		return (1);
-	return (!(isspace_orwall(map, pos)
-			&& isspace_orwall(map, pos)
-			&& isspace_orwall(map, pos)
-			&& isspace_orwall(map, pos)));
+	find = (const t_door **)ft_aafind((void **)map->arr_doors, &pos, cmp_doorpos);
+	ft_assert(find != NULL, "cubmap_iswalkable: could not find door at pos");
+	return ((*find)->is_open);
 }
