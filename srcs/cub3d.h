@@ -65,6 +65,7 @@ void	events(t_game *game);
 int		hook_expose(t_game *game);
 int		hook_loop(t_game *game);
 
-void	cub3d_map_render(const t_game *game);
+void	cub3d_map_render(t_mlx mlx, const t_image *img_map,
+			const t_rays rays, const t_player *player);
 
 #endif

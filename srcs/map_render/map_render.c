@@ -1,5 +1,9 @@
 #include "cub3d.h"
 
+#ifndef SHOW_RAY
+# define SHOW_RAY	0
+#endif
+
 void	map_layers_ray(t_image *layer, const t_rays rays, t_point start);
 void	map_layers_player(t_image *layer, const t_player *player);
 
@@ -62,28 +66,24 @@ static void	layers_create(void *p_mlx, t_map_layers layers,
 	}
 }
 
-static void	map_layers_init(t_map_layers layers, const t_game *game)
-{
-	void *const		p_mlx = game->mlx.p_mlx;
-	const t_image	*img_map = &game->texture.map;
-
-	layers_create(p_mlx, layers, img_map->size, img_map->putoffset);
-	map_layers_player(&layers[LayerPlayer], &game->player);
-	map_layers_ray(&layers[LayerRay], game->rays, game->player.pos);
-	ft_memcpy(layers[LayerMap].data, img_map->data,
-		(img_map->size.y * img_map->size.x) * sizeof(t_colour));
-}
-
-void	cub3d_map_render(const t_game *game)
+void	cub3d_map_render(t_mlx mlx, const t_image *img_map,
+			const t_rays rays, const t_player *player)
 {
 	t_map_layers	layers;
-	const t_point	map_pos = point_sub(game->screen_buffer.size,
-			game->texture.map.size);
+	const t_point	map_pos = point_sub((t_point){
+				.x = ScreenWidth,
+				.y = ScreenHeight
+			}, img_map->size);
 
-	map_layers_init(layers, game);
-	map_layers_player(&layers[LayerPlayer], &game->player);
-	map_layers_ray(&layers[LayerRay], game->rays, game->player.pos);
-	map_layers_render(game->mlx, layers, game->player.pos, put_minimap);
-	map_layers_render(game->mlx, layers, map_pos, image_put);
-	map_layers_destroy(game->mlx.p_mlx, layers);
+	{
+		layers_create(mlx.p_mlx, layers, img_map->size, img_map->putoffset);
+		map_layers_player(&layers[LayerPlayer], player);
+		if (SHOW_RAY)
+			map_layers_ray(&layers[LayerRay], rays, player->pos);
+		ft_memcpy(layers[LayerMap].data, img_map->data,
+			(img_map->size.y * img_map->size.x) * sizeof(t_colour));
+	}
+	map_layers_render(mlx, layers, player->pos, put_minimap);
+	map_layers_render(mlx, layers, map_pos, image_put);
+	map_layers_destroy(mlx.p_mlx, layers);
 }
