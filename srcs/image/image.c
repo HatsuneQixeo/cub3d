@@ -74,6 +74,16 @@ int	image_good(const t_image *image)
 	return (image->data != NULL);
 }
 
+void	image_setalpha(t_image *image, const t_colour_byte value)
+{
+	unsigned int		i;
+	const unsigned int	len = image->size.y * image->size.x;
+
+	i = -1;
+	while (++i < len)
+		colour_setmask(&image->data[i], value, ValueA);
+}
+
 /*
 	Not sure if the return value is really describing anything about the error
 

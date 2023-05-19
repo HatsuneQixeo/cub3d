@@ -11,12 +11,6 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include "minimap.h"
-
-t_point	minimap_scale_point(const t_point point)
-{
-	return (point_upscale(point, MapCellSize + 1));
-}
 
 void	cub3d_runtime_assertion(const int condition, const char *attachment)
 {
@@ -25,46 +19,6 @@ void	cub3d_runtime_assertion(const int condition, const char *attachment)
 	ft_putendl_fd("Error", 2);
 	perror(attachment);
 	exit(1);
-}
-
-void	map_draw_tile(t_image *map, const t_colour colour, const t_point pos)
-{
-	const t_point	map_start = point_upscale(pos, MapCellSize + 1);
-	const t_point	map_end = point_add(map_start,
-			(t_point){MapCellSize, MapCellSize});
-
-	image_draw_rectangle(map, colour, map_start, map_end);
-}
-
-void	layer_map(t_image *layer, const t_map map)
-{
-	const t_colour	wall_colour = colour_from_percentage(.70, .90, .90, .70);
-	const t_colour	space_colour = colour_from_percentage(.20, .30, .40, .70);
-	t_point			it;
-
-	image_fill(layer, colour_from_percentage(.0, .20, .20, .50));
-	it.y = -1;
-	while (++it.y < map.size.y)
-	{
-		it.x = -1;
-		while (++it.x < map.size.x)
-		{
-			if (map.layout[(int)it.y][(int)it.x] == Wall)
-				map_draw_tile(layer, wall_colour, it);
-			else
-				map_draw_tile(layer, space_colour, it);
-		}
-	}
-}
-
-void	image_setalpha(t_image *image, const t_colour_byte value)
-{
-	unsigned int		i;
-	const unsigned int	len = image->size.y * image->size.x;
-
-	i = -1;
-	while (++i < len)
-		colour_setmask(&image->data[i], value, ValueA);
 }
 
 static t_image	*texture_init_door(void *p_mlx, unsigned int *len)
@@ -89,10 +43,10 @@ static t_image	*texture_init_door(void *p_mlx, unsigned int *len)
 	return (animation);
 }
 
-static void	texture_init_map(void *p_mlx, t_map_layers layers, const t_map map)
+static void	texture_init_map(void *p_mlx, t_map_layers layers, const t_map *map)
 {
 	unsigned int	i;
-	const t_point	size = point_sub(point_upscale(map.size, MapCellSize + 1),
+	const t_point	size = point_sub(map_scale_point(map->size),
 			(t_point){1, 1});
 	const t_point	putoffset = {0, 0};
 
@@ -102,10 +56,10 @@ static void	texture_init_map(void *p_mlx, t_map_layers layers, const t_map map)
 		layers[i] = image_create(p_mlx, size, putoffset);
 		cub3d_runtime_assertion(image_good(&layers[i]), "texture_init_map");
 	}
-	layer_map(&layers[LayerMap], map);
+	map_layer_layout(&layers[LayerMap], map);
 }
 
-static void	texture_init(void *p_mlx, t_texture *texture, const t_map map)
+static void	texture_init(void *p_mlx, t_texture *texture, const t_map *map)
 {
 	{
 		texture->mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
@@ -136,7 +90,7 @@ int	game_init(const char *path, t_game *game)
 	if (cubmap_getmap(game->mlx.p_mlx, path, &game->map, &game->texture) == -1
 		|| cubmap_player_init(game->map, &game->map.player) == -1)
 		return (-1);
-	texture_init(game->mlx.p_mlx, &game->texture, game->map);
+	texture_init(game->mlx.p_mlx, &game->texture, &game->map);
 	cubmap_door_init(&game->map, game->texture.door_animation_len);
 	game->screen_buffer = image_create(game->mlx.p_mlx,
 			(t_point){.x = ScreenWidth, .y = ScreenHeight},

@@ -1,7 +1,5 @@
 #include "cub3d.h"
 
-void	map_draw_tile(t_image *map, t_colour colour, t_point pos);
-
 void	map_layer_door(t_image *layer, t_door **arr_door)
 {
 	t_colour		colour;

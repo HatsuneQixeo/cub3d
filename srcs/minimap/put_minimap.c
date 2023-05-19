@@ -19,13 +19,12 @@ static void	starttoend(const t_point img_mapsize, const t_point player_map_pos,
 
 void	put_minimap(t_mlx mlx, const t_image *map, const t_point player_pos)
 {
-	const t_point	player_map_pos = point_apply(
-			point_upscale(player_pos, MapCellSize + 1), trunc);
-	t_point			start;
-	t_point			end;
-	t_image			cropped;
+	t_point	start;
+	t_point	end;
+	t_image	cropped;
 
-	starttoend(map->size, player_map_pos, &start, &end);
+	starttoend(map->size, point_apply(map_scale_point(player_pos), trunc),
+		&start, &end);
 	cropped = image_crop(mlx.p_mlx, map, start, end);
 	/* cub assert */
 	ft_assert(image_good(&cropped), "put_minimap: "IMAGE_CREATION_FAILED);

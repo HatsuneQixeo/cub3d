@@ -1,3 +1,4 @@
+#include "minimap.h"
 #include "cub3d.h"
 
 static t_point	scale_ray_vector(const t_ray ray)
@@ -11,7 +12,7 @@ static t_point	scale_ray_vector(const t_ray ray)
 void	map_layer_ray(t_image *layer,
 			const t_rays rays, const t_point player_pos)
 {
-	const t_point	player_map_pos = point_upscale(player_pos, MapCellSize + 1);
+	const t_point	player_map_pos = map_scale_point(player_pos);
 	const t_colour	ray_colour = colour_from_rgba(160, 00, 00, 80);
 	unsigned int	i;
 

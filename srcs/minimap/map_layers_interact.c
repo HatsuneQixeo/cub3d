@@ -1,6 +1,4 @@
-#include "cub3d.h"
-
-void	map_draw_tile(t_image *map, t_colour colour, t_point pos);
+#include "minimap.h"
 
 void	map_layer_interact(t_image *layer, const t_player *player)
 {

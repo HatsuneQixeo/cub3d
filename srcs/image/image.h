@@ -48,7 +48,7 @@ t_colour	image_getpixel(const t_image *image, t_point pos);
 int			image_good(const t_image *image);
 t_image		image_create(void *p_mlx, t_point size, t_point putoffset);
 t_image		image_crop(void *p_mlx, const t_image *src,
-				const t_point start, const t_point end);
+				t_point start, t_point end);
 t_image		image_dup(void *p_mlx, const t_image *src);
 t_image		image_readxpm(void *p_mlx, const char *path,
 				t_offset putoffset_x, t_offset putoffset_y);
@@ -60,6 +60,7 @@ void		image_draw_line(t_image *image, t_colour colour,
 				t_point start, t_point end);
 void		image_fill(t_image *image, t_colour colour);
 void		image_clean(t_image *image);
+void		image_setalpha(t_image *image, t_colour_byte value);
 
 /* Rectangle */
 void		image_draw_rectangle(t_image *image, t_colour colour,
