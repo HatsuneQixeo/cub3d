@@ -44,7 +44,7 @@ static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 	map->size.y = ft_strcount(map->layout);
 	if (map->size.y != 0)
 		map->size.x = ft_strlen(map->layout[0]);
-	ft_strlistiteri(map->layout, iteri_showstr);
+	ft_aaiteri(map->layout, iteri_showstr);
 	point_log("size: ", map->size);
 }
 
