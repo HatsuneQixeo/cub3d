@@ -15,8 +15,8 @@
 int	hook_button_close(const int status)
 {
 	ft_putendl_fd("Game Closed", 2);
-	// if (!SAN)
-	// 	system("leaks -q cub3d");
+	if (!SAN)
+		system("leaks -q cub3d");
 	exit(status);
 	return (0);
 }

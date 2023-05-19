@@ -28,6 +28,7 @@ enum e_keys_index
 	Key_ESC,
 	Key_Left,
 	Key_Right,
+	Key_E,
 	key_count
 };
 

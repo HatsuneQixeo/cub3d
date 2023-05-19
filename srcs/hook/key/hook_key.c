@@ -17,12 +17,6 @@
 # define DEBUG_KEY	0
 #endif
 
-typedef struct s_key_pair
-{
-	int	keycode;
-	int	key_index;
-}			t_key_pair;
-
 static void	debug_key(const char *format, ...)
 {
 	va_list	args;
@@ -34,34 +28,35 @@ static void	debug_key(const char *format, ...)
 	va_end(args);
 }
 
-static int	find_key(unsigned int i, const void *arr_key_pair,
-				const void *p_keycode)
+static int	find_key(unsigned int i, const void *arr_keycode,
+			const void *p_keycode)
 {
-	const t_key_pair	*key_pair = arr_key_pair;
+	const int	*arr = arr_keycode;
 
-	return (key_pair[i].keycode == *(const int *)p_keycode);
+	return (arr[i] == *(int *)p_keycode);
 }
 
 static int	key_action(t_keys keys, const int keycode,
 				const enum e_input key_action)
 {
-	const t_key_pair	key_pairs[] = {
-	{.keycode = 13, .key_index = Key_W},
-	{.keycode = 0, .key_index = Key_A},
-	{.keycode = 1, .key_index = Key_S},
-	{.keycode = 2, .key_index = Key_D},
-	{.keycode = 53, .key_index = Key_ESC},
-	{.keycode = 123, .key_index = Key_Left},
-	{.keycode = 124, .key_index = Key_Right},
+	const int			key_pairs[] = {
+	[Key_W] = 13,
+	[Key_A] = 0,
+	[Key_S] = 1,
+	[Key_D] = 2,
+	[Key_ESC] = 53,
+	[Key_Left] = 123,
+	[Key_Right] = 124,
+	[Key_E] = 14
 	};
-	const size_t		len = (sizeof(key_pairs) / sizeof(key_pairs[0]));
+	const unsigned int	len = (sizeof(key_pairs) / sizeof(key_pairs[0]));
 	const size_t		find = ft_arrfind(key_pairs, len, find_key, &keycode);
 
 	if (find == NOTFOUND)
 		debug_key(" undefined key: %d\n", keycode);
 	else
 	{
-		keys[key_pairs[find].key_index] = key_action;
+		keys[find] = key_action;
 		debug_key(" key: %d\n", keycode);
 		return (0);
 	}
