@@ -15,11 +15,28 @@ enum e_wall_texture_index
 
 typedef t_image	t_wall_textures[wall_texture_count];
 
+enum e_layer_index
+{
+	LayerPlayer,
+	LayerRay,
+	LayerInteract,
+	LayerDoor,
+	LayerMap,
+	layer_count
+};
+// enum e_layer_index
+// {
+// 	LayerPlayer,
+// 	LayerDoor,
+// 	LayerMap,
+// 	layer_count
+// };
+typedef t_image	t_map_layers[layer_count];
+
 typedef struct s_texture
 {
 	t_wall_textures	walls;
-	t_image			map;
-	t_image			player_icon;
+	t_map_layers	map_layers;
 	t_image			mouse_icon;
 	t_colour		colour_floor;
 	t_colour		colour_ceiling;

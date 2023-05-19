@@ -4,20 +4,12 @@
 # define SHOW_RAY	0
 #endif
 
-void	map_layers_ray(t_image *layer, const t_rays rays, t_point start);
-void	map_layers_player(t_image *layer, const t_player *player);
+void	map_layer_ray(t_image *layer, const t_rays rays, t_point start);
+void	map_layer_player(t_image *layer, const t_player *player);
+void	map_layer_door(t_image *layer, t_door **arr_door);
+void	map_layer_interact(t_image *layer, const t_player *player);
 
-enum e_layer_index
-{
-	LayerPlayer,
-	LayerRay,
-	LayerMap,
-	layer_count
-};
-
-typedef t_image	t_map_layers[layer_count];
-
-static void	map_layers_destroy(void *p_mlx, t_map_layers layers)
+static void	map_layer_destroy(void *p_mlx, t_map_layers layers)
 {
 	unsigned int	i;
 
@@ -41,7 +33,7 @@ static void	map_layers_destroy(void *p_mlx, t_map_layers layers)
 	Why do I still keep it this way, frankly I don't think it matters,
 	and it keeps thing simple for not having more files to maintain.
 */
-static void	map_layers_render(t_mlx mlx, const t_map_layers layers,
+static void	map_layer_render(t_mlx mlx, const t_map_layers layers,
 			const t_point pos, void (*put)(t_mlx, const t_map_layers, t_point))
 {
 	unsigned int	i;
@@ -51,39 +43,36 @@ static void	map_layers_render(t_mlx mlx, const t_map_layers layers,
 		put(mlx, &layers[i], pos);
 }
 
-static void	layers_create(void *p_mlx, t_map_layers layers,
-			const t_point size, const t_point putoffset)
+static void	layers_clean(void *p_mlx, t_map_layers layers)
 {
 	unsigned int	i;
 
 	i = -1;
 	while (++i < layer_count)
 	{
-		layers[i] = image_create(p_mlx, size, putoffset);
-		ft_assert(layers[i].data != NULL,
-			"layers_create: "IMAGE_CREATION_FAILED);
+		if (i == LayerMap)
+			continue ;
+		// point_log("size", layers[i].size);
+		// printf("area: %d\n", (int)(layers[i].size.y * layers[i].size.x));
 		image_clean(&layers[i]);
 	}
 }
 
-void	cub3d_map_render(t_mlx mlx, const t_image *img_map,
-			const t_rays rays, const t_player *player)
+/*
+	Due to having to clean every layers everytime it renders,
+	this function is incredibly slow if the map size is very big
+*/
+void	cub3d_map_render(t_game *game)
 {
-	t_map_layers	layers;
-	const t_point	map_pos = point_sub((t_point){
-				.x = ScreenWidth,
-				.y = ScreenHeight
-			}, img_map->size);
+	t_image *const	layers = game->texture.map_layers;
 
 	{
-		layers_create(mlx.p_mlx, layers, img_map->size, img_map->putoffset);
-		map_layers_player(&layers[LayerPlayer], player);
+		TIME("layer clean", layers_clean(game->mlx.p_mlx, layers));
+		TIME("layer player", map_layer_player(&layers[LayerPlayer], &game->player));
+		TIME("layer interact", map_layer_interact(&layers[LayerInteract], &game->player));
 		if (SHOW_RAY)
-			map_layers_ray(&layers[LayerRay], rays, player->pos);
-		ft_memcpy(layers[LayerMap].data, img_map->data,
-			(img_map->size.y * img_map->size.x) * sizeof(t_colour));
+			map_layer_ray(&layers[LayerRay], game->rays, game->player.pos);
+		TIME("layer door", map_layer_door(&layers[LayerDoor], game->map.arr_doors));
 	}
-	map_layers_render(mlx, layers, player->pos, put_minimap);
-	map_layers_render(mlx, layers, map_pos, image_put);
-	map_layers_destroy(mlx.p_mlx, layers);
+	map_layer_render(game->mlx, layers, game->player.pos, put_minimap);
 }

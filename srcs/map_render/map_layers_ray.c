@@ -8,7 +8,7 @@ static t_point	scale_ray_vector(const t_ray ray)
 	return (ray_vector);
 }
 
-void	map_layers_ray(t_image *layer,
+void	map_layer_ray(t_image *layer,
 			const t_rays rays, const t_point player_pos)
 {
 	const t_point	player_map_pos = point_upscale(player_pos, MapCellSize + 1);
