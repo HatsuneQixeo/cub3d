@@ -53,8 +53,9 @@ typedef struct s_game
 
 void	put_a_line(t_mlx mlx, t_point player, t_point vector);
 
-void	screen_rays(t_rays rays, const t_player *player, t_map map);
-void	ray_draw_texture(t_image *screen_buffer, const t_rays rays,
+void	screen_rays(t_rays rays, const t_player *player, t_map map,
+			const char *target);
+void	render_wall(t_image *screen_buffer, const t_rays rays,
 			const t_wall_textures walls, t_point player_pos);
 
 int		hook_loop(t_game *game);
@@ -65,7 +66,6 @@ void	events(t_game *game);
 int		hook_expose(t_game *game);
 int		hook_loop(t_game *game);
 
-void	cub3d_map_render(t_mlx mlx, const t_image *img_map,
-			const t_rays rays, const t_player *player);
+void	cub3d_map_render(t_game *game);
 
 #endif

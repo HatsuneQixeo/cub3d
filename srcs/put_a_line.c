@@ -40,6 +40,7 @@ void	put_a_line(const t_mlx mlx, const t_point pos, const t_point vector)
 	t_point			end;
 
 	ray = image_create(mlx.p_mlx, size, putoffset);
+	/* cub assert */
 	ft_assert(ray.data != NULL, "put_a_line: "IMAGE_CREATION_FAILED);
 	start_to_end(&start, &end, size, vector);
 	image_clean(&ray);

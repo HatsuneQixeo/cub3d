@@ -29,6 +29,7 @@ void	cubmap_door_init(t_map *map, const unsigned int animation_amount)
 	lst_door = cubmap_gather_if(*map, cubmap_isdoor);
 	door_init(map, lst_door, animation_amount);
 	ft_lstclear(&lst_door, point_del);
+	/* cub assert */
 	ft_assert(map->arr_doors != NULL,
 		"cubmap_door_init: arr_doors malloc failed");
 }

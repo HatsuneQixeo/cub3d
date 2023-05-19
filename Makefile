@@ -5,7 +5,7 @@ CXXFLAGS	:=	-Wall -Werror -Wextra -g
 CXXFLAGS	+=	-O3
 CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 # CXXFLAGS	+=	-D DRAW_WARNING=0
-# CXXFLAGS	+=	-D BENCHMARK=1
+CXXFLAGS	+=	-D BENCHMARK=1
 # CXXFLAGS	+=	-D COLLISION=0
 # CXXFLAGS	+=	-D SHOW_RAY=1
 # CXXFLAGS	+=	-D DEBUG_KEY=1
