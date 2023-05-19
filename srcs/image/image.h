@@ -45,6 +45,7 @@ typedef struct s_image
 int			image_getindex(const t_image *image, t_point pos);
 t_colour	image_getpixel(const t_image *image, t_point pos);
 /* Image Creation */
+int			image_good(const t_image *image);
 t_image		image_create(void *p_mlx, t_point size, t_point putoffset);
 t_image		image_crop(void *p_mlx, const t_image *src,
 				const t_point start, const t_point end);

@@ -43,7 +43,6 @@ void	image_setpixel(t_image *image, const t_colour colour, const t_point pos)
 			printf("outofrange y: %f, size: %f\n", pos.y, image->size.y);
 		return ;
 	}
-	ft_assert(image->data != NULL, "image_setpixel: NULL image->data");
 	image->data[image_getindex(image, pos)] = colour;
 }
 

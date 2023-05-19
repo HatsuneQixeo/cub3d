@@ -68,6 +68,12 @@ t_image	image_crop(void *p_mlx, const t_image *src,
 	return (image);
 }
 
+
+int	image_good(const t_image *image)
+{
+	return (image->data != NULL);
+}
+
 /*
 	Not sure if the return value is really describing anything about the error
 
