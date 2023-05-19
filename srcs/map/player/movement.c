@@ -57,38 +57,6 @@ t_point	player_direction(const t_keys keys)
 
 	Why not fix it? Not that this game has any speed boost effect anyway.
 */
-/*
-	There's the questionable '1', I might need to provide a predicator
-
-	Things about predicator:
-		- I could probably get away with it if it's just wall on it's own,
-			door makes things complicated as I don't have the status recorded in map layout.
-			Even if I put the status in map_layout,
-			I still need to provide the necessary details about the data structure.
-
-	Logically speaking, it's hard to really define a player without proper context about where the player is,
-	I need to include map data to justify player,
-	I need map data to know where the player heading,
-	and some external context for door, whether it's opened
-
-	LETS JUST HAVE '3' AS OPENED_DOOR/OPENING_DOOR, THAT FIXED SO MANY FKING CONCERN
-	Multiple layers of maps? Door, Wall, what about (opened/opening)_door
-	consider I need to render the things behind the opening and opened door, they should be grouped together
-
-	Having a half transparent door as opened door would complicate things a lot,
-	Like I need to to stack up the amount and put multiple layers onto the screen
-
-	About modifying map layout for communication purpose
-		- It would be quite terribly optimized since a copy of map would need to be generated each update
-			Not to mention current plan for raycasting is also relying on this
-			(making char hit char *set would fix it, one for "1" and other for "12"),
-			(not really, the ray shouldn't stop at the first '2', it should )
-			would be doing so many inefficient checks and 
-
-	Even so, how can I know the map unit without any external context?
-	I need to know the details of the map, I can't keep this independent
-	It's gonna be a spagetti for sure
-*/
 static t_point	vector_collision(const t_point start, const t_point vector,
 			const t_map *map)
 {
@@ -106,12 +74,17 @@ static t_point	vector_collision(const t_point start, const t_point vector,
 
 void	player_move(t_player *player, const t_point direction, const t_map *map)
 {
-	const t_point	rotate = point_rotate(direction, point_angle(player->dir));
-	t_point			vector;
+	double	scale;
+	t_point	vector;
 
 	if (direction.x == 0 && direction.y == 0)
 		return ;
-	vector = point_downscale(rotate, ((rotate.x != 0) + (rotate.y != 0)) * 10);
+	else if (direction.x != 0 && direction.y != 0)
+		scale = 0.5;
+	else
+		scale = 0.75;
+	vector = point_rotate(direction, point_angle(player->dir));
+	vector = point_upscale(vector, scale * 0.1);
 	if (!COLLISION)
 		player->pos = point_add(player->pos, vector);
 	else
@@ -127,10 +100,22 @@ void	player_rotate(t_player *player, const t_mouse mouse, const t_keys keys)
 	*/
 	const double	key_direction = ((keys[Key_Right] == Press)
 			- (keys[Key_Left] == Press)) * 0.039;
-	// const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) * (.00831 * .39);
-	const double	mouse_speed = 0;
+	const double	mouse_speed = (mouse.pos.x - mouse.prev_pos.x) * (.00831 * .39);
+	// const double	mouse_speed = 0;
 	const double	rotation = key_direction + mouse_speed;
 
 	player->dir = point_rotate(player->dir, rotation);
 	(void)mouse;
+}
+
+void	player_target(t_player *player, const t_map *map)
+{
+	const t_ray	ray = raycast(map, player->pos, player->dir, set_any());
+	t_point		vector;
+
+	if (ray.distance_traveled < point_magnitude(player->dir))
+		vector = point_upscale(ray.direction, ray.distance_traveled + 0.000001);
+	else
+		vector = player->dir;
+	player->target = point_apply(point_add(player->pos, vector), trunc);
 }
