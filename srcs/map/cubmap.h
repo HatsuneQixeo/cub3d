@@ -47,4 +47,8 @@ int			cubmap_getmap(void *p_mlx, const char *path,
 int			cubmap_player_init(t_map map, t_player *player);
 void		cubmap_door_init(t_map *map, unsigned int animation_amount);
 
+const char	*set_wall(void);
+const char	*set_door(void);
+const char	*set_any(void);
+
 #endif

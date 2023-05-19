@@ -20,6 +20,6 @@ typedef struct s_ray
 }			t_ray;
 
 t_ray	raycast(const t_map *map, t_point pos, t_point ray_direction,
-			const char *hit);
+			const char *target);
 
 #endif

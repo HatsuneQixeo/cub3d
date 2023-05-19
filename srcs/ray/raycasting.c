@@ -29,7 +29,7 @@ static t_point	get_delta(const t_point ray_direction)
 }
 
 static t_point	go_until_hit(const t_map *map,
-			const t_point pos, t_ray *ray, const char *hit)
+			const t_point pos, t_ray *ray, const char *target)
 {
 	const t_point	delta_distance = get_delta(ray->direction);
 	const t_point	step = point_sign(ray->direction);
@@ -38,7 +38,7 @@ static t_point	go_until_hit(const t_map *map,
 	side_distance = side_distance_offset(pos, ray->direction, delta_distance);
 	ray->hit = point_apply(pos, trunc);
 	while (point_inbound(ray->hit, map->size)
-		&& !ft_strchr(hit, map->layout[(int)ray->hit.y][(int)ray->hit.x]))
+		&& !ft_strchr(target, map->layout[(int)ray->hit.y][(int)ray->hit.x]))
 	{
 		if (side_distance.x < side_distance.y)
 		{
@@ -68,14 +68,14 @@ static t_point	go_until_hit(const t_map *map,
 	since I haven't referenced other non middle ray outside of rendering.
 */
 t_ray	raycast(const t_map *map, const t_point pos,
-			const t_point ray_direction, const char *hit)
+			const t_point ray_direction, const char *target)
 {
 	t_ray	ray;
 	t_point	distance;
 
 	ray.direction = ray_direction;
 	ray.side = SideUnknown;
-	distance = go_until_hit(map, pos, &ray, hit);
+	distance = go_until_hit(map, pos, &ray, target);
 	ray.distance_traveled = ft_dmax(0, ft_dmax(distance.y, distance.x));
 	return (ray);
 }
