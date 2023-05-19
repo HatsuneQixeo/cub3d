@@ -134,7 +134,7 @@ int	game_init(const char *path, t_game *game)
 	game->mlx.p_mlx = mlx_init();
 	cub3d_runtime_assertion(game->mlx.p_mlx != NULL, "mlx_init");
 	if (cubmap_getmap(game->mlx.p_mlx, path, &game->map, &game->texture) == -1
-		|| cubmap_player_init(game->map, &game->player) == -1)
+		|| cubmap_player_init(game->map, &game->map.player) == -1)
 		return (-1);
 	texture_init(game->mlx.p_mlx, &game->texture, game->map);
 	cubmap_door_init(&game->map, game->texture.door_animation_len);

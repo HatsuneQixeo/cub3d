@@ -9,14 +9,13 @@ static t_point	scale_plane(const t_point plane, const unsigned int i)
 	return (scaled_plane);
 }
 
-void	screen_rays(t_rays rays, const t_player *player, const t_map map,
-			const char *target)
+void	screen_rays(t_rays rays, const t_map *map, const char *target)
 {
-	const t_point	plane = point_rotate(player->dir, M_PI_2);
+	const t_point	plane = point_rotate(map->player.dir, M_PI_2);
 	unsigned int	i;
 
 	i = -1;
 	while (++i < ray_amount)
-		rays[i] = raycast(&map, player->pos,
-				point_add(player->dir, scale_plane(plane, i)), target);
+		rays[i] = raycast(map, map->player.pos,
+				point_add(map->player.dir, scale_plane(plane, i)), target);
 }

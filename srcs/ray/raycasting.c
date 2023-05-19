@@ -1,4 +1,5 @@
 #include "ray.h"
+#include "cubmap.h"
 #include "libmath.h"
 
 static t_point	side_distance_offset(const t_point pos, const t_point direction,

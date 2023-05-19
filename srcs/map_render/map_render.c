@@ -68,11 +68,11 @@ void	cub3d_map_render(t_game *game)
 
 	{
 		TIME("layer clean", layers_clean(game->mlx.p_mlx, layers));
-		TIME("layer player", map_layer_player(&layers[LayerPlayer], &game->player));
-		TIME("layer interact", map_layer_interact(&layers[LayerInteract], &game->player));
+		TIME("layer player", map_layer_player(&layers[LayerPlayer], &game->map.player));
+		TIME("layer interact", map_layer_interact(&layers[LayerInteract], &game->map.player));
 		if (SHOW_RAY)
-			map_layer_ray(&layers[LayerRay], game->rays, game->player.pos);
+			map_layer_ray(&layers[LayerRay], game->rays, game->map.player.pos);
 		TIME("layer door", map_layer_door(&layers[LayerDoor], game->map.arr_doors));
 	}
-	map_layer_render(game->mlx, layers, game->player.pos, put_minimap);
+	map_layer_render(game->mlx, layers, game->map.player.pos, put_minimap);
 }

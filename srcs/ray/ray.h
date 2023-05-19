@@ -2,7 +2,8 @@
 # define RAY_H
 
 # include "point.h"
-# include "cubmap.h"
+
+typedef struct s_map	t_map;
 
 enum e_side
 {

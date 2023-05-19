@@ -69,8 +69,6 @@ void	door_iteri_update(const unsigned int i, void *arr_door)
 		door->step = 0;
 }
 
-void	render_door(t_game *game);
-
 void	map_update(t_map *map)
 {
 	t_door	**it_door;
@@ -119,59 +117,64 @@ void	render_background(t_image *screen_buffer,
 		(t_point){.x = ScreenWidth, .y = ScreenHeight});
 }
 
+void	update(t_game *game)
+{
+	{
+		const t_point	screen_center = {
+			.x = ScreenWidth / 2,
+			.y = ScreenHeight / 2
+		};
+
+		/* Rotate the player direction, based on the mouse movement and left right keys */
+		player_rotate(&game->map.player, game->mouse, game->keys);
+		mlx_mouse_move(game->mlx.p_win, screen_center.x, screen_center.y);
+		game->mouse.pos = screen_center;
+		game->mouse.prev_pos = screen_center;
+	}
+	player_move(&game->map.player, player_direction(game->keys), &game->map);
+	player_target(&game->map.player, &game->map);
+	player_interact(&game->map, game->keys, game->map.player.target);
+	ft_aaiteri(game->map.arr_doors, door_iteri_update);
+	map_update(&game->map);
+}
+
+void	render(t_game *game)
+{
+	render_background(&game->screen_buffer,
+		game->texture.colour_ceiling, game->texture.colour_floor);
+	/* Raycasting */
+	TIME("render total",
+		TIME("raycast", screen_rays(game->rays, &game->map, set_wall()));
+		TIME("draw   ", render_wall(&game->screen_buffer, game->rays, game->texture.walls, &game->map));
+		/* put door */
+		{
+			TIME("raycast", screen_rays(game->rays, &game->map, set_door()));
+			TIME("draw   ", render_door(&game->screen_buffer, game->rays, game->texture.door_animation, &game->map));
+			TIME("put    ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
+		}
+		/* put door */
+		{
+			TIME("raycast", screen_rays(game->rays, &game->map, set_any()));
+			TIME("draw   ", render_door(&game->screen_buffer, game->rays, game->texture.door_animation, &game->map));
+			TIME("put    ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
+		}
+	);
+}
 // ft_printf("くるり廻る廻る廻る世界\n");
 int	hook_loop(t_game *game)
 {
-	const t_point	screen_center = {
-		.x = ScreenWidth / 2,
-		.y = ScreenHeight / 2
-	};
-
 	TIME("time total",
 		if (game->keys[Key_ESC] == Press)
 			hook_button_close(EXIT_SUCCESS);
 		// mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 		/* Update entity like player and door */
-		{
-			/* Rotate the player direction, based on the mouse movement and left right keys */
-			{
-				player_rotate(&game->player, game->mouse, game->keys);
-				mlx_mouse_move(game->mlx.p_win, screen_center.x, screen_center.y);
-				game->mouse.pos = screen_center;
-				game->mouse.prev_pos = screen_center;
-			}
-			player_move(&game->player, player_direction(game->keys), &game->map);
-			player_target(&game->player, &game->map);
-			player_interact(&game->map, game->keys, game->player.target);
-			ft_aaiteri(game->map.arr_doors, door_iteri_update);
-			map_update(&game->map);
-		}
-		render_background(&game->screen_buffer,
-			game->texture.colour_ceiling, game->texture.colour_floor);
-		/* Raycasting */
-		TIME("render total",
-			TIME("raycast", screen_rays(game->rays, &game->player, game->map, set_wall()));
-			TIME("draw   ", render_wall(&game->screen_buffer, game->rays, game->texture.walls, game->player.pos));
-			TIME("put    ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
-			/* put door */
-			{
-				TIME("raycast", screen_rays(game->rays, &game->player, game->map, set_door()));
-				TIME("draw   ", render_door(game));
-				TIME("put    ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
-			}
-			/* put door */
-			{
-				TIME("raycast", screen_rays(game->rays, &game->player, game->map, set_any()));
-				TIME("draw   ", render_door(game));
-				TIME("put    ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
-			}
-		);
+		update(game);
+		render(game);
 		/* Minimap */
 		// TIME("minimap", cub3d_map_render(game));
 		/* Put the temporary cursor */
 		if (display_mouse(game->mouse))
 			image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
-		image_put(game->mlx, &game->texture.mouse_icon, screen_center);
 	);
 	if (BENCHMARK)
 		printf("\n");
@@ -192,7 +195,6 @@ int	cub3d(const char *map_path)
 		exit(1);
 	}
 		// return (-1);
-	// hook_button_close(0);
 	events(&game);
 	mlx_loop(game.mlx.p_mlx);
 	return (0);

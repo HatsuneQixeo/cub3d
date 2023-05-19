@@ -5,12 +5,14 @@
 # include "libft.h"
 # include "door.h"
 # include "texture.h"
+# include "player.h"
 
 typedef struct s_map
 {
-	t_point	size;
-	char	**layout;
-	t_door	**arr_doors;
+	t_point		size;
+	char		**layout;
+	t_door		**arr_doors;
+	t_player	player;
 }			t_map;
 
 enum e_mapunit
@@ -25,8 +27,6 @@ enum e_mapunit
 	StartLeft = 'W',
 	StartRight = 'E',
 };
-
-typedef struct s_player	t_player;
 
 /* Predicator */
 typedef int	(*t_cubmapis)(const t_map *map, t_point pos);

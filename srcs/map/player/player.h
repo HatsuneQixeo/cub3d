@@ -3,7 +3,6 @@
 
 # include "libft.h"
 # include "point.h"
-# include "cubmap.h"
 # include "ray.h"
 /* Would be getting these's hook off I think */
 # include "hook_mouse.h"

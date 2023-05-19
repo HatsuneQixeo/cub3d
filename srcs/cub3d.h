@@ -19,7 +19,6 @@
 # include "hook_key.h"
 # include "hook_mouse.h"
 # include "texture.h"
-# include "player.h"
 # include "cubmap.h"
 # include "ray.h"
 # include "minimap.h"
@@ -45,7 +44,6 @@ typedef struct s_game
 	t_image		screen_buffer;
 	t_rays		rays;
 	t_texture	texture;
-	t_player	player;
 	t_keys		keys;
 	t_mouse		mouse;
 	t_map		map;
@@ -53,10 +51,12 @@ typedef struct s_game
 
 void	put_a_line(t_mlx mlx, t_point player, t_point vector);
 
-void	screen_rays(t_rays rays, const t_player *player, t_map map,
-			const char *target);
+void	screen_rays(t_rays rays, const t_map *map, const char *target);
+
 void	render_wall(t_image *screen_buffer, const t_rays rays,
-			const t_wall_textures walls, t_point player_pos);
+			const t_wall_textures walls, const t_map *map);
+void	render_door(t_image *screen_buffer, const t_rays rays,
+			const t_image *animation, const t_map *map);
 
 int		hook_loop(t_game *game);
 

@@ -63,7 +63,7 @@ static void	draw_line(t_image *screen_buffer, const t_image *image,
 }
 
 void	render_wall(t_image *screen_buffer, const t_rays rays,
-			const t_wall_textures walls, const t_point player_pos)
+			const t_wall_textures walls, const t_map *map)
 {
 	unsigned int	i;
 	const t_ray		*ray;
@@ -76,13 +76,14 @@ void	render_wall(t_image *screen_buffer, const t_rays rays,
 		image = &walls[get_texture_index(ray->direction, ray->side)];
 		draw_line(screen_buffer, image, (t_normslave){
 			.line_height = ScreenHeight / ray->distance_traveled,
-			.image_x = get_image_x(image, ray, player_pos),
+			.image_x = get_image_x(image, ray, map->player.pos),
 			.screen_x = i
 		});
 	}
 }
 
-void	render_door(t_game *game)
+void	render_door(t_image *screen_buffer, const t_rays rays,
+			const t_image *animation, const t_map *map)
 {
 	unsigned int	i;
 	const t_door	*door;
@@ -92,14 +93,14 @@ void	render_door(t_game *game)
 	i = -1;
 	while (++i < ScreenWidth)
 	{
-		ray = &game->rays[(int)(i * ((double)ray_amount / ScreenWidth))];
-		if (!cubmap_isdoor(&game->map, ray->hit))
+		ray = &rays[(int)(i * ((double)ray_amount / ScreenWidth))];
+		if (!cubmap_isdoor(map, ray->hit))
 			continue ;
-		door = *(t_door **)ft_aafind((void **)game->map.arr_doors, &ray->hit, cmp_doorpos);
-		image = &game->texture.door_animation[door->animation_index];
-		draw_line(&game->screen_buffer, image, (t_normslave){
+		door = *(t_door **)ft_aafind((void **)map->arr_doors, &ray->hit, cmp_doorpos);
+		image = &animation[door->animation_index];
+		draw_line(screen_buffer, image, (t_normslave){
 			.line_height = ScreenHeight / ray->distance_traveled,
-			.image_x = get_image_x(image, ray, game->player.pos),
+			.image_x = get_image_x(image, ray, map->player.pos),
 			.screen_x = i
 		});
 	}

@@ -1,4 +1,4 @@
-#include "player.h"
+#include "cubmap.h"
 
 typedef struct s_pair
 {

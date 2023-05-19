@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "player.h"
+#include "cubmap.h"
 
 #ifndef COLLISION
 # define COLLISION 1
