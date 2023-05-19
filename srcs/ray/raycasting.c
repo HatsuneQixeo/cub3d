@@ -29,7 +29,7 @@ static t_point	get_delta(const t_point ray_direction)
 }
 
 static t_point	go_until_hit(const t_map *map,
-			const t_point pos, t_ray *ray, const char hit)
+			const t_point pos, t_ray *ray, const char *hit)
 {
 	const t_point	delta_distance = get_delta(ray->direction);
 	const t_point	step = point_sign(ray->direction);
@@ -38,7 +38,7 @@ static t_point	go_until_hit(const t_map *map,
 	side_distance = side_distance_offset(pos, ray->direction, delta_distance);
 	ray->hit = point_apply(pos, trunc);
 	while (point_inbound(ray->hit, map->size)
-		&& map->layout[(int)ray->hit.y][(int)ray->hit.x] != hit)
+		&& !ft_strchr(hit, map->layout[(int)ray->hit.y][(int)ray->hit.x]))
 	{
 		if (side_distance.x < side_distance.y)
 		{
@@ -58,8 +58,17 @@ static t_point	go_until_hit(const t_map *map,
 	return (point_sub(side_distance, delta_distance));
 }
 
+/*
+	Note: The distance returned is perpendicular distance,
+	under the assumption that this data is used for rendering,
+	therefore it is not numerically accurate.
+
+	Why not fix it? Lazy.
+	Don't think this has caused any bug yet either,
+	since I haven't referenced other non middle ray outside of rendering.
+*/
 t_ray	raycast(const t_map *map, const t_point pos,
-			const t_point ray_direction, const char hit)
+			const t_point ray_direction, const char *hit)
 {
 	t_ray	ray;
 	t_point	distance;

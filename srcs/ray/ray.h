@@ -19,6 +19,7 @@ typedef struct s_ray
 	enum e_side	side;
 }			t_ray;
 
-t_ray	raycast(const t_map *map, t_point pos, t_point ray_direction, char hit);
+t_ray	raycast(const t_map *map, t_point pos, t_point ray_direction,
+			const char *hit);
 
 #endif
