@@ -40,9 +40,11 @@ int	cubmap_player_init(const t_map map, t_player *player)
 	else if (lst_player->next != NULL)
 		cubmap_showlsterror(map, lst_player, "Duplicate Players");
 	else
+	{
 		status = 0;
-	pos = lst_player->content;
-	*player = player_init(*pos, map.layout[(int)pos->y][(int)pos->x]);
+		pos = lst_player->content;
+		*player = player_init(*pos, map.layout[(int)pos->y][(int)pos->x]);
+	}
 	ft_lstclear(&lst_player, point_del);
 	return (status);
 }
