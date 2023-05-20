@@ -31,7 +31,7 @@ int	image_getindex(const t_image *image, const t_point pos)
 void	image_setpixel(t_image *image, const t_colour colour, const t_point pos)
 {
 	if ((0 <= pos.x && pos.x < image->size.x)
-			&& (0 <= pos.y && pos.y < image->size.y))
+		&& (0 <= pos.y && pos.y < image->size.y))
 		image->data[image_getindex(image, pos)] = colour;
 	else if (DRAW_WARNING)
 	{

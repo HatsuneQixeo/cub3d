@@ -45,10 +45,11 @@ int	display_mouse(const t_mouse mouse)
 */
 void	image_copy_opaque(t_image *dst, const t_image *src)
 {
-	unsigned int	i;
+	unsigned int		i;
+	const unsigned int	len = dst->size.x * dst->size.y;
 
 	i = -1;
-	while (++i < dst->size.x * dst->size.y)
+	while (++i < len)
 		if (colour_getmask(src->data[i], ValueA) != 0xff)
 			dst->data[i] = src->data[i];
 }
@@ -59,7 +60,7 @@ int	hook_loop(t_game *game)
 	TIME("time total",
 		if (game->keys[Key_ESC] == Press)
 			hook_button_close(EXIT_SUCCESS);
-		// mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
+		mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 		/* Update entity like player and door */
 		update(game);
 		render(game);

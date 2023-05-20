@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   image.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/12 23:24:46 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/12 23:24:46 by hqixeo           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "image.h"
 #include <errno.h>
 
@@ -27,7 +15,7 @@ t_image	image_create(void *p_mlx, const t_point size, const t_point putoffset)
 
 	ft_bzero(&image, sizeof(image));
 	image.p_image = mlx_new_image(p_mlx, size.x, size.y);
-	if (image.p_image == NULL)
+	if (!image_good(&image))
 		return (image);
 	image.data = image_getdata(image.p_image);
 	image.putoffset = putoffset;
@@ -47,16 +35,6 @@ t_image	image_dup(void *p_mlx, const t_image *src)
 	return (image);
 }
 
-/*
-	Not sure if the return value is really describing anything about the error
-
-	a file format error?
-	a file error?
-	a mlx error?
-
-	Anyway, it shouldn't matter since the error should be recorded by errno,
-	except invalid suffix I guess
-*/
 t_image	image_readxpm(void *p_mlx, const char *path,
 			t_offset putoffset_x, t_offset putoffset_y)
 {
@@ -71,7 +49,7 @@ t_image	image_readxpm(void *p_mlx, const char *path,
 		return (image);
 	}
 	image.p_image = mlx_xpm_file_to_image(p_mlx, (char *)path, &width, &height);
-	if (image.p_image == NULL)
+	if (!image_good(&image))
 		return (image);
 	image.size = (t_point){.x = width, .y = height};
 	image.data = image_getdata(image.p_image);
@@ -90,7 +68,7 @@ t_image	image_crop(void *p_mlx, const t_image *src,
 	t_point			it;
 
 	image = image_create(p_mlx, size, (t_point){0, 0});
-	if (image.data == NULL)
+	if (!image_good(&image))
 		return (image);
 	it.y = start.y - 1;
 	while (++it.y < end.y)
@@ -101,25 +79,4 @@ t_image	image_crop(void *p_mlx, const t_image *src,
 				point_sub(it, start));
 	}
 	return (image);
-}
-
-int	image_good(const t_image *image)
-{
-	return (image->data != NULL);
-}
-
-void	image_setalpha(t_image *image, const t_colour_byte value)
-{
-	unsigned int		i;
-	const unsigned int	len = image->size.y * image->size.x;
-
-	i = -1;
-	while (++i < len)
-		colour_setmask(&image->data[i], value, ValueA);
-}
-
-void	image_destroy(void *p_mlx, t_image *image)
-{
-	mlx_destroy_image(p_mlx, image->p_image);
-	ft_bzero(image, sizeof(*image));
 }

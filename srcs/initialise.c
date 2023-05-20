@@ -42,6 +42,7 @@ int	game_init(const char *path, t_game *game)
 		return (-1);
 	texture_init(game->mlx.p_mlx, &game->texture, &game->map);
 	cubmap_door_init(&game->map, game->texture.door_animation_len);
+	cub3d_runtime_assertion(game->map.arr_doors != NULL, "arr_doors");
 	game->screen_buffer = image_create(game->mlx.p_mlx,
 			(t_point){.x = ScreenWidth, .y = ScreenHeight},
 			(t_point){0, 0});

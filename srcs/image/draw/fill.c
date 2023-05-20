@@ -9,3 +9,13 @@ void	image_clean(t_image *image)
 {
 	image_fill(image, 0xff000000);
 }
+
+void	image_setalpha(t_image *image, const t_colour_byte value)
+{
+	unsigned int		i;
+	const unsigned int	len = image->size.y * image->size.x;
+
+	i = -1;
+	while (++i < len)
+		colour_setmask(&image->data[i], value, ValueA);
+}

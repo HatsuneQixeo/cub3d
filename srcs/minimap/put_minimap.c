@@ -26,8 +26,8 @@ void	put_minimap(t_mlx mlx, const t_image *map, const t_point player_pos)
 	starttoend(map->size, point_apply(map_scale_point(player_pos), trunc),
 		&start, &end);
 	cropped = image_crop(mlx.p_mlx, map, start, end);
-	/* cub assert */
-	ft_assert(image_good(&cropped), "put_minimap: "IMAGE_CREATION_FAILED);
+	if (!image_good(&cropped))
+		return ;
 	image_put(mlx, &cropped, (t_point){0, 0});
 	image_destroy(mlx.p_mlx, &cropped);
 }

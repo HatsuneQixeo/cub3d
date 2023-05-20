@@ -13,6 +13,7 @@ static int	colour_convert(char **strlist_values, t_colour *colour)
 	i = -1;
 	while (strlist_values[++i] != NULL)
 	{
+		/* Note: Does not print out Error\n */
 		if (!stris_numeric(strlist_values[i]))
 			ret = ft_dprintf(2, "Invalid value: %s\n", strlist_values[i]);
 		else
@@ -33,20 +34,20 @@ static int	colour_convert(char **strlist_values, t_colour *colour)
 
 static int	ft_strtocolour(const char *properties, t_colour *colour)
 {
-	const unsigned int	expected_len = 3;
+	const unsigned int	expected_amount = 3;
 	char **const		strlist_values = ft_split(properties, ',');
 	const unsigned int	len = ft_strcount(strlist_values);
-	int					ret;
+	int					status;
 
-	ret = -1;
-	/* Testing required */
-	if (len != expected_len)
+	status = -1;
+	if (len != expected_amount)
+		/* Note: Does not print out Error\n */
 		ft_dprintf(2, "Expected %.*s value: %s\n",
-			expected_len + (expected_len - 1), "R,G,B,A", properties);
+			expected_amount + (expected_amount - 1), "R,G,B,A", properties);
 	else
-		ret = colour_convert(strlist_values, colour);
+		status = colour_convert(strlist_values, colour);
 	ft_strlistclear(strlist_values);
-	return (ret);
+	return (status);
 }
 
 int	get_environment_colour(t_element_table element_table,

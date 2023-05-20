@@ -27,5 +27,4 @@ int	cmp_doorpos(const void *p_door, const void *p_pos)
 	const t_point	*pos = p_pos;
 
 	return (!(door->pos.x == pos->x && door->pos.y == pos->y));
-	// return (ft_memcmp(&door->pos, pos, sizeof(t_point)));
 }

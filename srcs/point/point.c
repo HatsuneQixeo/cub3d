@@ -31,7 +31,6 @@ void	point_del(void *content)
 
 void	point_log(const char *prefix, const t_point point)
 {
-	// printf("[%-20s] x: %6.2f, y: %6.2f\n", prefix, point.x, point.y);
 	printf("%s[x: %f, y: %f]\n", prefix, point.x, point.y);
 }
 

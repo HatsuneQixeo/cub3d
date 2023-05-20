@@ -17,7 +17,8 @@ static t_list	*read_image(void *p_mlx, const char *path, t_image *image)
 		return (NULL);
 }
 
-static int	read_walls(void *p_mlx, t_element_table element_table, t_wall_textures walls)
+static int	read_walls(void *p_mlx, t_element_table element_table,
+			t_wall_textures walls)
 {
 	const char	*paths[] = {
 	[North] = ((t_element *)element_table[IdxElemNorth]->content)->properties,

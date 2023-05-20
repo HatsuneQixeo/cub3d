@@ -82,8 +82,10 @@ thisre:
 	${RM} -r ${NAME} ${OBJ_DIR}
 	make all
 
+NORM_CHECK	:=	${SRC_DIR} $(filter-out libft/experiment/exlib/include/exlib.h, ${HEADER})
+
 norm:
-	@norminette ${SRC_DIR} ${HEADER}
+	@norminette ${NORM_CHECK}
 
 normltr:
-	@norminette -R CheckForbiddenSourceHeader ${SRC_DIR} $(filter-out libft/experiment/exlib/include/exlib.h, ${HEADER}) | grep -v INVALID_HEADER | grep -v WRONG_SCOPE_COMMENT # | grep -v LINE_TOO_LONG
+	@norminette ${NORM_CHECK} | grep -v INVALID_HEADER

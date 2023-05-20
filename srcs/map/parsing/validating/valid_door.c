@@ -16,11 +16,12 @@ static int	cubmap_isinvalid_door(const t_map *map, const t_point pos)
 			|| (layout[y][x - 1] == Wall && layout[y][x + 1] == Wall)));
 }
 
+// const char	*err_msg = "Door cannot be placed without walls on either side"
+// " or at the border: ";
 int	cubmap_valid_door(const t_map map)
 {
-	t_list	*lst_invalid_door;
+	t_list		*lst_invalid_door;
 	const char	*err_msg = "Invalid Door";
-	// const char	*err_msg = "Door cannot be placed without walls on either side or at the border: ";
 
 	lst_invalid_door = cubmap_gather_if(map, cubmap_isinvalid_door);
 	if (lst_invalid_door == NULL)
