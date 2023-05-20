@@ -31,21 +31,7 @@
 	Don't think inlining is optimizing anything either,
 	not even getindex call in this file is getting optimised.
 */
-#if IMAGE_OUT_OF_BOUND_CHECK == 0
-
-inline int	image_getindex(const t_image *const image, const t_point pos)
-{
-	return ((pos.y * image->size.x) + pos.x);
-}
-
-inline void	image_setpixel(const t_image *const image, const t_colour colour,
-			const t_point pos)
-{
-	image->data[(unsigned int)((pos.y * image->size.x) + pos.x)] = colour;
-}
-
-#else
-inline int	image_getindex(const t_image *const image, const t_point pos)
+int	image_getindex(const t_image *const image, const t_point pos)
 {
 	const unsigned int	index = (pos.y * image->size.x) + pos.x;
 
@@ -58,7 +44,7 @@ inline int	image_getindex(const t_image *const image, const t_point pos)
 	return (index);
 }
 
-inline void	image_setpixel(const t_image *const image, const t_colour colour,
+void	image_setpixel(const t_image *const image, const t_colour colour,
 			const t_point pos)
 {
 	if (!IMAGE_OUT_OF_BOUND_CHECK
@@ -71,9 +57,8 @@ inline void	image_setpixel(const t_image *const image, const t_colour colour,
 		point_log("image_setpixel: size", image->size);
 	}
 }
-#endif
 
-inline t_colour	image_getpixel(const t_image *const image, const t_point pos)
+t_colour	image_getpixel(const t_image *const image, const t_point pos)
 {
 	return (image->data[(unsigned int)((pos.y * image->size.x) + pos.x)]);
 }
