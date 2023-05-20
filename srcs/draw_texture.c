@@ -33,7 +33,12 @@ static int	get_image_x(const t_image *image, const t_ray *ray,
 		return (x * image->size.x);
 }
 
-static void	draw_line(t_image *screen_buffer, const t_image *image,
+/*
+	The reason why I'm not using setpixel and getpixel
+	 is because the function overhead slows down the performance
+	 pretty significantly
+*/
+static void	draw_line(t_image *const screen_buffer, const t_image *const image,
 			const t_normslave var)
 {
 	const double	image_step = image->size.y / var.line_height;
@@ -50,14 +55,43 @@ static void	draw_line(t_image *screen_buffer, const t_image *image,
 	screen_y = trunc(screen_y - 1);
 	while (++screen_y < screen_end_y)
 	{
-		colour = image_getpixel(image, (t_point){
-				.x = var.image_x,
-				.y = ft_min(it_img_y, image->size.y - 1)
+		/* Clean code */
+		if (1)
+		{
+			colour = image_getpixel(image, (t_point){
+					.x = var.image_x,
+					.y = ft_min(it_img_y, image->size.y - 1)
+				});
+			image_setpixel(screen_buffer, colour, (t_point){
+				.x = var.screen_x,
+				.y = screen_y
 			});
-		image_setpixel(screen_buffer, colour, (t_point){
-			.x = var.screen_x,
-			.y = screen_y
-		});
+		}
+		else if (01)
+		/* No function call */
+		{
+			screen_buffer->data[((int)(screen_y * screen_buffer->size.x) + var.screen_x)]
+			= image->data[(int)((ft_min(it_img_y, image->size.y - 1) * image->size.x)) + var.image_x];
+		}
+		else if (0)
+		/* Get only */
+		{
+			screen_buffer->data[((int)(screen_y * screen_buffer->size.x) + var.screen_x)]
+			= image_getpixel(image, (t_point){
+					.x = var.image_x,
+					.y = ft_min(it_img_y, image->size.y - 1)
+				});
+		}
+		else
+		/* Set only */
+		{
+			image_setpixel(screen_buffer,
+				image->data[(int)((ft_min(it_img_y, image->size.y - 1) * image->size.x)) + var.image_x],
+				(t_point){
+				.x = var.screen_x,
+				.y = screen_y
+			});
+		}
 		it_img_y += image_step;
 	}
 }

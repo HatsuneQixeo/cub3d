@@ -82,7 +82,12 @@ int	hook_mouse_release(int button, int x, int y, t_mouse *mouse)
 
 int	hook_mouse_move(int x, int y, t_mouse *mouse)
 {
-	mouse->prev_pos = mouse->pos;
+	POINT_DEBUG(mouse->prev_pos);
+	POINT_DEBUG(mouse->pos);
+	// mouse->prev_pos = mouse->pos;
 	mouse->pos = (t_point){.x = x, .y = y};
+	POINT_DEBUG(mouse->prev_pos);
+	POINT_DEBUG(mouse->pos);
+	printf("\n");
 	return (0);
 }

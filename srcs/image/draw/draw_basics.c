@@ -16,11 +16,41 @@
 # define DRAW_WARNING	1
 #endif
 
-int	image_getindex(const t_image *image, const t_point pos)
+#ifndef IMAGE_OUT_OF_BOUND_CHECK
+# define IMAGE_OUT_OF_BOUND_CHECK	0
+#endif
+
+/*
+	Certain amount of readability is sacrificed for the sake of performace,
+	since these functions are called very very frequently for image manipulation
+
+	Would not have to if norminette allows function macro, duh.
+	It would have make these functions literally have no performance penalty
+	 without giving up any readability.
+
+	Don't think inlining is optimizing anything either,
+	not even getindex call in this file is getting optimised.
+*/
+#if IMAGE_OUT_OF_BOUND_CHECK == 0
+
+inline int	image_getindex(const t_image *const image, const t_point pos)
+{
+	return ((pos.y * image->size.x) + pos.x);
+}
+
+inline void	image_setpixel(const t_image *const image, const t_colour colour,
+			const t_point pos)
+{
+	image->data[(unsigned int)((pos.y * image->size.x) + pos.x)] = colour;
+}
+
+#else
+inline int	image_getindex(const t_image *const image, const t_point pos)
 {
 	const unsigned int	index = (pos.y * image->size.x) + pos.x;
 
-	if (DRAW_WARNING && index >= image->size.y * image->size.x)
+	if (IMAGE_OUT_OF_BOUND_CHECK && DRAW_WARNING
+		&& index >= image->size.y * image->size.x)
 	{
 		point_log("image_getindex: outofbound", pos);
 		point_log("image_getindex: size", image->size);
@@ -28,19 +58,22 @@ int	image_getindex(const t_image *image, const t_point pos)
 	return (index);
 }
 
-void	image_setpixel(t_image *image, const t_colour colour, const t_point pos)
+inline void	image_setpixel(const t_image *const image, const t_colour colour,
+			const t_point pos)
 {
-	if ((0 <= pos.x && pos.x < image->size.x)
-		&& (0 <= pos.y && pos.y < image->size.y))
-		image->data[image_getindex(image, pos)] = colour;
+	if (!IMAGE_OUT_OF_BOUND_CHECK
+		|| ((0 <= pos.x && pos.x < image->size.x)
+			&& (0 <= pos.y && pos.y < image->size.y)))
+		image->data[(unsigned int)((pos.y * image->size.x) + pos.x)] = colour;
 	else if (DRAW_WARNING)
 	{
 		point_log("image_setpixel: outofbound", pos);
 		point_log("image_setpixel: size", image->size);
 	}
 }
+#endif
 
-t_colour	image_getpixel(const t_image *image, const t_point pos)
+inline t_colour	image_getpixel(const t_image *const image, const t_point pos)
 {
-	return (image->data[image_getindex(image, pos)]);
+	return (image->data[(unsigned int)((pos.y * image->size.x) + pos.x)]);
 }

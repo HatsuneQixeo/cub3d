@@ -55,7 +55,7 @@ t_image		image_readxpm(void *p_mlx, const char *path,
 void		image_destroy(void *p_mlx, t_image *image);
 
 /* Image Manipulation */
-void		image_setpixel(t_image *image, t_colour colour, t_point at);
+void		image_setpixel(const t_image *image, t_colour colour, t_point at);
 void		image_draw_line(t_image *image, t_colour colour,
 				t_point start, t_point end);
 void		image_fill(t_image *image, t_colour colour);

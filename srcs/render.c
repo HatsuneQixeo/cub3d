@@ -3,18 +3,17 @@
 void	render_background(t_image *screen_buffer,
 			const t_colour ceiling, const t_colour floor)
 {
-	image_draw_rectangle(screen_buffer, ceiling,
-		(t_point){.x = 0, .y = 0},
-		(t_point){.x = ScreenWidth, .y = ScreenHeight / 2});
-	image_draw_rectangle(screen_buffer, floor,
-		(t_point){.x = 0, .y = ScreenHeight / 2},
-		(t_point){.x = ScreenWidth, .y = ScreenHeight});
+	const unsigned int	len = screen_buffer->size.y * screen_buffer->size.x;
+	const unsigned int	half = len / 2;
+
+	ft_intset((int *)screen_buffer->data, half, ceiling);
+	ft_intset((int *)screen_buffer->data + half, half + (len & 0b1), floor);
 }
 
 void	render(t_game *game)
 {
-	render_background(&game->screen_buffer,
-		game->texture.colour_ceiling, game->texture.colour_floor);
+	TIME("background", render_background(&game->screen_buffer,
+		game->texture.colour_ceiling, game->texture.colour_floor));
 	/* Raycasting */
 	TIME("render total",
 		TIME("raycast", screen_rays(game->rays, &game->map, set_wall()));

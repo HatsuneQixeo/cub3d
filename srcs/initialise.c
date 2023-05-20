@@ -27,8 +27,8 @@ static void	events(t_game *game)
 	ft_mlx_hook(mlx.p_win, DestroyNotify, hook_button_close, EXIT_SUCCESS);
 	ft_mlx_hook(mlx.p_win, KeyPress, hook_key_press, game->keys);
 	ft_mlx_hook(mlx.p_win, KeyRelease, hook_key_release, game->keys);
-	ft_mlx_hook(mlx.p_win, Expose, hook_expose, game);
 	ft_mlx_hook(mlx.p_win, MotionNotify, hook_mouse_move, &game->mouse);
+	ft_mlx_hook(mlx.p_win, Expose, hook_expose, game);
 	mlx_loop_hook(mlx.p_mlx, hook_loop, game);
 }
 

@@ -2,10 +2,11 @@ NAME		:=	cub3d
 
 CC			:=	gcc
 CXXFLAGS	:=	-Wall -Werror -Wextra -g
-CXXFLAGS	+=	-O3
-CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
-# CXXFLAGS	+=	-D DRAW_WARNING=0
+# CXXFLAGS	+=	-O3
+# CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 CXXFLAGS	+=	-D BENCHMARK=1
+# CXXFLAGS	+=	-D DRAW_WARNING=0
+# CXXFLAGS	+=	-D IMAGE_OUT_OF_BOUND_CHECK=1
 # CXXFLAGS	+=	-D COLLISION=0
 # CXXFLAGS	+=	-D SHOW_RAY=1
 # CXXFLAGS	+=	-D DEBUG_KEY=1
