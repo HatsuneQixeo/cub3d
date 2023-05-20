@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include "minimap.h"
 
 int	hook_expose(t_game *game)
 {
@@ -54,112 +53,6 @@ void	image_copy_opaque(t_image *dst, const t_image *src)
 			dst->data[i] = src->data[i];
 }
 
-void	door_iteri_update(const unsigned int i, void *arr_door)
-{
-	t_door **const	aa = arr_door;
-	t_door *const	door = aa[i];
-
-	if (door->step == 0)
-		return ;
-	door->animation_index += door->step;
-	// door->is_open = (door->animation_index != 0);
-	door->is_open = (door->animation_index == door->animation_amount - 1);
-	if (door->animation_index == 0
-		|| door->animation_index == door->animation_amount - 1)
-		door->step = 0;
-}
-
-void	map_update(t_map *map)
-{
-	t_door	**it_door;
-
-	it_door = map->arr_doors - 1;
-	while (*++it_door != NULL)
-	{
-		const t_point	pos = (*it_door)->pos;
-
-		if ((*it_door)->animation_index != 0)
-			map->layout[(int)pos.y][(int)pos.x] = DoorOpen;
-		else
-			map->layout[(int)pos.y][(int)pos.x] = DoorClose;
-	}
-}
-
-void	player_interact(const t_map *map, t_keys keys, const t_point target)
-{
-	t_door	**find;
-	t_door	*door;
-
-	if (keys[Key_E] == Release)
-		return ;
-	keys[Key_E] = Release;
-	if (!cubmap_isdoor(map, target))
-		return ;
-	find = (t_door **)ft_aafind((void **)map->arr_doors, &target, cmp_doorpos);
-	ft_assert(find != NULL, "player_interact: Could not find door");
-	door = *find;
-	if (door->step != 0)
-		door->step *= -1;
-	else if (door->is_open)
-		door->step = -1;
-	else
-		door->step = 1;
-}
-
-void	render_background(t_image *screen_buffer,
-			const t_colour ceiling, const t_colour floor)
-{
-	image_draw_rectangle(screen_buffer, ceiling,
-		(t_point){.x = 0, .y = 0},
-		(t_point){.x = ScreenWidth, .y = ScreenHeight / 2});
-	image_draw_rectangle(screen_buffer, floor,
-		(t_point){.x = 0, .y = ScreenHeight / 2},
-		(t_point){.x = ScreenWidth, .y = ScreenHeight});
-}
-
-void	update(t_game *game)
-{
-	{
-		const t_point	screen_center = {
-			.x = ScreenWidth / 2,
-			.y = ScreenHeight / 2
-		};
-
-		/* Rotate the player direction, based on the mouse movement and left right keys */
-		player_rotate(&game->map.player, game->mouse, game->keys);
-		mlx_mouse_move(game->mlx.p_win, screen_center.x, screen_center.y);
-		game->mouse.pos = screen_center;
-		game->mouse.prev_pos = screen_center;
-	}
-	player_move(&game->map.player, player_direction(game->keys), &game->map);
-	player_target(&game->map.player, &game->map);
-	player_interact(&game->map, game->keys, game->map.player.target);
-	ft_aaiteri(game->map.arr_doors, door_iteri_update);
-	map_update(&game->map);
-}
-
-void	render(t_game *game)
-{
-	render_background(&game->screen_buffer,
-		game->texture.colour_ceiling, game->texture.colour_floor);
-	/* Raycasting */
-	TIME("render total",
-		TIME("raycast", screen_rays(game->rays, &game->map, set_wall()));
-		TIME("draw   ", render_wall(&game->screen_buffer, game->rays, game->texture.walls, &game->map));
-		/* put door */
-		{
-			TIME("raycast", screen_rays(game->rays, &game->map, set_door()));
-			TIME("draw   ", render_door(&game->screen_buffer, game->rays, game->texture.door_animation, &game->map));
-			TIME("put    ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
-		}
-		/* put door */
-		{
-			TIME("raycast", screen_rays(game->rays, &game->map, set_any()));
-			TIME("draw   ", render_door(&game->screen_buffer, game->rays, game->texture.door_animation, &game->map));
-			TIME("put    ", image_put(game->mlx, &game->screen_buffer, (t_point){0, 0}));
-		}
-	);
-}
 // ft_printf("くるり廻る廻る廻る世界\n");
 int	hook_loop(t_game *game)
 {
@@ -171,7 +64,7 @@ int	hook_loop(t_game *game)
 		update(game);
 		render(game);
 		/* Minimap */
-		// TIME("minimap", cub3d_map_render(game));
+		TIME("minimap", cub3d_map_render(game));
 		/* Put the temporary cursor */
 		if (display_mouse(game->mouse))
 			image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
@@ -194,8 +87,6 @@ int	cub3d(const char *map_path)
 			system("leaks -q cub3d");
 		exit(1);
 	}
-		// return (-1);
-	events(&game);
 	mlx_loop(game.mlx.p_mlx);
 	return (0);
 }

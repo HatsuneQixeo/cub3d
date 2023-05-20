@@ -12,74 +12,24 @@
 
 #include "cub3d.h"
 
-void	cub3d_runtime_assertion(const int condition, const char *attachment)
+void	texture_init(void *p_mlx, t_texture *texture, const t_map *map);
+
+static void	ft_mlx_hook(void *win_ptr, int x_event, int (*func)(), void *param)
 {
-	if (condition)
-		return ;
-	ft_putendl_fd("Error", 2);
-	perror(attachment);
-	exit(1);
+	mlx_hook(win_ptr, x_event, NoEventMask, func, param);
 }
 
-static t_image	*texture_init_door(void *p_mlx, unsigned int *len)
+static void	events(t_game *game)
 {
-	const char *const	filename = "sprites/weekender-girl-heart.xgif";
-	char **const		strlist = ft_readfile(filename);
-	t_image				*animation;
+	const t_mlx	mlx = game->mlx;
 
-	cub3d_runtime_assertion(strlist != NULL, filename);
-	*len = ft_strcount(strlist);
-	animation = malloc(sizeof(*animation) * (*len));
-	if (animation == NULL)
-		return (NULL);
-	for (unsigned int i = 0; i < *len; i++)
-	{
-		animation[i] = image_readxpm(p_mlx, strlist[i],
-				putoffset_default, putoffset_default);
-		cub3d_runtime_assertion(image_good(&animation[i]), strlist[i]);
-		image_setalpha(&animation[i], ft_min(0xff * ((double)i / *len), 0xbf));
-	}
-	ft_strlistclear(strlist);
-	return (animation);
-}
-
-static void	texture_init_map(void *p_mlx, t_map_layers layers, const t_map *map)
-{
-	unsigned int	i;
-	const t_point	size = point_sub(map_scale_point(map->size),
-			(t_point){1, 1});
-	const t_point	putoffset = {0, 0};
-
-	i = -1;
-	while (++i < layer_count)
-	{
-		layers[i] = image_create(p_mlx, size, putoffset);
-		cub3d_runtime_assertion(image_good(&layers[i]), "texture_init_map");
-	}
-	map_layer_layout(&layers[LayerMap], map);
-}
-
-static void	texture_init(void *p_mlx, t_texture *texture, const t_map *map)
-{
-	{
-		texture->mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
-				putoffset_default, putoffset_default);
-		cub3d_runtime_assertion(image_good(&texture->mouse_icon),
-			"mouse_icon creation");
-	}
-	{
-		texture_init_map(p_mlx, texture->map_layers, map);
-	}
-	{
-		texture->walls[Invalid] = image_create(p_mlx, (t_point){1, 1}, (t_point){0, 0});
-		cub3d_runtime_assertion(image_good(&texture->walls[Invalid]),
-			"invalid side of wall creation");
-		texture->walls[Invalid].data[0] = 0x00000000;
-	}
-	{
-		texture->door_animation = texture_init_door(p_mlx, &texture->door_animation_len);
-		cub3d_runtime_assertion(texture->door_animation != NULL, "init_door");
-	}
+	mlx_do_key_autorepeatoff(mlx.p_mlx);
+	ft_mlx_hook(mlx.p_win, DestroyNotify, hook_button_close, EXIT_SUCCESS);
+	ft_mlx_hook(mlx.p_win, KeyPress, hook_key_press, game->keys);
+	ft_mlx_hook(mlx.p_win, KeyRelease, hook_key_release, game->keys);
+	ft_mlx_hook(mlx.p_win, Expose, hook_expose, game);
+	ft_mlx_hook(mlx.p_win, MotionNotify, hook_mouse_move, &game->mouse);
+	mlx_loop_hook(mlx.p_mlx, hook_loop, game);
 }
 
 /* Initialization and assertion */
@@ -98,34 +48,9 @@ int	game_init(const char *path, t_game *game)
 	cub3d_runtime_assertion(image_good(&game->screen_buffer),
 		"screen_buffer creation");
 	ft_intset((int *)game->keys, key_count, Release);
-	game->mouse.left_click = Release;
 	game->mlx.p_win = mlx_new_window(game->mlx.p_mlx, ScreenWidth, ScreenHeight,
 			"cub3d");
 	cub3d_runtime_assertion(game->mlx.p_win != NULL, "mlx_new_window");
+	events(game);
 	return (0);
-}
-
-static void	ft_mlx_hook(void *win_ptr, int x_event, int (*func)(), void *param)
-{
-	mlx_hook(win_ptr, x_event, NoEventMask, func, param);
-}
-
-void	events(t_game *game)
-{
-	const t_mlx	mlx = game->mlx;
-
-	/* hooks and loop */
-	mlx_do_key_autorepeatoff(mlx.p_mlx);
-	// for (int i = 2; i <= 36; i++)
-		// ft_mlx_hook(mlx.p_win, i, hook_log, NULL);
-	ft_mlx_hook(mlx.p_win, DestroyNotify, hook_button_close, EXIT_SUCCESS);
-	ft_mlx_hook(mlx.p_win, KeyPress, hook_key_press, game->keys);
-	ft_mlx_hook(mlx.p_win, KeyRelease, hook_key_release, game->keys);
-	ft_mlx_hook(mlx.p_win, ButtonPress, hook_mouse_click, &game->mouse);
-	ft_mlx_hook(mlx.p_win, ButtonRelease, hook_mouse_release, &game->mouse);
-	ft_mlx_hook(mlx.p_win, Expose, hook_expose, game);
-	ft_mlx_hook(mlx.p_win, MotionNotify, hook_mouse_move, &game->mouse.pos);
-	/* Gotta have to dig into this */
-	// mlx_do_sync(mlx.p_mlx);
-	mlx_loop_hook(mlx.p_mlx, hook_loop, game);
 }

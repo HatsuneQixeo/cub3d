@@ -1,6 +1,8 @@
 #ifndef ELEMENT_H
 # define ELEMENT_H
 
+# include "libft.h"
+
 typedef struct s_element
 {
 	char	*identifier;
@@ -16,8 +18,10 @@ enum e_table_index
 	IdxElemFloor,
 	IdxElemCeiling,
 	IdxElemUnknown,
-	IDX_ELEM_AMOUNT
+	idx_elem_amount
 };
+
+typedef t_list	*t_element_table[idx_elem_amount];
 
 t_element	*element_new(char *identifier, char *properties);
 void		element_del(void *content);

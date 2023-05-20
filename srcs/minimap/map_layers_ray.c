@@ -3,7 +3,7 @@
 
 static t_point	scale_ray_vector(const t_ray ray)
 {
-	const double	scaled_distance = ray.distance_traveled * (MapCellSize + 1);
+	const double	scaled_distance = ray.magnitude * (MapCellSize + 1);
 	const t_point	ray_vector = point_upscale(ray.direction, scaled_distance);
 
 	return (ray_vector);

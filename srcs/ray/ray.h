@@ -15,7 +15,7 @@ enum e_side
 typedef struct s_ray
 {
 	t_point		direction;
-	double		distance_traveled;
+	double		magnitude;
 	t_point		hit;
 	enum e_side	side;
 }			t_ray;

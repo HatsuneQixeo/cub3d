@@ -62,7 +62,7 @@ void	image_draw_circle(t_image *image, const t_colour colour,
 }
 
 void	draw_filled_circle(t_image *image, const t_colour colour,
-			const t_point center, const int radius)
+			const t_point center, const unsigned int radius)
 {
 	t_point	index;
 

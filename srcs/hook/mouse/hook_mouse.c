@@ -29,7 +29,6 @@ static void	debug_button(const char *format, ...)
 }
 
 #if 0
-
 typedef struct s_button_pair
 {
 	enum e_mouse	button;
@@ -69,7 +68,6 @@ int	hook_mouse_click(int button, int x, int y, t_mouse *mouse)
 	debug_button("mouse click: %d, x: %d, y: %d\n", button, x, y);
 	if (y < 0 || button != 1)
 		return (-1);
-	mouse->left_click = Press;
 	mouse->press = (t_point){.x = x, .y = y};
 	return (0);
 }
@@ -77,15 +75,13 @@ int	hook_mouse_click(int button, int x, int y, t_mouse *mouse)
 int	hook_mouse_release(int button, int x, int y, t_mouse *mouse)
 {
 	debug_button("mouse release: %d, x: %d, y: %d\n", button, x, y);
-	if (button != 1)
-		return (-1);
-	mouse->left_click = Release;
 	mouse->press = (t_point){.x = x, .y = y};
 	return (0);
 }
 
-int	hook_mouse_move(int x, int y, t_point *mouse_pos)
+int	hook_mouse_move(int x, int y, t_mouse *mouse)
 {
-	*mouse_pos = (t_point){.x = x, .y = y};
+	mouse->prev_pos = mouse->pos;
+	mouse->pos = (t_point){.x = x, .y = y};
 	return (0);
 }

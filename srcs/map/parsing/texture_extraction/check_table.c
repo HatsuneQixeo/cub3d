@@ -1,5 +1,4 @@
 #include "element.h"
-#include "libft.h"
 
 static void	*map_invalid_type(const void *ele)
 {
@@ -17,29 +16,29 @@ static void	*map_duplicate_element(const void *ele)
 }
 
 int	check_table(const char *idx_table[], const unsigned int length,
-			t_list *lst_table[])
+			t_element_table element_table)
 {
 	t_list			*lst_err;
 	unsigned int	i;
 
 	lst_err = NULL;
-	if (lst_table[IdxElemUnknown] != NULL)
-		lst_err = ft_lstmap(lst_table[IdxElemUnknown],
+	if (element_table[IdxElemUnknown] != NULL)
+		lst_err = ft_lstmap(element_table[IdxElemUnknown],
 				map_invalid_type, free);
 	i = length;
 	while (i--)
 	{
-		if (lst_table[i] == NULL)
+		if (element_table[i] == NULL)
 			ft_lstadd_front(&lst_err, ft_lstnew(
 					ft_strjoin("Missing Element: ", idx_table[i])));
-		else if (lst_table[i]->next != NULL)
+		else if (element_table[i]->next != NULL)
 			ft_lstadd_front(&lst_err, ft_lstmap(
-					lst_table[i], map_duplicate_element, free));
+					element_table[i], map_duplicate_element, free));
 	}
 	if (lst_err == NULL)
 		return (0);
 	ft_putendl_fd("Error", 2);
-	ft_lstiter(lst_err, lstshow_puterrendl);
+	ft_lstiter(lst_err, iter_puterrendl);
 	ft_lstclear(&lst_err, free);
 	return (-1);
 }

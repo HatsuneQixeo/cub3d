@@ -1,5 +1,4 @@
 #include "element.h"
-#include "libft.h"
 #include "colour.h"
 
 static int	colour_convert(char **strlist_values, t_colour *colour)
@@ -50,11 +49,11 @@ static int	ft_strtocolour(const char *properties, t_colour *colour)
 	return (ret);
 }
 
-int	get_environment_colour(t_list *lst_table[],
+int	get_environment_colour(t_element_table element_table,
 			t_colour *ceiling, t_colour *floor)
 {
-	const t_element	*ele_floor = lst_table[IdxElemFloor]->content;
-	const t_element	*ele_ceiling = lst_table[IdxElemCeiling]->content;
+	const t_element	*ele_floor = element_table[IdxElemFloor]->content;
+	const t_element	*ele_ceiling = element_table[IdxElemCeiling]->content;
 	const char		*str_floor = ele_floor->properties;
 	const char		*str_ceiling = ele_ceiling->properties;
 

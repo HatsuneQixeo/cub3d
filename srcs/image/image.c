@@ -47,43 +47,6 @@ t_image	image_dup(void *p_mlx, const t_image *src)
 	return (image);
 }
 
-t_image	image_crop(void *p_mlx, const t_image *src,
-			const t_point start, const t_point end)
-{
-	const t_point	size = point_sub(end, start);
-	t_image			image;
-	t_point			it;
-
-	image = image_create(p_mlx, size, (t_point){0, 0});
-	if (image.data == NULL)
-		return (image);
-	it.y = start.y - 1;
-	while (++it.y < end.y)
-	{
-		it.x = start.x - 1;
-		while (++it.x < end.x)
-			image_setpixel(&image, image_getpixel(src, it),
-				point_sub(it, start));
-	}
-	return (image);
-}
-
-
-int	image_good(const t_image *image)
-{
-	return (image->data != NULL);
-}
-
-void	image_setalpha(t_image *image, const t_colour_byte value)
-{
-	unsigned int		i;
-	const unsigned int	len = image->size.y * image->size.x;
-
-	i = -1;
-	while (++i < len)
-		colour_setmask(&image->data[i], value, ValueA);
-}
-
 /*
 	Not sure if the return value is really describing anything about the error
 
@@ -117,6 +80,42 @@ t_image	image_readxpm(void *p_mlx, const char *path,
 		.y = putoffset_y(image.size.y)
 	};
 	return (image);
+}
+
+t_image	image_crop(void *p_mlx, const t_image *src,
+			const t_point start, const t_point end)
+{
+	const t_point	size = point_sub(end, start);
+	t_image			image;
+	t_point			it;
+
+	image = image_create(p_mlx, size, (t_point){0, 0});
+	if (image.data == NULL)
+		return (image);
+	it.y = start.y - 1;
+	while (++it.y < end.y)
+	{
+		it.x = start.x - 1;
+		while (++it.x < end.x)
+			image_setpixel(&image, image_getpixel(src, it),
+				point_sub(it, start));
+	}
+	return (image);
+}
+
+int	image_good(const t_image *image)
+{
+	return (image->data != NULL);
+}
+
+void	image_setalpha(t_image *image, const t_colour_byte value)
+{
+	unsigned int		i;
+	const unsigned int	len = image->size.y * image->size.x;
+
+	i = -1;
+	while (++i < len)
+		colour_setmask(&image->data[i], value, ValueA);
 }
 
 void	image_destroy(void *p_mlx, t_image *image)

@@ -1,6 +1,6 @@
 #include "cubmap.h"
 
-static void	door_init(t_map *map, const t_list *lst_door, 
+static void	door_init(t_map *map, const t_list *lst_door,
 			const unsigned int animation_amount)
 {
 	const unsigned int	len = ft_lstsize(lst_door);

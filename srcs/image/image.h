@@ -70,7 +70,7 @@ void		image_draw_rectangle(t_image *image, t_colour colour,
 void		image_draw_circle(t_image *image, t_colour colour,
 				t_point center, unsigned int radius);
 void		draw_filled_circle(t_image *image, t_colour colour,
-				t_point center, int radius);
+				t_point center, unsigned int radius);
 void		image_fill_circle(t_image *image, t_colour colour);
 
 /* Image Render */

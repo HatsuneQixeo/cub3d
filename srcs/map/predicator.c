@@ -1,6 +1,5 @@
 #include "cubmap.h"
 
-
 /**
  * The identifier started off using t_ftis prototype,
  * but since these identifier are specifically designed for cubmap,
@@ -33,7 +32,8 @@ int	cubmap_iswalkable(const t_map *map, const t_point pos)
 		return (0);
 	else if (!cubmap_isdoor(map, pos))
 		return (1);
-	find = (const t_door **)ft_aafind((void **)map->arr_doors, &rounded_pos, cmp_doorpos);
+	find = (const t_door **)ft_aafind((void **)map->arr_doors,
+			&rounded_pos, cmp_doorpos);
 	ft_assert(find != NULL, "cubmap_iswalkable: could not find door at pos");
 	return ((*find)->is_open);
 }

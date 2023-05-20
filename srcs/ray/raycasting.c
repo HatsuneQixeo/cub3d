@@ -77,6 +77,6 @@ t_ray	raycast(const t_map *map, const t_point pos,
 	ray.direction = ray_direction;
 	ray.side = SideUnknown;
 	distance = go_until_hit(map, pos, &ray, target);
-	ray.distance_traveled = ft_dmax(0, ft_dmax(distance.y, distance.x));
+	ray.magnitude = ft_dmax(0, ft_dmax(distance.y, distance.x));
 	return (ray);
 }

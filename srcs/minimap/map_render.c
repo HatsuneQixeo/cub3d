@@ -30,7 +30,7 @@ static void	map_layer_destroy(void *p_mlx, t_map_layers layers)
 	tho the problem is more on put_minimap not asking for enough argument,
 	like where the image should be put.
 
-	Why do I still keep it this way, frankly I don't think it matters,
+	Why do I still keep it this way? Frankly I don't think it matters,
 	and it keeps thing simple for not having more files to maintain.
 */
 static void	map_layer_render(t_mlx mlx, const t_map_layers layers,
@@ -59,8 +59,9 @@ static void	layers_clean(void *p_mlx, t_map_layers layers)
 }
 
 /*
-	Due to having to clean every layers everytime it renders,
-	this function is incredibly slow if the map size is very big
+	Due to having to clean every layers with size of mapsize * (MapCellSize + 1)
+	everytime it renders,
+	this function is incredibly slow if the mapsize is very big
 */
 void	cub3d_map_render(t_game *game)
 {

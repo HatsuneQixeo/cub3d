@@ -16,29 +16,28 @@
 # include "hook.h"
 # include "point.h"
 
-// enum e_mouse_buttons_index
-// {
-// 	MouseLeft,
-// 	MouseRight,
-// 	MouseMiddle,
-// 	MouseScrollUp,
-// 	MouseScrollDown,
-// 	mouse_buttons_count
-// };
+enum e_mouse_buttons_index
+{
+	MouseLeft,
+	MouseRight,
+	MouseMiddle,
+	MouseScrollUp,
+	MouseScrollDown,
+	mouse_buttons_count
+};
 
-// typedef int	t_mouse_buttons[mouse_buttons_count];
+typedef enum e_input	t_mouse_buttons[mouse_buttons_count];
 
 typedef struct s_mouse
 {
-	t_point		pos;
-	t_point		prev_pos;
-	t_point		press;
-	// t_mouse_buttons	buttons;
-	int			left_click;
+	t_point			pos;
+	t_point			prev_pos;
+	t_point			press;
+	t_mouse_buttons	buttons;
 }			t_mouse;
 
 int	hook_mouse_click(int button, int x, int y, t_mouse *mouse);
 int	hook_mouse_release(int button, int x, int y, t_mouse *mouse);
-int	hook_mouse_move(int x, int y, t_point *mouse_pos);
+int	hook_mouse_move(int x, int y, t_mouse *mouse);
 
 #endif

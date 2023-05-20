@@ -35,7 +35,6 @@ static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 		line = strlist[i];
 		if (stris_empty(line) || stris_only(line, ft_isspace))
 			continue ;
-		/* Check if it's map start */
 		if (ft_isspace(line[0]) || ft_isdigit(line[0]))
 			break ;
 		ft_lstadd_back(lst_element, ft_lstnew(parse_element(line)));
@@ -44,8 +43,22 @@ static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 	map->size.y = ft_strcount(map->layout);
 	if (map->size.y != 0)
 		map->size.x = ft_strlen(map->layout[0]);
-	ft_aaiteri(map->layout, iteri_showstr);
-	point_log("size: ", map->size);
+	// ft_aaiteri(map->layout, iteri_showstr);
+	// point_log("size: ", map->size);
+}
+
+int	cubmap_valid_size(const t_map map)
+{
+	const char	*msg;
+
+	if (!(map.size.y != 0 && map.size.x != 0))
+		msg = "Empty Map";
+	else if (!(map.size.y >= 3 && map.size.x >= 3))
+		msg = "Map too small";
+	else
+		return (0);
+	ft_dprintf(2, "Error\n%s\n", msg);
+	return (-1);
 }
 
 int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
@@ -63,8 +76,10 @@ int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
 	lst_element = NULL;
 	getmap_lexer(file_content, &lst_element, map);
 	ft_strlistclear(file_content);
-	ft_lstiter(lst_element, element_show);
+	// ft_lstiter(lst_element, element_show);
 	status = cubmap_parse_texture(p_mlx, lst_element, texture);
+	if (status != -1)
+		status = cubmap_valid_size(*map);
 	if (status != -1)
 		status = -(cubmap_valid_door(*map)
 				+ cubmap_valid_unit(*map)

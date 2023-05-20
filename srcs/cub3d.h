@@ -49,7 +49,7 @@ typedef struct s_game
 	t_map		map;
 }			t_game;
 
-void	put_a_line(t_mlx mlx, t_point player, t_point vector);
+void	cub3d_runtime_assertion(int condition, const char *attachment);
 
 void	screen_rays(t_rays rays, const t_map *map, const char *target);
 
@@ -58,10 +58,12 @@ void	render_wall(t_image *screen_buffer, const t_rays rays,
 void	render_door(t_image *screen_buffer, const t_rays rays,
 			const t_image *animation, const t_map *map);
 
+void	update(t_game *game);
+void	render(t_game *game);
+
 int		hook_loop(t_game *game);
 
 int		game_init(const char *path, t_game *game);
-void	events(t_game *game);
 
 int		hook_expose(t_game *game);
 int		hook_loop(t_game *game);
