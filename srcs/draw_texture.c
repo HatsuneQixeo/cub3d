@@ -37,6 +37,19 @@ static int	get_image_x(const t_image *image, const t_ray *ray,
 	The reason why I'm not using setpixel and getpixel
 	 is because the function overhead slows down the performance
 	 pretty significantly
+
+	An example of getpixel and setpixel,
+	if I have to show the performance penalty during evaluation.
+		{
+			const t_colour	colour = image_getpixel(image, (t_point){
+					.x = var.image_x,
+					.y = ft_min(it_img_y, image->size.y - 1)
+				});
+			image_setpixel(screen_buffer, colour, (t_point){
+				.x = var.screen_x,
+				.y = screen_y
+			});
+		}
 */
 static void	draw_line(t_image *const screen_buffer, const t_image *const image,
 			const t_normslave var)
@@ -46,7 +59,6 @@ static void	draw_line(t_image *const screen_buffer, const t_image *const image,
 				(var.line_height + ScreenHeight) / 2));
 	double			screen_y;
 	double			it_img_y;
-	t_colour		colour;
 
 	screen_y = ft_dmax(0, (ScreenHeight - var.line_height) / 2);
 	it_img_y = (screen_y + ((var.line_height - ScreenHeight) / 2)) * image_step;
@@ -55,43 +67,12 @@ static void	draw_line(t_image *const screen_buffer, const t_image *const image,
 	screen_y = trunc(screen_y - 1);
 	while (++screen_y < screen_end_y)
 	{
-		/* Clean code */
-		if (1)
-		{
-			colour = image_getpixel(image, (t_point){
-					.x = var.image_x,
-					.y = ft_min(it_img_y, image->size.y - 1)
-				});
-			image_setpixel(screen_buffer, colour, (t_point){
-				.x = var.screen_x,
-				.y = screen_y
-			});
-		}
-		else if (01)
-		/* No function call */
-		{
-			screen_buffer->data[((int)(screen_y * screen_buffer->size.x) + var.screen_x)]
-			= image->data[(int)((ft_min(it_img_y, image->size.y - 1) * image->size.x)) + var.image_x];
-		}
-		else if (0)
-		/* Get only */
-		{
-			screen_buffer->data[((int)(screen_y * screen_buffer->size.x) + var.screen_x)]
-			= image_getpixel(image, (t_point){
-					.x = var.image_x,
-					.y = ft_min(it_img_y, image->size.y - 1)
-				});
-		}
-		else
-		/* Set only */
-		{
-			image_setpixel(screen_buffer,
-				image->data[(int)((ft_min(it_img_y, image->size.y - 1) * image->size.x)) + var.image_x],
-				(t_point){
-				.x = var.screen_x,
-				.y = screen_y
-			});
-		}
+		screen_buffer->data
+		[(int)((screen_y * screen_buffer->size.x) + var.screen_x)]
+			= image->data[(int)(
+				/* Space after pointer? :D */
+				((int)(it_img_y - (it_img_y >= image->size.y)) *image->size.x))
+			+ var.image_x];
 		it_img_y += image_step;
 	}
 }

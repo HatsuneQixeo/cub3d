@@ -3,7 +3,7 @@ NAME		:=	cub3d
 CC			:=	gcc
 CXXFLAGS	:=	-Wall -Werror -Wextra -g
 # CXXFLAGS	+=	-O3
-# CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
+CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 CXXFLAGS	+=	-D BENCHMARK=1
 # CXXFLAGS	+=	-D DRAW_WARNING=0
 # CXXFLAGS	+=	-D IMAGE_OUT_OF_BOUND_CHECK=1
@@ -25,7 +25,7 @@ SRCS		:=	$(shell find ${SRC_DIR} -name "*.c")
 HEADER		:=	$(shell find ${SRC_DIR} -name "*.h")
 HEADER		+=	libft/include/libft.h
 HEADER		+=	libft/experiment/exlib/include/exlib.h
-CFLAGS		:=	$(addprefix -I, $(dir ${HEADER})) -I mlx
+CFLAGS		:=	$(addprefix -I, $(dir ${HEADER})) -Imlx
 
 OBJ_DIR		:=	objs
 OBJS 		:=	$(patsubst ${SRC_DIR}%.c, ${OBJ_DIR}%.o, ${SRCS})

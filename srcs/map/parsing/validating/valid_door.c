@@ -5,7 +5,6 @@ static int	cubmap_isinvalid_door(const t_map *map, const t_point pos)
 	const unsigned int	x = pos.x;
 	const unsigned int	y = pos.y;
 	char **const		layout = map->layout;
-	const char			c = layout[y][x];
 
 	if (!cubmap_isdoor(map, pos))
 		return (0);

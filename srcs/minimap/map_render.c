@@ -9,15 +9,6 @@ void	map_layer_player(t_image *layer, const t_player *player);
 void	map_layer_door(t_image *layer, t_door **arr_door);
 void	map_layer_interact(t_image *layer, const t_player *player);
 
-static void	map_layer_destroy(void *p_mlx, t_map_layers layers)
-{
-	unsigned int	i;
-
-	i = -1;
-	while (++i < layer_count)
-		image_destroy(p_mlx, &layers[i]);
-}
-
 /*
 	Pos in put_minimap means the player_pos,
 	the image is always put at the top left corner.
@@ -43,7 +34,7 @@ static void	map_layer_render(t_mlx mlx, const t_map_layers layers,
 		put(mlx, &layers[i], pos);
 }
 
-static void	layers_clean(void *p_mlx, t_map_layers layers)
+static void	layers_clean(t_map_layers layers)
 {
 	unsigned int	i;
 
@@ -68,7 +59,7 @@ void	cub3d_map_render(t_game *game)
 	t_image *const	layers = game->texture.map_layers;
 
 	{
-		TIME("layer clean", layers_clean(game->mlx.p_mlx, layers));
+		TIME("layer clean", layers_clean(layers));
 		TIME("layer player", map_layer_player(&layers[LayerPlayer], &game->map.player));
 		TIME("layer interact", map_layer_interact(&layers[LayerInteract], &game->map.player));
 		if (SHOW_RAY)

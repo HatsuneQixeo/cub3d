@@ -2,3 +2,4 @@ Shearing, shifting start and end to create an illusion of up and down (Let's not
 more map test cases and related norm
 more efficient minimap, by cropping the size and clamp start and end
 mouse bug
+mouse focus
