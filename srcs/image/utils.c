@@ -14,7 +14,7 @@
 
 int	image_good(const t_image *image)
 {
-	return (image->data != NULL);
+	return (image->p_image != NULL);
 }
 
 void	image_destroy(void *p_mlx, t_image *image)

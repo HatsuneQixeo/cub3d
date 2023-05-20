@@ -110,7 +110,7 @@ enum e_input
 	Press
 };
 
-int	hook_button_close(const int status);
+int	hook_button_close(void);
 int	hook_log(const char *message);
 
 #endif

@@ -59,7 +59,7 @@ int	hook_loop(t_game *game)
 {
 	TIME("time total",
 		if (game->keys[Key_ESC] == Press)
-			hook_button_close(EXIT_SUCCESS);
+			hook_button_close();
 		mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 		/* Update entity like player and door */
 		update(game);
