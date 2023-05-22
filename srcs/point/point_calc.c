@@ -22,16 +22,6 @@ double	point_distance(const t_point point1, const t_point point2)
 	return (sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2)));
 }
 
-double	point_dot(const t_point point1, const t_point point2)
-{
-	return ((point1.x * point2.x) + (point1.y * point2.y));
-}
-
-double	point_cross(const t_point point1, const t_point point2)
-{
-	return ((point1.x * point2.y) - (point1.y * point2.x));
-}
-
 t_point	point_rotate(const t_point point, const double angle)
 {
 	const t_point	new_point = {
@@ -40,4 +30,12 @@ t_point	point_rotate(const t_point point, const double angle)
 	};
 
 	return (new_point);
+}
+
+/**
+ * @note 0 is east
+ */
+double	point_angle(const t_point point)
+{
+	return (atan2(point.y, point.x));
 }

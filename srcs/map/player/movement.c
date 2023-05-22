@@ -93,7 +93,7 @@ void	player_move(t_player *player, const t_point direction, const t_map *map)
 		scale = 0.5;
 	else
 		scale = 0.75;
-	vector = point_rotate(direction, point_angle(player->dir));
+	vector = point_rotate(direction, point_angle(player->dir) + M_PI_2);
 	vector = point_upscale(vector, scale * 0.1);
 	if (!COLLISION)
 		player->pos = point_add(player->pos, vector);

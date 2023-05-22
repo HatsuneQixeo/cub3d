@@ -34,12 +34,6 @@ void	point_log(const char *prefix, const t_point point)
 	printf("%s[x: %f, y: %f]\n", prefix, point.x, point.y);
 }
 
-double	point_angle(const t_point point)
-{
-	/* Remember to change this back? Or maybe just leave it as it is? */
-	return (atan2(point.y, point.x) + M_PI_2);
-}
-
 t_point	point_sign(const t_point direction)
 {
 	const t_point	point = {
