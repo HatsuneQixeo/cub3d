@@ -14,7 +14,6 @@
 # define CUB3D_H
 
 # include "libft.h"
-# include "exlib.h"
 # include "point.h"
 # include "hook_key.h"
 # include "hook_mouse.h"
@@ -65,7 +64,6 @@ int		hook_loop(t_game *game);
 
 int		game_init(const char *path, t_game *game);
 
-int		hook_expose(t_game *game);
 int		hook_loop(t_game *game);
 
 void	cub3d_map_render(t_game *game);

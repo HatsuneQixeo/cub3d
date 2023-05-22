@@ -26,7 +26,6 @@ static t_list	*convert_core(char **strlist_values, t_colour_byte arr[4])
 	return (lst_err);
 }
 
-
 static int	colour_convert(char **strlist_values, t_colour *colour)
 {
 	t_colour_byte	arr[4];

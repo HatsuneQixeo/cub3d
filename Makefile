@@ -24,7 +24,7 @@ SRCS		:=	$(shell find ${SRC_DIR} -name "*.c")
 
 HEADER		:=	$(shell find ${SRC_DIR} -name "*.h")
 HEADER		+=	libft/include/libft.h
-HEADER		+=	libft/experiment/exlib/include/exlib.h
+# HEADER		+=	libft/experiment/exlib/include/exlib.h
 CFLAGS		:=	$(addprefix -I, $(dir ${HEADER})) -Imlx
 
 OBJ_DIR		:=	objs
@@ -83,10 +83,14 @@ thisre:
 	${RM} -r ${NAME} ${OBJ_DIR}
 	make all
 
-NORM_CHECK	:=	${SRC_DIR} $(filter-out libft/experiment/exlib/include/exlib.h, ${HEADER})
+NORM_CHECK	:=	${SRCS} $(filter-out libft/experiment/exlib/include/exlib.h, ${HEADER})
 
 norm:
 	@norminette ${NORM_CHECK}
 
 normltr:
 	@norminette ${NORM_CHECK} | grep -v INVALID_HEADER
+
+check:
+	touch srcs/main.c
+	make all

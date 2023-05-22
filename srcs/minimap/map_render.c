@@ -82,14 +82,12 @@ void	cub3d_map_render(t_game *game)
 	const t_minimapdata	data = getminimapdata(game->texture.map.size,
 			game->map.player.pos);
 
-	TIME("Init", map_layers_init(game->mlx.p_mlx, layers));
-	{
-		TIME("layer player", map_layer_player(&layers[LayerPlayer], game->map.player.dir, data));
-		TIME("layer interact", map_layer_interact(&layers[LayerInteract], game->map.player.target, data));
-		if (SHOW_RAY)
-			map_layer_ray(&layers[LayerRay], game->rays, data);
-		TIME("layer door", map_layer_door(&layers[LayerDoor], game->map.arr_doors, data));
-		TIME("layer map", map_layer_map(&layers[LayerMap], &game->texture.map, &game->map, data));
-	}
+	map_layers_init(game->mlx.p_mlx, layers);
+	map_layer_player(&layers[LayerPlayer], game->map.player.dir, data);
+	map_layer_interact(&layers[LayerInteract], game->map.player.target, data);
+	if (SHOW_RAY)
+		map_layer_ray(&layers[LayerRay], game->rays, data);
+	map_layer_door(&layers[LayerDoor], game->map.arr_doors, data);
+	map_layer_map(&layers[LayerMap], &game->texture.map, &game->map, data);
 	map_layers_render(game->mlx, layers);
 }

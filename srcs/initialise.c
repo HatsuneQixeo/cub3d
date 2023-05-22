@@ -14,6 +14,18 @@
 
 void	texture_init(void *p_mlx, t_texture *texture, const t_map *map);
 
+static int	hook_expose(t_game *game)
+{
+	int	x;
+	int	y;
+
+	mlx_mouse_get_pos(game->mlx.p_win, &x, &y);
+	game->mouse.pos = (t_point){.x = x, .y = y};
+	game->mouse.prev_pos = game->mouse.pos;
+	game->mouse.focus = 1;
+	return (0);
+}
+
 static void	ft_mlx_hook(void *win_ptr, int x_event, int (*func)(), void *param)
 {
 	mlx_hook(win_ptr, x_event, NoEventMask, func, param);

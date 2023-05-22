@@ -12,18 +12,6 @@
 
 #include "cub3d.h"
 
-int	hook_expose(t_game *game)
-{
-	int	x;
-	int	y;
-
-	mlx_mouse_get_pos(game->mlx.p_win, &x, &y);
-	game->mouse.pos = (t_point){.x = x, .y = y};
-	game->mouse.prev_pos = game->mouse.pos;
-	game->mouse.focus = 1;
-	return (0);
-}
-
 int	display_mouse(const t_mouse mouse)
 {
 	static int	custom_cursor;
@@ -58,39 +46,30 @@ void	mouse_focus(void *p_win, t_mouse *mouse, const int focus)
 	if the pixel is the same as the last image,
 	probably did so for optimisation purpose?
 */
-void	image_copy_opaque(t_image *dst, const t_image *src)
-{
-	unsigned int		i;
-	const unsigned int	len = dst->size.x * dst->size.y;
+// void	image_copy_opaque(t_image *dst, const t_image *src)
+// {
+// 	unsigned int		i;
+// 	const unsigned int	len = dst->size.x * dst->size.y;
 
-	i = -1;
-	while (++i < len)
-		if (colour_getmask(src->data[i], ValueA) != 0xff)
-			dst->data[i] = src->data[i];
-}
+// 	i = -1;
+// 	while (++i < len)
+// 		if (colour_getmask(src->data[i], ValueA) != 0xff)
+// 			dst->data[i] = src->data[i];
+// }
 
 // ft_printf("くるり廻る廻る廻る世界\n");
 int	hook_loop(t_game *game)
 {
-	TIME("time total",
-		if (game->keys[Key_ESC] == Press)
-			hook_button_close();
-		// game->mouse.focus = (game->keys[Key_LCtrl] != Press
-		// 		&& game->keys[Key_RCtrl] != Press);
-		mouse_focus(game->mlx.p_win, &game->mouse, game->keys[Key_LCtrl] != Press
-				&& game->keys[Key_RCtrl] != Press);
-		mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
-		/* Update entity like player and door */
-		update(game);
-		render(game);
-		/* Minimap */
-		TIME("minimap", cub3d_map_render(game));
-		/* Put the temporary cursor */
-		if (display_mouse(game->mouse))
-			image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
-	);
-	if (BENCHMARK)
-		printf("\n");
+	if (game->keys[Key_ESC] == Press)
+		hook_button_close();
+	mouse_focus(game->mlx.p_win, &game->mouse, game->keys[Key_LCtrl] != Press
+		&& game->keys[Key_RCtrl] != Press);
+	mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
+	update(game);
+	render(game);
+	cub3d_map_render(game);
+	if (display_mouse(game->mouse))
+		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
 	return (0);
 }
 

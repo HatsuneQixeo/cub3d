@@ -18,8 +18,6 @@
 # include <math.h>
 # include "libmath.h"
 
-# define POINT_DEBUG(point)	point_log(#point, point)
-
 typedef struct s_point
 {
 	double	x;

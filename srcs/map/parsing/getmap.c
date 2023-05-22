@@ -43,8 +43,6 @@ static void	getmap_lexer(char **strlist, t_list **lst_element, t_map *map)
 	map->size.y = ft_strcount(map->layout);
 	if (map->size.y != 0)
 		map->size.x = ft_strlen(map->layout[0]);
-	// ft_aaiteri(map->layout, iteri_showstr);
-	// point_log("size: ", map->size);
 }
 
 int	cubmap_valid_size(const t_map map)
@@ -76,7 +74,6 @@ int	cubmap_getmap(void *p_mlx, const char *path, t_map *map, t_texture *texture)
 	lst_element = NULL;
 	getmap_lexer(file_content, &lst_element, map);
 	ft_strlistclear(file_content);
-	// ft_lstiter(lst_element, element_show);
 	status = cubmap_parse_texture(p_mlx, lst_element, texture);
 	if (status != -1)
 		status = cubmap_valid_size(*map);
