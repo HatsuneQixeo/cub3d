@@ -1,35 +1,47 @@
 #include "element.h"
 #include "colour.h"
 
-static int	colour_convert(char **strlist_values, t_colour *colour)
+static t_list	*convert_core(char **strlist_values, t_colour_byte arr[4])
 {
-	t_colour_byte	arr[4];
-	int				ret;
 	unsigned int	i;
 	long			value;
+	t_list			*lst_err;
 
-	ft_bzero(arr, sizeof(arr));
-	ret = 0;
-	i = -1;
-	while (strlist_values[++i] != NULL)
+	lst_err = NULL;
+	i = ft_strcount(strlist_values);
+	while (i--)
 	{
-		/* Note: Does not print out Error\n */
 		if (!stris_numeric(strlist_values[i]))
-			ret = ft_dprintf(2, "Invalid value: %s\n", strlist_values[i]);
+			ft_lstadd_front(&lst_err, ft_lstnew(
+					ft_strjoin("Invalid value: ", strlist_values[i])));
 		else
 		{
-			/* Still not protected, atoi/atol itself needs to report error */
-			value = ft_atol(strlist_values[i]);
-			if (!(0 <= value && value <= UCHAR_MAX))
-				ret = ft_dprintf(2, "Value out of range: %s\n", strlist_values[i]);
+			if (ft_atol_range(strlist_values[i], &value, 0, UCHAR_MAX) == -1)
+				ft_lstadd_front(&lst_err, ft_lstnew(
+						ft_strjoin("Value out of range: ", strlist_values[i])));
 			else
 				arr[i] = value;
 		}
 	}
-	if (ret != 0)
-		return (-1);
-	*colour = colour_from_rgba(arr[0], arr[1], arr[2], arr[3]);
-	return (0);
+	return (lst_err);
+}
+
+
+static int	colour_convert(char **strlist_values, t_colour *colour)
+{
+	t_colour_byte	arr[4];
+	t_list			*lst_err;
+
+	lst_err = convert_core(strlist_values, arr);
+	if (lst_err == NULL)
+	{
+		*colour = colour_from_rgba(arr[0], arr[1], arr[2], arr[3]);
+		return (0);
+	}
+	ft_putendl_fd("Error", 2);
+	ft_lstiter(lst_err, iter_puterrendl);
+	ft_lstclear(&lst_err, free);
+	return (-1);
 }
 
 static int	ft_strtocolour(const char *properties, t_colour *colour)
@@ -41,8 +53,7 @@ static int	ft_strtocolour(const char *properties, t_colour *colour)
 
 	status = -1;
 	if (len != expected_amount)
-		/* Note: Does not print out Error\n */
-		ft_dprintf(2, "Expected %.*s value: %s\n",
+		ft_dprintf(2, "Error\nExpected %.*s value: %s\n",
 			expected_amount + (expected_amount - 1), "R,G,B,A", properties);
 	else
 		status = colour_convert(strlist_values, colour);
