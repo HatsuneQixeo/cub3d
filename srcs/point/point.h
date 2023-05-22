@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
+# include "libmath.h"
 
 # define POINT_DEBUG(point)	point_log(#point, point)
 
@@ -31,6 +32,11 @@ double	point_distance(t_point point1, t_point point2);
 double	point_dot(t_point point1, t_point point2);
 double	point_cross(t_point point1, t_point point2);
 t_point	point_rotate(t_point point, double angle);
+
+/* Minmax */
+t_point	point_min(t_point point, t_point min);
+t_point	point_max(t_point point, t_point max);
+t_point	point_minmax(t_point min, t_point point, t_point max);
 
 /* Operators */
 t_point	point_add(t_point point1, t_point point2);
