@@ -52,6 +52,7 @@ int	game_init(const char *path, t_game *game)
 	game->mlx.p_win = mlx_new_window(game->mlx.p_mlx, ScreenWidth, ScreenHeight,
 			"cub3d");
 	cub3d_runtime_assertion(game->mlx.p_win != NULL, "mlx_new_window");
+	game->mouse.focus = 1;
 	events(game);
 	return (0);
 }

@@ -58,13 +58,13 @@ static double	input_angle(void *p_win, t_mouse *mouse, const t_keys keys)
 	};
 	const double	key_direction = ((keys[Key_Right] == Press)
 			- (keys[Key_Left] == Press)) * 0.039;
-	// const double	mouse_speed = (mouse->pos.x - mouse->prev_pos.x)
-	// 	* (.0831 * .39 * .39 * .39);
-	const double	mouse_speed = 0;
+	const double	mouse_speed = (mouse->pos.x - screen_center.x)
+		* (.0831 * .39 * .39 * .39);
 
-	// mlx_mouse_move(p_win, screen_center.x, screen_center.y);
+	if (!mouse->focus)
+		return (key_direction);
+	mlx_mouse_move(p_win, screen_center.x, screen_center.y);
 	mouse->pos = screen_center;
-	mouse->prev_pos = screen_center;
 	return (key_direction + mouse_speed);
 }
 

@@ -28,41 +28,38 @@ static void	debug_button(const char *format, ...)
 	va_end(args);
 }
 
-#if 0
+// typedef struct s_button_pair
+// {
+// 	enum e_mouse	button;
+// 	int				button_index;
+// }				t_button_pair;
 
-typedef struct s_button_pair
-{
-	enum e_mouse	button;
-	int				button_index;
-}				t_button_pair;
+// int	find_button(unsigned int i, const void *arr_button_pair,
+// 			const void *p_button)
+// {
+// 	const t_button_pair	*button_pair = arr_button_pair;
 
-int	find_button(unsigned int i, const void *arr_button_pair,
-			const void *p_button)
-{
-	const t_button_pair	*button_pair = arr_button_pair;
+// 	return (button_pair[i].button == *(const int *)p_button);
+// }
 
-	return (button_pair[i].button == *(const int *)p_button);
-}
+// void	mouse_action(t_mouse_buttons buttons, int button,
+// 			enum e_input mouse_action)
+// {
+// 	const t_button_pair	button_pairs[] = {
+// 	{.button = 1, .button_index = MouseLeft},
+// 	{.button = 2, .button_index = MouseRight},
+// 	{.button = 3, .button_index = MouseMiddle},
+// 	{.button = 4, .button_index = MouseScrollUp},
+// 	{.button = 5, .button_index = MouseScrollDown},
+// 	};
+// 	const unsigned int	len = (sizeof(button_pairs) / sizeof(button_pairs[0]));
+// 	const size_t	find = ft_arrfind(button_pairs, len, find_button, &button);
 
-void	mouse_action(t_mouse_buttons buttons, int button,
-			enum e_input mouse_action)
-{
-	const t_button_pair	button_pairs[] = {
-	{.button = 1, .button_index = MouseLeft},
-	{.button = 2, .button_index = MouseRight},
-	{.button = 3, .button_index = MouseMiddle},
-	{.button = 4, .button_index = MouseScrollUp},
-	{.button = 5, .button_index = MouseScrollDown},
-	};
-	const size_t		len = (sizeof(button_pairs) / sizeof(button_pairs[0]));
-	const size_t		find = ft_arrfind(button_pairs, len, find_button, &button);
-
-	if (find == NOTFOUND)
-		debug_mouse(" undefined mouse button: %d\n", button);
-	else
-		buttons[button_pairs[find].button_index] = mouse_action;
-}
-#endif
+// 	if (find == NOTFOUND)
+// 		debug_mouse(" undefined mouse button: %d\n", button);
+// 	else
+// 		buttons[button_pairs[find].button_index] = mouse_action;
+// }
 
 int	hook_mouse_click(int button, int x, int y, t_mouse *mouse)
 {
@@ -82,12 +79,6 @@ int	hook_mouse_release(int button, int x, int y, t_mouse *mouse)
 
 int	hook_mouse_move(int x, int y, t_mouse *mouse)
 {
-	POINT_DEBUG(mouse->prev_pos);
-	POINT_DEBUG(mouse->pos);
-	// mouse->prev_pos = mouse->pos;
 	mouse->pos = (t_point){.x = x, .y = y};
-	POINT_DEBUG(mouse->prev_pos);
-	POINT_DEBUG(mouse->pos);
-	printf("\n");
 	return (0);
 }

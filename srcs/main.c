@@ -20,6 +20,7 @@ int	hook_expose(t_game *game)
 	mlx_mouse_get_pos(game->mlx.p_win, &x, &y);
 	game->mouse.pos = (t_point){.x = x, .y = y};
 	game->mouse.prev_pos = game->mouse.pos;
+	game->mouse.focus = 1;
 	return (0);
 }
 
@@ -35,6 +36,20 @@ int	display_mouse(const t_mouse mouse)
 		(int (*[])(void)){mlx_mouse_show, mlx_mouse_hide}[custom_cursor]();
 	}
 	return (custom_cursor);
+}
+
+void	mouse_focus(void *p_win, t_mouse *mouse, const int focus)
+{
+	const t_point	screen_center = {
+		.x = ScreenWidth / 2,
+		.y = ScreenHeight / 2
+	};
+
+	if (mouse->focus == focus)
+		return ;
+	mouse->focus = focus;
+	mlx_mouse_move(p_win, screen_center.x, screen_center.y);
+	mouse->pos = screen_center;
 }
 
 /*
@@ -60,6 +75,10 @@ int	hook_loop(t_game *game)
 	TIME("time total",
 		if (game->keys[Key_ESC] == Press)
 			hook_button_close();
+		// game->mouse.focus = (game->keys[Key_LCtrl] != Press
+		// 		&& game->keys[Key_RCtrl] != Press);
+		mouse_focus(game->mlx.p_win, &game->mouse, game->keys[Key_LCtrl] != Press
+				&& game->keys[Key_RCtrl] != Press);
 		mlx_clear_window(game->mlx.p_mlx, game->mlx.p_win);
 		/* Update entity like player and door */
 		update(game);

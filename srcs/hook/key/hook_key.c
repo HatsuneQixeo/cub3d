@@ -36,6 +36,17 @@ static int	find_key(unsigned int i, const void *arr_keycode,
 	return (arr[i] == *(int *)p_keycode);
 }
 
+/*
+	If you're sharp,
+	you probably noticed that the Key_RCtrl is defined in header but not here.
+
+	If you're sharper,
+	you would notice that it's because this function has exactly 24 lines.
+
+	Although if I have strong reason to include it,
+	I could just multiply the sizeof(t_keys) in bzero with the expression,
+	but I don't.
+*/
 static int	key_action(t_keys keys, const int keycode,
 				const enum e_input key_action)
 {
@@ -47,7 +58,8 @@ static int	key_action(t_keys keys, const int keycode,
 	[Key_ESC] = 53,
 	[Key_Left] = 123,
 	[Key_Right] = 124,
-	[Key_E] = 14
+	[Key_E] = 14,
+	[Key_LCtrl] = 259,
 	};
 	const unsigned int	len = (sizeof(key_pairs) / sizeof(key_pairs[0]));
 	const size_t		find = ft_arrfind(key_pairs, len, find_key, &keycode);
@@ -56,6 +68,8 @@ static int	key_action(t_keys keys, const int keycode,
 		debug_key(" undefined key: %d\n", keycode);
 	else
 	{
+		if (find == Key_LCtrl)
+			ft_bzero(keys, sizeof(t_keys));
 		keys[find] = key_action;
 		debug_key(" key: %d\n", keycode);
 		return (0);

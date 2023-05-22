@@ -1,5 +1,3 @@
-Shearing, shifting start and end to create an illusion of up and down (Let's not, Think I've spent enough time on this project, don't have any idea how to handle at close space either)
 more map test cases and related norm
-more efficient minimap, by cropping the size and clamp start and end
-mouse bug
-mouse focus
+norm cleanup
+search and remove system

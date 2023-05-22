@@ -34,6 +34,7 @@ typedef struct s_mouse
 	t_point			prev_pos;
 	t_point			press;
 	t_mouse_buttons	buttons;
+	int				focus;
 }			t_mouse;
 
 int	hook_mouse_click(int button, int x, int y, t_mouse *mouse);
