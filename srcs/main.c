@@ -6,10 +6,9 @@
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 22:58:08 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
+/*   Updated: 2023/05/23 03:46:06 by hqixeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "cub3d.h"
 
 int	display_mouse(const t_mouse mouse)

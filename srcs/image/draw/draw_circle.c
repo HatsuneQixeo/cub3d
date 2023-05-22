@@ -6,10 +6,9 @@
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 23:24:46 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/12 23:24:46 by hqixeo           ###   ########.fr       */
+/*   Updated: 2023/05/23 03:46:05 by hqixeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "image.h"
 
 static void	doro(t_image *image, const t_colour colour, const t_point center,

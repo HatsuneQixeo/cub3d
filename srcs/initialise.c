@@ -6,10 +6,9 @@
 /*   By: hqixeo <hqixeo@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 23:24:47 by hqixeo            #+#    #+#             */
-/*   Updated: 2023/04/12 23:24:47 by hqixeo           ###   ########.fr       */
+/*   Updated: 2023/05/23 03:46:06 by hqixeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "cub3d.h"
 
 void	texture_init(void *p_mlx, t_texture *texture, const t_map *map);
