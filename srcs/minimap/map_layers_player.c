@@ -1,16 +1,5 @@
 #include "minimap.h"
 
-// t_point	point_clamp(const t_point point,
-// 			const t_point min, const t_point max)
-// {
-// 	const t_point	new_point = {
-// 		.x = ft_dminmax(min.x, point.x, max.x),
-// 		.y = ft_dminmax(min.y, point.y, max.y),
-// 	};
-
-// 	return (new_point);
-// }
-
 // t_point	point_multiply(const t_point a, const t_point b)
 // {
 // 	const t_point	point = {
@@ -44,14 +33,14 @@
 // 	image_draw_line(layer, colour, map_pos, end);
 // }
 
-void	map_layer_player(t_image *layer, const t_player *player)
+void	map_layer_player(t_image *layer, const t_point dir,
+			const t_minimapdata data)
 {
-	const t_point	map_pos = point_apply(map_scale_point(player->pos), trunc);
 	const t_colour	colour = colour_from_percentage(.2, .8, .8, .4);
 
-	if (!point_inbound(map_pos, layer->size))
+	if (!point_inbound(data.player_pos, layer->size))
 		return ;
 	image_draw_line(layer, colour_from_rgba(100, 200, 200, 10),
-		map_pos, point_add(map_pos, map_scale_point(player->dir)));
-	image_draw_circle(layer, colour, map_pos, 9);
+		data.player_pos, point_add(data.player_pos, map_scale_point(dir)));
+	image_draw_circle(layer, colour, data.player_pos, 9);
 }

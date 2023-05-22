@@ -1,5 +1,26 @@
 #include "cub3d.h"
 
+static void	map_draw_layout(t_image *img_map, const t_map *map)
+{
+	const t_colour	wall_colour = colour_from_percentage(.70, .90, .90, .70);
+	const t_colour	space_colour = colour_from_percentage(.20, .30, .40, .70);
+	t_point			it;
+
+	image_fill(img_map, colour_from_percentage(.0, .20, .20, .50));
+	it.y = -1;
+	while (++it.y < map->size.y)
+	{
+		it.x = -1;
+		while (++it.x < map->size.x)
+		{
+			if (map->layout[(int)it.y][(int)it.x] == Wall)
+				map_draw_tile(img_map, wall_colour, it);
+			else
+				map_draw_tile(img_map, space_colour, it);
+		}
+	}
+}
+
 static t_image	*texture_init_door(void *p_mlx, unsigned int *len)
 {
 	const char *const	filename = "sprites/weekender-girl-heart.xgif";
@@ -24,19 +45,14 @@ static t_image	*texture_init_door(void *p_mlx, unsigned int *len)
 	return (animation);
 }
 
-static void	texture_init_map(void *p_mlx, t_map_layers layers, const t_map *map)
+static void	texture_init_map(void *p_mlx, t_image *img_map, const t_map *map)
 {
-	unsigned int	i;
 	const t_point	size = point_sub(map_scale_point(map->size),
 			(t_point){1, 1});
 
-	i = -1;
-	while (++i < layer_count)
-	{
-		layers[i] = image_create(p_mlx, size, (t_point){0, 0});
-		cub3d_runtime_assertion(image_good(&layers[i]), "texture_init_map");
-	}
-	map_layer_layout(&layers[LayerMap], map);
+	*img_map = image_create(p_mlx, size, (t_point){0, 0});
+	cub3d_runtime_assertion(image_good(img_map), "texture_init_map");
+	map_draw_layout(img_map, map);
 }
 
 void	texture_init(void *p_mlx, t_texture *texture, const t_map *map)
@@ -48,7 +64,7 @@ void	texture_init(void *p_mlx, t_texture *texture, const t_map *map)
 			"mouse_icon creation");
 	}
 	{
-		texture_init_map(p_mlx, texture->map_layers, map);
+		texture_init_map(p_mlx, &texture->map, map);
 	}
 	{
 		texture->walls[Invalid] = image_create(p_mlx, (t_point){1, 1},

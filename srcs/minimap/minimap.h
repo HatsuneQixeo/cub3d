@@ -11,11 +11,35 @@ enum e_minimap_size
 	MinimapSize = MapCellSize * MinimapCell
 };
 
-void	put_minimap(t_mlx mlx, const t_image *map, t_point player_pos);
+enum e_layer_index
+{
+	LayerPlayer,
+	LayerRay,
+	LayerInteract,
+	LayerDoor,
+	LayerMap,
+	layer_count
+};
+
+typedef t_image	t_map_layers[layer_count];
+
+/*
+	Why isn't there a t_pointrange instead of this in case you wonder?
+	This project is messy enough,
+	and I feel really discouraged to add any more files.
+*/
+typedef struct s_minimapdata
+{
+	t_point	begin;
+	t_point	player_pos;
+	t_point	end;
+}			t_minimapdata;
 
 t_point	map_scale_point(t_point point);
 void	map_draw_tile(t_image *map, t_colour colour, t_point pos);
 
-void	map_layer_layout(t_image *layer, const t_map *map);
+void	map_layer_player(t_image *layer, t_point dir, t_minimapdata data);
+void	map_layer_door(t_image *layer, t_door **arr_door, t_minimapdata data);
+void	map_layer_interact(t_image *layer, t_point target, t_minimapdata data);
 
 #endif

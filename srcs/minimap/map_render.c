@@ -4,67 +4,92 @@
 # define SHOW_RAY	0
 #endif
 
-void	map_layer_ray(t_image *layer, const t_rays rays, t_point start);
-void	map_layer_player(t_image *layer, const t_player *player);
-void	map_layer_door(t_image *layer, t_door **arr_door);
-void	map_layer_interact(t_image *layer, const t_player *player);
+void	map_layer_ray(t_image *layer, const t_rays rays, t_minimapdata data);
 
-/*
-	Pos in put_minimap means the player_pos,
-	the image is always put at the top left corner.
+static t_minimapdata	getminimapdata(const t_point img_mapsize,
+			const t_point player_pos)
+{
+	const t_point	player_map_pos = point_apply(
+			map_scale_point(player_pos), trunc);
+	t_minimapdata	data;
 
-	Pos in image_put means the position the image will be put at,
-	adding the implicit variable of offset in the image.
+	data.begin = (t_point){
+		.x = ft_max(0, player_map_pos.x - (MinimapSize / 2)),
+		.y = ft_max(0, player_map_pos.y - (MinimapSize / 2))
+	};
+	data.end = (t_point){
+		.x = ft_min(img_mapsize.x, data.begin.x + MinimapSize),
+		.y = ft_min(img_mapsize.y, data.begin.y + MinimapSize)
+	};
+	if (data.end.x == img_mapsize.x)
+		data.begin.x = ft_max(0, img_mapsize.x - MinimapSize);
+	if (data.end.y == img_mapsize.y)
+		data.begin.y = ft_max(0, img_mapsize.y - MinimapSize);
+	data.player_pos = point_apply(point_sub(player_map_pos, data.begin), trunc);
+	return (data);
+}
 
-	It's probably a bad practice to group functions with same parameter
-	but takes the value in different context,
-	tho the problem is more on put_minimap not asking for enough argument,
-	like where the image should be put.
-
-	Why do I still keep it this way? Frankly I don't think it matters,
-	and it keeps thing simple for not having more files to maintain.
-*/
-static void	map_layer_render(t_mlx mlx, const t_map_layers layers,
-			const t_point pos, void (*put)(t_mlx, const t_map_layers, t_point))
+static void	map_layers_render(t_mlx mlx, const t_map_layers layers)
 {
 	unsigned int	i;
 
 	i = layer_count;
 	while (i--)
-		put(mlx, &layers[i], pos);
+		image_put(mlx, &layers[i], (t_point){0, 0});
 }
 
-static void	layers_clean(t_map_layers layers)
+/*
+	Excluding the map layer is something that came to mind
+	 for a little bit of optimisation,
+	but there would be black frame
+	 if the minimap is larger than the actual map size
+*/
+static void	map_layers_init(void *p_mlx, t_map_layers layers)
 {
 	unsigned int	i;
+	const t_point	size = {MinimapSize, MinimapSize};
 
 	i = -1;
 	while (++i < layer_count)
 	{
-		if (i == LayerMap)
-			continue ;
-		// point_log("size", layers[i].size);
-		// printf("area: %d\n", (int)(layers[i].size.y * layers[i].size.x));
+		if (!image_good(&layers[i]))
+		{
+			layers[i] = image_create(p_mlx, size, (t_point){0, 0});
+			cub3d_runtime_assertion(image_good(&layers[i]), "layers_init");
+		}
 		image_clean(&layers[i]);
 	}
 }
 
-/*
-	Due to having to clean every layers with size of mapsize * (MapCellSize + 1)
-	everytime it renders,
-	this function is incredibly slow if the mapsize is very big
-*/
+static void	map_layer_map(t_image *layer, const t_image *img_map,
+			const t_map *map, const t_minimapdata data)
+{
+	t_point	it;
+
+	it.y = data.begin.y - 1;
+	while (++it.y < data.end.y)
+	{
+		it.x = data.begin.x - 1;
+		while (++it.x < data.end.x)
+			image_setpixel(layer, image_getpixel(img_map, it),
+				point_sub(it, data.begin));
+	}
+}
+
 void	cub3d_map_render(t_game *game)
 {
-	t_image *const	layers = game->texture.map_layers;
+	static t_map_layers	layers;
+	const t_minimapdata	data = getminimapdata(game->texture.map.size,
+			game->map.player.pos);
 
+	TIME("Init", map_layers_init(game->mlx.p_mlx, layers));
 	{
-		TIME("layer clean", layers_clean(layers));
-		TIME("layer player", map_layer_player(&layers[LayerPlayer], &game->map.player));
-		TIME("layer interact", map_layer_interact(&layers[LayerInteract], &game->map.player));
+		TIME("layer player", map_layer_player(&layers[LayerPlayer], game->map.player.dir, data));
+		TIME("layer interact", map_layer_interact(&layers[LayerInteract], game->map.player.target, data));
 		if (SHOW_RAY)
-			map_layer_ray(&layers[LayerRay], game->rays, game->map.player.pos);
-		TIME("layer door", map_layer_door(&layers[LayerDoor], game->map.arr_doors));
+			map_layer_ray(&layers[LayerRay], game->rays, data);
+		TIME("layer door", map_layer_door(&layers[LayerDoor], game->map.arr_doors, data));
+		TIME("layer map", map_layer_map(&layers[LayerMap], &game->texture.map, &game->map, data));
 	}
-	map_layer_render(game->mlx, layers, game->map.player.pos, put_minimap);
+	map_layers_render(game->mlx, layers);
 }
