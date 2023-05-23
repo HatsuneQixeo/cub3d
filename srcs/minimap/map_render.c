@@ -73,7 +73,7 @@ static void	map_layers_init(void *p_mlx, t_map_layers layers)
 }
 
 static void	map_layer_map(t_image *layer, const t_image *img_map,
-			const t_map *map, const t_minimapdata data)
+			const t_minimapdata data)
 {
 	t_point	it;
 
@@ -99,6 +99,6 @@ void	cub3d_map_render(t_game *game)
 	if (SHOW_RAY)
 		map_layer_ray(&layers[LayerRay], game->rays, data);
 	map_layer_door(&layers[LayerDoor], game->map.arr_doors, data);
-	map_layer_map(&layers[LayerMap], &game->texture.map, &game->map, data);
+	map_layer_map(&layers[LayerMap], &game->texture.map, data);
 	map_layers_render(game->mlx, layers);
 }
