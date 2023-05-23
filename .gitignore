@@ -1,1 +1,5 @@
 submission
+*.o
+cub3d
+*.a
+.vscode
