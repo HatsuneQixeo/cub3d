@@ -39,24 +39,6 @@ void	mouse_focus(void *p_win, t_mouse *mouse, const int focus)
 	mouse->pos = screen_center;
 }
 
-/*
-	Originally made because a gif conversion seems to have missing pixel.
-	My deduction is because certain gif image default into transparent
-	if the pixel is the same as the last image,
-	probably did so for optimisation purpose?
-*/
-// void	image_copy_opaque(t_image *dst, const t_image *src)
-// {
-// 	unsigned int		i;
-// 	const unsigned int	len = dst->size.x * dst->size.y;
-
-// 	i = -1;
-// 	while (++i < len)
-// 		if (colour_getmask(src->data[i], ValueA) != 0xff)
-// 			dst->data[i] = src->data[i];
-// }
-
-// ft_printf("くるり廻る廻る廻る世界\n");
 int	hook_loop(t_game *game)
 {
 	if (game->keys[Key_ESC] == Press)

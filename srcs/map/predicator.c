@@ -48,10 +48,3 @@ int	cubmap_iswalkable(const t_map *map, const t_point pos)
 	ft_assert(find != NULL, "cubmap_iswalkable: could not find door at pos");
 	return ((*find)->is_open);
 }
-
-// int	cubmap_iswalkable(const t_map *map, const t_point pos)
-// {
-// 	const char	c = map->layout[(int)pos.y][(int)pos.x];
-
-// 	return (!(c == Wall || c == DoorClose));
-// }

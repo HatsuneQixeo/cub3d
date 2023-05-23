@@ -81,7 +81,6 @@ static void	draw_line(t_image *const screen_buffer, const t_image *const image,
 		screen_buffer->data
 		[(int)((screen_y * screen_buffer->size.x) + var.screen_x)]
 			= image->data[(int)(
-				/* Space after pointer? :D */
 				((int)(it_img_y - (it_img_y >= image->size.y)) *image->size.x))
 			+ var.image_x];
 		it_img_y += image_step;

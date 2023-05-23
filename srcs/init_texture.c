@@ -68,25 +68,17 @@ static void	texture_init_map(void *p_mlx, t_image *img_map, const t_map *map)
 
 void	texture_init(void *p_mlx, t_texture *texture, const t_map *map)
 {
-	{
-		texture->mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
-				putoffset_default, putoffset_default);
-		cub3d_runtime_assertion(image_good(&texture->mouse_icon),
-			"mouse_icon creation");
-	}
-	{
-		texture_init_map(p_mlx, &texture->map, map);
-	}
-	{
-		texture->walls[Invalid] = image_create(p_mlx, (t_point){1, 1},
-				(t_point){0, 0});
-		cub3d_runtime_assertion(image_good(&texture->walls[Invalid]),
-			"invalid side of wall creation");
-		texture->walls[Invalid].data[0] = 0x00000000;
-	}
-	{
-		texture->door_animation = texture_init_door(p_mlx,
-				&texture->door_animation_len);
-		cub3d_runtime_assertion(texture->door_animation != NULL, "init_door");
-	}
+	texture->mouse_icon = image_readxpm(p_mlx, "sprites/Normal-Select.xpm",
+			putoffset_default, putoffset_default);
+	cub3d_runtime_assertion(image_good(&texture->mouse_icon),
+		"mouse_icon creation");
+	texture_init_map(p_mlx, &texture->map, map);
+	texture->walls[Invalid] = image_create(p_mlx, (t_point){1, 1},
+			(t_point){0, 0});
+	cub3d_runtime_assertion(image_good(&texture->walls[Invalid]),
+		"invalid side of wall creation");
+	texture->walls[Invalid].data[0] = 0x00000000;
+	texture->door_animation = texture_init_door(p_mlx,
+			&texture->door_animation_len);
+	cub3d_runtime_assertion(texture->door_animation != NULL, "init_door");
 }
