@@ -1,0 +1,17 @@
+SO ./sprites/rgb.xpm
+WE ./sprites/Normal-Select.xpm
+EA ./sprites/Normal-Select.xpm
+NO ./sprites/Wall48.xpm
+
+C 135,206,235
+F 131,101,57
+
+111111111
+100010001
+10E011011
+100010001
+112110001
+100000001
+100010111
+100010001
+111111111
