@@ -1,9 +1,10 @@
 NAME		:=	cub3d
 
 CC			:=	gcc
-CXXFLAGS	:=	-Wall -Werror -Wextra -g
+CXXFLAGS	:=	-Wall -Werror -Wextra
+# CXXFLAGS	+=	-g
 # CXXFLAGS	+=	-O3
-CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
+# CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 # CXXFLAGS	+=	-D IMAGE_OUT_OF_BOUND_CHECK=1
 # CXXFLAGS	+=	-D DRAW_WARNING=0
 # CXXFLAGS	+=	-D BENCHMARK=1
@@ -11,20 +12,19 @@ CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 # CXXFLAGS	+=	-D SHOW_RAY=1
 # CXXFLAGS	+=	-D DEBUG_KEY=1
 # CXXFLAGS	+=	-D DEBUG_BUTTON=1
-MLXFLAGS	:=	-framework OpenGL -framework AppKit
-
 ifdef SAN
 CXXFLAGS	+=	-fsanitize=address -g -D SAN=1
 endif
+MLXFLAGS	:=	-framework OpenGL -framework AppKit
+
 MLX			:=	mlx/libmlx.a
-MLX_MAKE	:=	make -C mlx 2> /dev/null
+MLX_MAKE	:=	make -C mlx
 
 SRC_DIR		:=	srcs
 SRCS		:=	$(shell find ${SRC_DIR} -name "*.c")
 
 HEADER		:=	$(shell find ${SRC_DIR} -name "*.h")
 HEADER		+=	libft/include/libft.h
-# HEADER		+=	libft/experiment/exlib/include/exlib.h
 CFLAGS		:=	$(addprefix -I, $(dir ${HEADER})) -Imlx
 
 OBJ_DIR		:=	objs
@@ -39,9 +39,6 @@ CYAN		:=	\033[36m
 LIGHT_CYAN	:=	\033[1;36m
 RESET		:=	\033[0m
 
-EXLIB_DIR	:=	libft/experiment/exlib
-EXLIB		:=	${EXLIB_DIR}/exlib.a
-
 all: ${NAME}
 
 ${OBJ_DIR}:
@@ -55,14 +52,13 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.c ${HEADER} | ${OBJ_DIR}
 
 ${NAME}: ${OBJS}
 	${LIBFT_MAKE}
-	make -C ${EXLIB_DIR}
-	${MLX_MAKE}
-	@printf "${LIGHT_CYAN}${CC} ${CXXFLAGS} $^ -o $@${RESET}\n"
-	@${CC} ${CXXFLAGS} ${LIBFT} ${EXLIB} $^ ${MLX} ${MLXFLAGS} -o $@
+	${MLX_MAKE} 2> /dev/null
+	@printf "${LIGHT_CYAN}${CC} ${CXXFLAGS} ${LIBFT} \$${OBJS} ${MLX} ${MLXFLAGS} -o $@${RESET}\n"
+	@${CC} ${CXXFLAGS} ${LIBFT} $^ ${MLX} ${MLXFLAGS} -o $@
 
 clean:
 	${LIBFT_MAKE} clean
-	# ${MLX_MAKE} clean
+	${MLX_MAKE} clean
 	@printf "${RED}${RM} ${OBJ_DIR}${RESET}\n"
 	@${RM} -r ${OBJ_DIR}
 
@@ -73,23 +69,12 @@ fclean: clean
 
 re:	fclean all
 
-run: ${NAME}
-	./$<
-
-log: ${NAME}
-	./$< > log.log
-
 thisre:
 	${RM} -r ${NAME} ${OBJ_DIR}
 	make all
 
-NORM_CHECK	:=	${SRCS} $(filter-out libft/experiment/exlib/include/exlib.h, ${HEADER})
-
 norm:
-	@norminette ${NORM_CHECK}
-
-normltr:
-	@norminette ${NORM_CHECK} | grep -v INVALID_HEADER
+	@norminette ${SRCS} ${HEADER}
 
 check:
 	touch srcs/main.c

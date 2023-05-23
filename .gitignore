@@ -1,7 +1,2 @@
-.vscode
-objs
-*.o
-libmlx.a
-cub3d
-log
-.DS_Store
+submission
+.gitignore

@@ -77,14 +77,10 @@ int	cub3d(const char *map_path)
 	t_game	game;
 
 	if (cmp_strsuffix(map_path, ".cub"))
-		return (-!!ft_dprintf(2, "Invalid File extension: %s\n", map_path));
+		return (!!ft_dprintf(2, "Invalid File extension: %s\n", map_path));
 	ft_bzero(&game, sizeof(t_game));
 	if (game_init(map_path, &game) == -1)
-	{
-		if (!SAN)
-			system("leaks -q cub3d");
 		exit(1);
-	}
 	mlx_loop(game.mlx.p_mlx);
 	return (0);
 }
@@ -93,7 +89,5 @@ int	main(int argc, char **argv)
 {
 	if (argc != 2)
 		return (!!ft_putendl_fd("usage: cub3d <map>", 2));
-	cub3d(argv[1]);
-	if (!SAN)
-		system("leaks -q cub3d");
+	return (cub3d(argv[1]));
 }
