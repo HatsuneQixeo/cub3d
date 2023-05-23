@@ -42,14 +42,18 @@ static void	map_update(t_map *map)
 	}
 }
 
-static void	player_interact(const t_map *map, t_keys keys, const t_point target)
+static void	player_interact(const t_map *map, t_keys keys,
+			const t_player player)
 {
-	t_door	*door;
+	t_door			*door;
+	const t_point	pos = point_apply(player.pos, trunc);
+	const t_point	target = player.target;
 
 	if (keys[Key_E] == Release)
 		return ;
 	keys[Key_E] = Release;
-	if (!cubmap_isdoor(map, target))
+	if (!cubmap_isdoor(map, target)
+		|| (pos.x == target.x && pos.y == target.y))
 		return ;
 	door = *(t_door **)ft_aafind((void **)map->arr_doors, &target, cmp_doorpos);
 	if (door->step != 0)
@@ -85,7 +89,7 @@ void	update(t_game *game)
 			input_angle(game->mlx.p_win, &game->mouse, game->keys));
 	player_move(&game->map.player, player_getvector(game->keys), &game->map);
 	player_target(&game->map.player, &game->map);
-	player_interact(&game->map, game->keys, game->map.player.target);
+	player_interact(&game->map, game->keys, game->map.player);
 	ft_aaiteri(game->map.arr_doors, door_iteri_update);
 	map_update(&game->map);
 }

@@ -28,21 +28,21 @@ t_point	point_minmax(const t_point min, const t_point point, const t_point max)
 	return (ret);
 }
 
-t_point	point_min(const t_point point, const t_point min)
+t_point	point_min(const t_point a, const t_point b)
 {
 	const t_point	ret = {
-		.x = ft_dmin(min.x, point.x),
-		.y = ft_dmin(min.y, point.y)
+		.x = ft_dmin(a.x, b.x),
+		.y = ft_dmin(a.y, b.y)
 	};
 
 	return (ret);
 }
 
-t_point	point_max(const t_point point, const t_point max)
+t_point	point_max(const t_point a, const t_point b)
 {
 	const t_point	ret = {
-		.x = ft_dmax(max.x, point.x),
-		.y = ft_dmax(max.y, point.y)
+		.x = ft_dmax(a.x, b.x),
+		.y = ft_dmax(a.y, b.y)
 	};
 
 	return (ret);

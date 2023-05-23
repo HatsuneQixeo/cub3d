@@ -31,8 +31,8 @@ double	point_cross(t_point point1, t_point point2);
 t_point	point_rotate(t_point point, double angle);
 
 /* Minmax */
-t_point	point_min(t_point point, t_point min);
-t_point	point_max(t_point point, t_point max);
+t_point	point_min(t_point a, t_point b);
+t_point	point_max(t_point a, t_point b);
 t_point	point_minmax(t_point min, t_point point, t_point max);
 
 /* Operators */

@@ -23,7 +23,7 @@ void	map_draw_tile(t_image *map, const t_colour colour, const t_point pos)
 		.x = ft_dmin(map->size.x, start.x + MapCellSize),
 		.y = ft_dmin(map->size.y, start.y + MapCellSize)
 	};
-	const t_point	img_start = point_max(start, (t_point){0, 0});
+	const t_point	img_start = point_max((t_point){0, 0}, start);
 
 	image_draw_rectangle(map, colour, img_start, img_end);
 }
