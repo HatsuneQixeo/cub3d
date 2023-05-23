@@ -43,6 +43,7 @@ typedef struct s_image
 /* Image Getters */
 int			image_getindex(const t_image *image, t_point pos);
 t_colour	image_getpixel(const t_image *image, t_point pos);
+
 /* Image Creation */
 int			image_good(const t_image *image);
 t_image		image_create(void *p_mlx, t_point size, t_point putoffset);
@@ -68,9 +69,8 @@ void		image_draw_rectangle(t_image *image, t_colour colour,
 /* Circle */
 void		image_draw_circle(t_image *image, t_colour colour,
 				t_point center, unsigned int radius);
-void		draw_filled_circle(t_image *image, t_colour colour,
+void		image_draw_filled_circle(t_image *image, t_colour colour,
 				t_point center, unsigned int radius);
-void		image_fill_circle(t_image *image, t_colour colour);
 
 /* Image Render */
 void		image_put(t_mlx mlx, const t_image *image, t_point pos);
