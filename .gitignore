@@ -1,8 +1,8 @@
 .vscode
-objs
 *.o
-libmlx.a
+*.a
 cub3d
+submission*
+reference
 log
 .DS_Store
-submission
