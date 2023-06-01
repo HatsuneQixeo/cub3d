@@ -119,7 +119,7 @@ void	render_door(t_image *screen_buffer, const t_rays rays,
 	while (++i < ScreenWidth)
 	{
 		ray = &rays[(int)(i * ((double)ray_amount / ScreenWidth))];
-		if (!cubmap_isdoor(map, ray->hit))
+		if (!point_inbound(ray->hit, map->size) || !cubmap_isdoor(map, ray->hit))
 			continue ;
 		door = *(t_door **)ft_aafind((void **)map->arr_doors,
 				&ray->hit, cmp_doorpos);

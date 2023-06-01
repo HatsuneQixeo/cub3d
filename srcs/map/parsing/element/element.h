@@ -32,7 +32,7 @@ enum e_table_index
 	idx_elem_amount
 };
 
-typedef t_list	*t_element_table[idx_elem_amount];
+typedef t_list	*t_element_table[idx_elem_amount + 1];
 
 t_element	*element_new(char *identifier, char *properties);
 void		element_del(void *content);

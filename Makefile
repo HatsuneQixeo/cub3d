@@ -2,7 +2,7 @@ NAME		:=	cub3d
 
 CC			:=	gcc
 CXXFLAGS	:=	-Wall -Werror -Wextra
-# CXXFLAGS	+=	-g
+CXXFLAGS	+=	-g
 # CXXFLAGS	+=	-O3
 # CXXFLAGS	+=	-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 # CXXFLAGS	+=	-D IMAGE_OUT_OF_BOUND_CHECK=1
