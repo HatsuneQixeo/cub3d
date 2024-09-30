@@ -39,7 +39,7 @@ typedef t_ray	t_rays[ray_amount];
 typedef struct s_game
 {
 	t_mlx		mlx;
-	t_image		screen_buffer;
+	t_image		canvas;
 	t_rays		rays;
 	t_texture	texture;
 	t_keys		keys;
@@ -51,9 +51,9 @@ void	cub3d_runtime_assertion(int condition, const char *attachment);
 
 void	screen_rays(t_rays rays, const t_map *map, const char *target);
 
-void	render_wall(t_image *screen_buffer, const t_rays rays,
+void	render_wall(t_image *canvas, const t_rays rays,
 			const t_wall_textures walls, const t_map *map);
-void	render_door(t_image *screen_buffer, const t_rays rays,
+void	render_door(t_image *canvas, const t_rays rays,
 			const t_image *animation, const t_map *map);
 
 void	update(t_game *game);

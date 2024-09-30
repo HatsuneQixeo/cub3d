@@ -54,11 +54,10 @@ int	game_init(const char *path, t_game *game)
 	texture_init(game->mlx.p_mlx, &game->texture, &game->map);
 	cubmap_door_init(&game->map, game->texture.door_animation_len);
 	cub3d_runtime_assertion(game->map.arr_doors != NULL, "arr_doors");
-	game->screen_buffer = image_create(game->mlx.p_mlx,
+	game->canvas = image_create(game->mlx.p_mlx,
 			(t_point){.x = ScreenWidth, .y = ScreenHeight},
 			(t_point){0, 0});
-	cub3d_runtime_assertion(image_good(&game->screen_buffer),
-		"screen_buffer creation");
+	cub3d_runtime_assertion(image_good(&game->canvas), "canvas creation");
 	ft_intset((int *)game->keys, key_count, Release);
 	game->mlx.p_win = mlx_new_window(game->mlx.p_mlx, ScreenWidth, ScreenHeight,
 			"cub3d");
