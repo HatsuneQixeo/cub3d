@@ -39,6 +39,7 @@ void	mouse_focus(void *p_win, t_mouse *mouse, const int focus)
 	mouse->pos = screen_center;
 }
 
+#include <sys/time.h>
 /*
 	Originally made because a gif conversion seems to have missing pixel.
 	My deduction is because certain gif image default into transparent
@@ -57,6 +58,29 @@ void	mouse_focus(void *p_win, t_mouse *mouse, const int focus)
 // }
 
 // ft_printf("くるり廻る廻る廻る世界\n");
+
+void	show_fps(t_mlx mlx)
+{
+	static unsigned int		count = 0;
+	static char				*fps = NULL;
+	static struct timeval	prev;
+	static struct timeval	now;
+
+	count++;
+	gettimeofday(&now, NULL);
+	if (fps == NULL)
+		fps = ft_strdup("fps: 0");
+	if (prev.tv_sec < now.tv_sec)
+	{
+		free(fps);
+		fps = ft_strmodify(ft_strrjoin, ft_utoa_base(count, DECIMAL), "fps: ");
+		count = 0;
+		prev = now;
+	}
+	if (fps != NULL)
+		mlx_string_put(mlx.p_mlx, mlx.p_win, 39, 39, 0xffffff, fps);
+}
+
 int	hook_loop(t_game *game)
 {
 	if (game->keys[Key_ESC] == Press)
@@ -69,6 +93,7 @@ int	hook_loop(t_game *game)
 	cub3d_map_render(game);
 	if (display_mouse(game->mouse))
 		image_put(game->mlx, &game->texture.mouse_icon, game->mouse.pos);
+	show_fps(game->mlx);
 	return (0);
 }
 
